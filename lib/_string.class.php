@@ -33,7 +33,7 @@ class _string {
 			$patten = "/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|\xe0[\xa0-\xbf][\x80-\xbf]|[\xe1-\xef][\x80-\xbf][\x80-\xbf]|\xf0[\x90-\xbf][\x80-\xbf][\x80-\xbf]|[\xf1-\xf7][\x80-\xbf][\x80-\xbf][\x80-\xbf]/";
 			preg_match_all($patten, $str, $regs);
 			$s = '';
-			for($i=$start; $i<count($regs[0]); $i++){
+			for($i=$start; $i<getCount($regs[0]); $i++){
 				$s .= $regs[0][$i];
 				if($i >= $limit){
 					break;

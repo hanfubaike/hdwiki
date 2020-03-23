@@ -162,9 +162,9 @@ class filecheckmodel {
 	function getlist($filelists){
 		if($filelists){
 			foreach($filelists as $key=>$filelist){
-				$filelists[$key]['funtimes'] = isset($filelist['func']) ? count($filelist['func']) : 0;
+				$filelists[$key]['funtimes'] = isset($filelist['func']) ? getCount($filelist['func']) : 0;
 				$filelists[$key]['funstr'] = $this->get_func_code($filelist['func']);
-				$filelists[$key]['codetimes'] = isset($filelist['code']) ? count($filelist['code']) : 0;
+				$filelists[$key]['codetimes'] = isset($filelist['code']) ? getCount($filelist['code']) : 0;
 				$filelists[$key]['codestr'] = $this->get_func_code($filelist['code']);
 				$filelists[$key]['key'] = $this->urlcode($key);
 			}

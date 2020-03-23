@@ -114,7 +114,7 @@ class control extends base{
 
 		$relatelist = array();
 		$relatelist = $_ENV['doc']->get_related_doc($doc['did']);
-		if(!count($relatelist)){
+		if(!getCount($relatelist)){
 			if($this->setting['isrelate']){
 				$relatelist = array_unique(explode(';',$this->setting['relateddoc']));
 			}
@@ -605,7 +605,7 @@ class control extends base{
 			$_ENV['attachment']->update_desc($this->post['attachment_id'],$this->post['attachment_desc']);
 			if($this->checkable('attachment-remove')){
 				$attachmentlist=$_ENV['attachment']->get_attachment('did',$doc['did'],0);
-				for($i=0;$i<count($attachmentlist);$i++){
+				for($i=0;$i<getCount($attachmentlist);$i++){
 					if($attachmentlist[$i]['isimage']=="0"&&!in_array($attachmentlist[$i]['id'],(array)$this->post['attachment_id'])){
 						@unlink($attachmentlist[$i]['attachment']);
 						$remove_attachid[]=$attachmentlist[$i]['id'];
@@ -850,7 +850,7 @@ class control extends base{
 	}
 
 	function dosummary(){
-		$count=count($this->get);
+		$count=getCount($this->get);
 		@$title=$this->get[2];
 		for($i=3;$i<$count;$i++){
 			$title .='-'.$this->get[$i];
@@ -1060,7 +1060,7 @@ class control extends base{
 		$aid=isset($this->get[2])?$this->get[2]:'';
 		if(empty($aid)){
 			$aid=$this->post['checkid'];
-			$num=count($aid);
+			$num=getCount($aid);
 			if($num>0){
 				$aids='';
 				for($i=0;$i<$num;$i++){
@@ -1138,7 +1138,7 @@ class control extends base{
 
 		$coopdoc = array();
 		$cooperatedocs = explode(';',$this->setting['cooperatedoc']);
-		$counts = count($cooperatedocs);
+		$counts = getCount($cooperatedocs);
 		for($i=0;$i<$counts;$i++){
 			if($cooperatedocs[$i]==''){
 				unset($cooperatedocs[$i]);

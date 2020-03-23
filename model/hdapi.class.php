@@ -395,7 +395,7 @@ class hdapimodel {
 		
 		$sql = "REPLACE INTO `".DB_TABLEPRE."privatetitle` (`title`) values";
 		$values=array();
-		$num = count($list);
+		$num = getCount($list);
 		$num = $num < 200 ? $num:200;
 		for($i=0;$i<$num;$i++){
 			$value = trim($list[$i]);
@@ -505,7 +505,7 @@ class hdapimodel {
 	function input_db_docs($str,$cid){
 		$docs = explode($this->exploder,$str);
 		$num = array('all'=>0,'in'=>0);
-		$num['all'] = count($docs)-1;
+		$num['all'] = getCount($docs)-1;
 		$time = time();
 		if(is_array($docs)){
 			foreach($docs as $doc){
@@ -579,7 +579,7 @@ class hdapimodel {
 	function filter_external($content){
 		preg_match_all("/<a[^>]*>(.*?)<\/a>/is", $content, $links);
 		if ($links){
-			for($i=count($links[0])-1; $i>=0; $i--){
+			for($i=getCount($links[0])-1; $i>=0; $i--){
 				if (!preg_match("/href=\"?(http:\/\/(\w+?\.){1,2}hudong\.com|index\.php\?doc-innerlink)/i", $links[0][$i])){
 					$content = str_replace($links[0][$i], $links[1][$i], $content);
 				}

@@ -21,7 +21,7 @@ class control extends base{
 		$total=$_ENV['doc']->get_list_total(1,'');
 		$count=($total==0)?min($count,100):min($total,$count,100);		
 		
-		$temcount=count($list);
+		$temcount=getCount($list);
 		for($i=0;$i<$temcount;$i++){
 			$list[$i]['time']=$list[$i]['lastedit'];
 		}
@@ -124,7 +124,7 @@ class control extends base{
         $start_limit = ($page - 1) * $this->setting['list_recentupdate'];
         $list = $_ENV['doc']->get_list_cache(1, '', $start_limit, $this->setting['list_recentupdate']);
 
-        $temcount = count($list);
+        $temcount = getCount($list);
         for($i = 0; $i < $temcount; $i++) {
             $list[$i]['time'] = $list[$i]['lastedit'];
         }

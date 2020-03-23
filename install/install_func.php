@@ -193,7 +193,7 @@ function subString($text, $start = 0, $limit = 12) {
 			preg_match_all($patten, $text, $regs);
 			$v = 0;
 			$s = '';
-			for ($i = 0; $i < count($regs[0]); $i++) {
+			for ($i = 0; $i < getCount($regs[0]); $i++) {
 				(ord($regs[0][$i]) > 129) ? $v += 2 : $v++;
 				$s .= $regs[0][$i];
 				if ($v >= $limit * 2) {

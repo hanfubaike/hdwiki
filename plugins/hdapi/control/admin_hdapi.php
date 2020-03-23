@@ -238,7 +238,7 @@ class control extends base{
 			
 			if (is_array($titles)){
 				$privtetitles = '';
-				$privtetitlescount = count($titles);
+				$privtetitlescount = getCount($titles);
 				foreach($titles as $title){
 					$privtetitles .= $title."\n";
 				}

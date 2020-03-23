@@ -30,7 +30,7 @@ class wordmodel {
 	
 	function add_word($alluploadwords,$replacement,$username){
 		$username = addslashes(htmlspecial_chars($username));
-		$num = count($alluploadwords);
+		$num = getCount($alluploadwords);
 		$start = 0;
 		$step = $end = 100;
 		do{

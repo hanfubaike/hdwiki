@@ -51,7 +51,7 @@ class actionsmodel {
 			}
 			$kws = explode(',', $key);
 			$kws = array_map('trim', $kws);
-			$num = count($kws);
+			$num = getCount($kws);
 			if($num==3){
 				$outstr .=$prenum!=3?'<ul>':'';
 			}else{

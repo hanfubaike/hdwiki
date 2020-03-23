@@ -72,7 +72,7 @@ class control extends base{
 	}
 	
 	function doremove(){
-		if(count($this->post['channel_id'])!=0){
+		if(getCount($this->post['channel_id'])!=0){
 			$_ENV['channel']->remove_channel($this->post['channel_id']);
 			$this->cache->removecache('channel');
 			$this->message($this->view->lang['channel_RemoveSuccess'],'index.php?admin_channel');

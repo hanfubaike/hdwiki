@@ -97,7 +97,7 @@ class XML {
 		}
 		array_pop($this->stack);
 		if($this->stack) {
-			$this->document = &$this->stack[count($this->stack)-1];
+			$this->document = &$this->stack[getCount($this->stack)-1];
 		}
 	}
 

@@ -96,7 +96,7 @@ class attachmentmodel {
 	}
 	
 	function update_desc($ids,$descs){
-		$count=count($ids);
+		$count=getCount($ids);
 		for($i=0;$i<$count;$i++){
 			$this->db->query("UPDATE ".DB_TABLEPRE."attachment SET description='".$descs[$i]."' WHERE id=".$ids[$i]);
 		}
@@ -117,7 +117,7 @@ class attachmentmodel {
 		if(!$this->base->setting['attachment_open']){
 			return false;
 		}
-		$count=count($_FILES['attachment']['name']);
+		$count=getCount($_FILES['attachment']['name']);
 		for($i=0;$i<$count;$i++){
 			if(!(bool)$_FILES['attachment']['name'][$i]){
 				continue;

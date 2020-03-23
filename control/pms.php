@@ -104,7 +104,7 @@ class control extends base{
 			$sendto = _string::hiconv($sendto,'GBK','UTF-8',1);
 		}
 		$send = explode(',',$sendto);
-		if(count($send)>10){
+		if(getCount($send)>10){
 			$this->message($this->view->lang['fullsend'],'',2);
 		}
 		$checkreturn = $_ENV['pms']->check_recipient($sendto,0);
@@ -173,7 +173,7 @@ class control extends base{
 			}
 		}else{
 			$removeid = $this->post['checkid'];
-			$num = count($removeid);
+			$num = getCount($removeid);
 			$allowlist = array('inbox', 'outbox', 'drafts');
 			if(is_array($removeid) && $num>=1 && in_array($this->get[3], $allowlist)){
 				switch ($this->get[3]){

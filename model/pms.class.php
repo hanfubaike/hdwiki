@@ -16,7 +16,7 @@ class pmsmodel {
 		$userinfos = array();
 		$send = array_unique(explode(',', $sendto));
 		sort($send);
-		$num = count($send);
+		$num = getCount($send);
 		$sendto = str_replace(",", "','", $sendto);
 		$query = $this->db->query("SELECT username,uid FROM ".DB_TABLEPRE."user WHERE username IN ('$sendto')");
 		if($this->db->num_rows($query) == $num && $type != 1){
@@ -36,7 +36,7 @@ class pmsmodel {
 		$pmsresult = true;
 		$isdraft = ($sendarray['isdraft'] === 'on')? 1 : 0;
 		$userinfo = $this->check_recipient($sendarray['sendto'],1);
-		$num = count($userinfo);
+		$num = getCount($userinfo);
 		if($num > 0){
 			$pmsquery = "INSERT INTO ".DB_TABLEPRE."pms (`from`,`fromid`,`drafts`,`toid`,`to`,`subject`,`message`,`time`,`new`) VALUES ";
 			for($i=0; $i<$num; $i++){

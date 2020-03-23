@@ -33,7 +33,7 @@ class logmodel {
 				$i=$num;
 			}
 		}
-		$content=array($loglist,count($logs),$formatdate);
+		$content=array($loglist,getCount($logs),$formatdate);
 		return $content;
 	}
 

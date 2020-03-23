@@ -56,7 +56,7 @@ class control extends base{
 		}
 		$okfile='';
 		$this->setting['coin_download'] = isset ($this->setting['coin_download'])?$this->setting['coin_download']:10;
-		$count=count($_FILES['attachment']['name']);
+		$count=getCount($_FILES['attachment']['name']);
 		for($i=0;$i<$count;$i++){
 			if(!(bool)$_FILES['attachment']['name'][$i]){
 				continue;

@@ -42,7 +42,7 @@ class control extends base{
 		$checkable['remove']=$this->checkable('edition-remove');
 		$checkable['excellent']=$this->checkable('edition-excellent');
 		$biglist = false;
-		if (is_array($editionlist) && count($editionlist) > 20) $biglist = true;
+		if (is_array($editionlist) && getCount($editionlist) > 20) $biglist = true;
 		$this->view->assign('biglist',$biglist);
 		$this->view->assign('checkable',$checkable);
 		$this->view->assign('doc',$doc);

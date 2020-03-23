@@ -34,7 +34,7 @@ class bannedmodel {
 	
 	function add_ip($alluploadips, $expiration, $username){
 		$expiration = ($expiration) ? $expiration*3600*24 : 0;
-		$num = count($alluploadips);
+		$num = getCount($alluploadips);
 		$start = 0;
 		$step = $end = 100;
 		do{

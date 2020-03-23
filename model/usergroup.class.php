@@ -49,7 +49,7 @@ class usergroupmodel {
 			}
 			if(!$i) return false;
 			$sql = substr($sql, 0, -1);
-			if (count($groupdata)>0){
+			if (getCount($groupdata)>0){
 				$this->db->query($sql);
 			}
 		}elseif('delete' == $action) {

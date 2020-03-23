@@ -17,7 +17,7 @@ class control extends base{
 		$page = max(1, intval($this->get[3]));
 		$start_limit = ($page - 1) * $num;
 		$pic_cache=$_ENV['pic']->get_pic_cache($type);
-		$count=count($pic_cache);
+		$count=getCount($pic_cache);
 		$list=array_slice($pic_cache,$start_limit,$num);
 		//调用判断是否移动端请求
 		if($this->isMobile() && $page > 1){
@@ -53,7 +53,7 @@ class control extends base{
 			}
 		}
 
-		$countnum=count($piclist);
+		$countnum=getCount($piclist);
 		if(!empty($piclist)) {
 			foreach($piclist as $key=>$val){
 				if($val['id']==$id){
@@ -103,7 +103,7 @@ class control extends base{
 			$pic=$_ENV['pic']->get_pic_by_id($id);
 		}elseif(isset($this->post['did'])){
 			$piclist=$_ENV['pic']->get_pic_by_did($this->post['did']);
-			$countnum=count($piclist);
+			$countnum=getCount($piclist);
 			if($countnum<=12){
 				$returnlist=&$piclist;
 			}else{

@@ -19,7 +19,7 @@ class control extends base{
 		$defaultstyle=$_ENV['theme']->choose_theme_name($this->setting['theme_name']);
 		
 		$stylearray=$_ENV['theme']->get_all_list_num();
-		$count=count($stylearray);
+		$count=getCount($stylearray);
 		$num = 10;
 		$page = max(1, intval(end($this->get)));
 		$start_limit = ($page - 1) * $num;

@@ -31,7 +31,7 @@
 
     <div style="margin: 10px;">
      <h3
-      <!--{if count($attachment)==0}-->
+      <!--{if getCount($attachment)==0}-->
       style="display:none"
       <!--{/if}-->
       >{lang attachList}
@@ -43,7 +43,7 @@
           </span></dt>
         <dd></dd>
       </dl>
-      <!--{if count($attachment)>0}-->
+      <!--{if getCount($attachment)>0}-->
       <!--{if $attach_download}-->
       <!--{loop $attachment $attach}-->
       <dl id="$attach['id']">

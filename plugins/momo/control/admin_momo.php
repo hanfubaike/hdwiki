@@ -19,7 +19,7 @@ class control extends base{
 		$plugin=$_ENV['plugin']->get_plugin_by_identifier('momo');
 		$pluginid=$plugin['pluginid'];
 		$momocode=$_ENV['momo']->get_momo($pluginid);
-		$counts=count($momocode);
+		$counts=getCount($momocode);
 		for($i=0;$i<$counts;$i++){
 			if($momocode[$i][variable]=='momolength')$momolength=$momocode[$i][value];
 			if($momocode[$i][variable]=='momourl') $momourl=$momocode[$i][value];

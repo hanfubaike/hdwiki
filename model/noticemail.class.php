@@ -34,7 +34,7 @@ class noticemailmodel {
 				$mail_uids[] = $user['uid'];
 			}
 		}
-		if(count($mail_uids) > 0) {
+		if(getCount($mail_uids) > 0) {
 			$this->base->load('mail');
 			$_ENV['mail']->add($mail_uids, array(), $mail_subject, $mail_message);
 		}
@@ -75,7 +75,7 @@ class noticemailmodel {
 			}
 			$mail_uids = array_unique($mail_uids);
 		}
-		if(count($mail_uids) > 0) {
+		if(getCount($mail_uids) > 0) {
 			$this->base->load('mail');
 			$_ENV['mail']->add($mail_uids, array(), $mail_subject, $mail_message);
 		}
@@ -128,7 +128,7 @@ class noticemailmodel {
 			unset($doc);
 			$mail_uids = array_unique($mail_uids);
 		}
-		if(count($mail_uids) > 0) {
+		if(getCount($mail_uids) > 0) {
 			$this->base->load('mail');
 			$_ENV['mail']->add($mail_uids, array(), $mail_subject, $mail_message);
 		}

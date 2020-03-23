@@ -70,7 +70,7 @@
     <label id='lockimage'><image src="style/default/lock.gif"/></label>
       <!--{/if}-->
   </div>
-  <!--{if count($nav[1] )>0}-->
+  <!--{if getCount($nav[1] )>0}-->
 	<div class="nav_model">
   <!--{loop $nav[1] $key $val}-->
   {$val['code']}
@@ -117,7 +117,7 @@
     <!--{/if}-->
     <!--{/loop}-->
   </div>
-  <!--{if count($nav[2] )>0}-->
+  <!--{if getCount($nav[2] )>0}-->
   <div class="nav_model">
   <!--{loop $nav[2] $key $val}-->
   {$val['code']}
@@ -125,7 +125,7 @@
   </div>
   <!--{/if}-->
 <div class="fj_list m-t10"> <h3
-  <!--{if count($attachment)==0}-->
+  <!--{if getCount($attachment)==0}-->
   style="display:none"
   <!--{/if}-->
   >{lang attachList}
@@ -137,7 +137,7 @@
       </span></dt>
     <dd></dd>
   </dl>
-  <!--{if count($attachment)>0}-->
+  <!--{if getCount($attachment)>0}-->
   <!--{if $attach_download}-->
   <!--{loop $attachment $attach}-->
   <dl id="$attach['id']">
@@ -242,7 +242,7 @@
 		<input type='hidden' id='fletter' value='$docletter'>
 		<!--{/if}-->
 	</div>
-	<!--{if count($doc['tag'] )>0}-->
+	<!--{if getCount($doc['tag'] )>0}-->
 	<ul class="doc-list">
 		<!--{loop $doc['tag'] $key $tag}-->
 		<li><a href="{url search-tag-$tag}" name="tag">{$tag}</a></li>
@@ -253,7 +253,7 @@
 	<!--{/if}-->
 </div>
 
-<!--{if count($referencelist)>0}-->
+<!--{if getCount($referencelist)>0}-->
   <div class="columns add">
   <h2 class="col-h2">{lang references}</h2>
   <!--{if $reference_add}--><a class="more clink" href="javascript:reference_edit();">{lang edit}</a><!--{/if}-->
@@ -361,7 +361,7 @@
 <!--{/if}-->
 </div>
 <aside class="doc-aside group2" id="doc-aside">
-  <!--{if count($nav[3] )>0}-->
+  <!--{if getCount($nav[3] )>0}-->
 <div class="nav_model">
   <!--{loop $nav[3] $key $val}-->
   {$val['code']}
@@ -469,7 +469,7 @@
   <!--{/if}-->
 </aside>
 </section>
-<!--{if count($nav[4] )>0}-->
+<!--{if getCount($nav[4] )>0}-->
 <aside class="wrap"><div class="nav_model columns">
 <!--{loop $nav[4] $key $val}-->
 {$val['code']}

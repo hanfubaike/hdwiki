@@ -30,7 +30,7 @@ class control extends base{
 				$relatelists[] = $relate;
 			}
 		}
-		if(count($relatelist)>10){
+		if(getCount($relatelist)>10){
 			$this->message($this->view->lang['relatedtitlemore'],'index.php?admin_relation');
 		}
 		$setting['relateddoc']=implode(";", $relatelists);

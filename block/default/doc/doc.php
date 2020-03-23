@@ -36,7 +36,7 @@ class doc{
 		$num=!empty($setting['num'])?$setting['num']:$this->base->setting['index_wonderdoc'];
 		$type = 3;
 		$list = $_ENV["doc"]->get_focus_list(0,$num,$type);
-		if(count($list)>0){
+		if(getCount($list)>0){
 			$fistwonderdoc=is_array($list)?array_shift($list):array();
 			$fistwonderdoc['image'] = str_replace('s_','',$fistwonderdoc['image']);
 		}

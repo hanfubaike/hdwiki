@@ -48,7 +48,7 @@ class friendlinkmodel {
 	}
 	
 	function updateorder($order){
-		$count=count($order);
+		$count=getCount($order);
 		for($i=0;$i<$count;$i++){
 			$this->db->query("UPDATE ".DB_TABLEPRE."friendlink SET displayorder=$i WHERE id=".$order[$i]);
 		}

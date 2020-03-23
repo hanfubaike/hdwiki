@@ -55,7 +55,7 @@ class control extends base{
 			if($num > 0) {
 				$synonyms_list=$_ENV['synonym']->get_synonym_by_dest($destdid,'');
 				$str='<ul class="doc-list" id="str">';
-				for($i=0;$i<count($synonyms_list);$i++){
+				for($i=0;$i<getCount($synonyms_list);$i++){
 					$str.="<li><a href='index.php?doc-innerlink-".urlencode($synonyms_list[$i]['srctitle'])."' name='synonym'> ".$synonyms_list[$i]['srctitle']."</a></li>";
 				}
 				$str .='</ul>';

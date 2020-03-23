@@ -6,7 +6,7 @@
     <div class="swiper-container">
         <div class="swiper-wrapper">
             <!--{if isset($indexcache['piclist'])}-->
-            {eval $count = count($indexcache['piclist'])}
+            {eval $count = getCount($indexcache['piclist'])}
             <!--{loop $indexcache['piclist'] $key $picname}-->
             <div class="swiper-slide picswipe">
                 <a href="{url pic-view-{$picname['id']}-{$picname['did']}}">

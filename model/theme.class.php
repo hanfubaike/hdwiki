@@ -94,7 +94,7 @@ class thememodel {
 			xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
 			xml_parse_into_struct($parser, $data, $values, $tags);
 			xml_parser_free($parser);
-			$xmlcounts=count($values);
+			$xmlcounts=getCount($values);
 			$xmlarray['path']=$filenames;
 			for($x=0;$x<$xmlcounts;$x++){
 				if($values[$x]['level']==2){
@@ -184,7 +184,7 @@ class thememodel {
 	}
 	
 	function upload_img($uploadimg,$filename){
-		$counts=count($uploadimg);
+		$counts=getCount($uploadimg);
 		if($counts!=0){
 			for($i=0;$i<$counts;$i++){
 				$imgname=$uploadimg[$i]['name'];
@@ -440,7 +440,7 @@ class thememodel {
 		foreach($post as $key=>$value){
 			$areas.="'".$key."',";
 			$value=explode('-',$value);
-			$num=count($value);
+			$num=getCount($value);
 			for($i=0;$i<$num;$i++){
 				$id=$value[$i];
 				if(is_numeric($id)){//id是数字，表明是需要更新的。

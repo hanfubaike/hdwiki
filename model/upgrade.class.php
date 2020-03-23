@@ -119,7 +119,7 @@ class upgrademodel {
 		$packages = @unserialize($packages);
 
 		if($get_first) {
-			if(count($packages) > 0) {
+			if(getCount($packages) > 0) {
 				$first = each($packages);
 				$first['value']['release_code'] = $first['key'];
 				return $first['value'];

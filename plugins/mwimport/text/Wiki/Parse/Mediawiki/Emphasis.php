@@ -72,7 +72,7 @@ class Text_Wiki_Parse_Emphasis extends Text_Wiki_Parse {
      */
     function process($text) {
         $arr = preg_split("/(''+)/", $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-        if (count($arr) == 1) {
+        if (getCount($arr) == 1) {
             return $text;
         } else {
             # First, do some preliminary work. This may shift some apostrophes from

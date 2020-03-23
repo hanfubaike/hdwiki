@@ -114,7 +114,7 @@ class docmodel {
 			$authorid[] = $result['authorid'];
 		}
 		$authorid = array_unique($authorid);
-		return count($authorid);
+		return getCount($authorid);
 	}
 	
 	function get_similardoc($cid,$limit=6) {
@@ -195,13 +195,13 @@ class docmodel {
 		$cids = explode(",", $cidstr);
 		foreach ($dids as $did){
 			$sql = "INSERT INTO ".DB_TABLEPRE."categorylink (`did`,`cid`) VALUES ";
-			for($i=0; $i<count($cids); $i++){
+			for($i=0; $i<getCount($cids); $i++){
 				$sql .= "('".$did."','".$cids[$i]."'),";
 			}
 			$sql = substr($sql,0,-1) . ';';
 			$this->db->query($sql);
 		}
-		$this->db->query("UPDATE ".DB_TABLEPRE."category SET docs=docs+".count($dids)." WHERE cid IN ($cidstr)");
+		$this->db->query("UPDATE ".DB_TABLEPRE."category SET docs=docs+".getCount($dids)." WHERE cid IN ($cidstr)");
 	}
 
 	function del_doc_category($dids){
@@ -306,7 +306,7 @@ class docmodel {
 	//function splithtml($html,$preg='/(<div\s+class=\"?hdwiki_tmml\"?\s*>.+?<\/div>)/i'){
 	function splithtml($html,$preg='/(<h2>.+?<\/h2>)/i'){
 		$arrhtml=preg_split($preg,$html,-1,PREG_SPLIT_DELIM_CAPTURE);
-		$count=count($arrhtml);
+		$count=getCount($arrhtml);
 		for($i=0;$i<$count;$i++){
 			if(preg_match($preg,$arrhtml[$i])){
 				//preg_match('/hdwiki_tmm(l+)/i',$arrhtml[$i],$l_num);
@@ -325,7 +325,7 @@ class docmodel {
 
 	function joinhtml($arrhtml){
 		$html='';
-		$count=count($arrhtml);
+		$count=getCount($arrhtml);
 		for($i=0;$i<$count;$i++){
 			if($arrhtml[$i]['flag']==1){
 				$html.="<h2>".$arrhtml[$i]['value']."</h2>";
@@ -338,7 +338,7 @@ class docmodel {
 
 	function getsections($section){
 		$sectionlist=array();
-		$secounts = count($section);
+		$secounts = getCount($section);
 		for($i=0;$i<$secounts;$i++){
 			if($section[$i]['flag']==1){
 				$sectionlist[]=array('key'=>$i,'value'=>$section[$i]['value']);
@@ -535,7 +535,7 @@ class docmodel {
 	
 	function get_list_total($type=1,$letter=''){
 		$cache=(array) $this->base->cache->getcache("list_{$letter}_{$type}",$this->base->setting['list_cache_time']);
-		return count($cache);
+		return getCount($cache);
 	}
 	
 	function get_focus_list($start=0,$limit=10,$type=0){
@@ -750,31 +750,31 @@ class docmodel {
 	
 	function recover($data){
 		$data=_string::haddslashes($data,1);
-		for($i=0,$count=count($data['doc']);$i<$count;$i++){
+		for($i=0,$count=getCount($data['doc']);$i<$count;$i++){
 			$this->db->query("INSERT INTO  ".DB_TABLEPRE."doc (did,cid,letter,title,tag,summary,content,author,authorid,time,lastedit,lasteditor,lasteditorid,views,edits,editions,comments,votes,visible,locked) 
 			VALUES ('".$data['doc'][$i]['did']."','".$data['doc'][$i]['cid']."','".$data['doc'][$i]['letter']."','".$data['doc'][$i]['title']."','".$data['doc'][$i]['tag']."','".$data['doc'][$i]['summary']."','".$data['doc'][$i]['content']."','".$data['doc'][$i]['author']."','".$data['doc'][$i]['authorid']."','".$data['doc'][$i]['time']."','".$data['doc'][$i]['lastedit']."','".$data['doc'][$i]['lasteditor']."','".$data['doc'][$i]['lasteditorid']."','".$data['doc'][$i]['views']."','".$data['doc'][$i]['edits']."','".$data['doc'][$i]['editions']."','".$data['doc'][$i]['comments']."','".$data['doc'][$i]['votes']."','".$data['doc'][$i]['visible']."','".$data['doc'][$i]['locked']."') ");
 		}
-		for($i=0,$count=count($data['categorylink']);$i<$count;$i++){
+		for($i=0,$count=getCount($data['categorylink']);$i<$count;$i++){
 			$this->db->query("INSERT INTO  ".DB_TABLEPRE."categorylink (did,cid) VALUES ('".$data['categorylink'][$i]['did']."','".$data['categorylink'][$i]['cid']."') ");
 			$this->db->query("UPDATE ".DB_TABLEPRE."category SET docs=docs+1 WHERE cid='".$data['categorylink'][$i]['cid']."'");
 		}
-		for($i=0,$count=count($data['edition']);$i<$count;$i++){
+		for($i=0,$count=getCount($data['edition']);$i<$count;$i++){
 			$this->db->query("INSERT INTO  ".DB_TABLEPRE."edition (eid,cid,did,author,authorid,time,ip,title,tag,summary,content,words,images,type,excellent,big,reason) 
 			VALUES ('".$data['edition'][$i]['eid']."','".$data['edition'][$i]['cid']."','".$data['edition'][$i]['did']."','".$data['edition'][$i]['author']."','".$data['edition'][$i]['authorid']."','".$data['edition'][$i]['time']."','".$data['edition'][$i]['ip']."','".$data['edition'][$i]['title']."','".$data['edition'][$i]['tag']."','".$data['edition'][$i]['summary']."','".$data['edition'][$i]['content']."','".$data['edition'][$i]['words']."','".$data['edition'][$i]['images']."','".$data['edition'][$i]['type']."','".$data['edition'][$i]['excellent']."','".$data['edition'][$i]['big']."','".$data['edition'][$i]['reason']."') ");
 		}
-		for($i=0,$count=count($data['focus']);$i<$count;$i++){
+		for($i=0,$count=getCount($data['focus']);$i<$count;$i++){
 			$this->db->query("INSERT INTO  ".DB_TABLEPRE."focus (did,title,tag,summary,image,time,displayorder) 
 			VALUES ('".$data['focus'][$i]['did']."','".$data['focus'][$i]['title']."','".$data['focus'][$i]['tag']."','".$data['focus'][$i]['summary']."','".$data['focus'][$i]['image']."','".$data['focus'][$i]['time']."','".$data['focus'][$i]['displayorder']."')");
 		}
-		for($i=0,$count=count($data['comment']);$i<$count;$i++){
+		for($i=0,$count=getCount($data['comment']);$i<$count;$i++){
 			$this->db->query("INSERT INTO  ".DB_TABLEPRE."comment (id,did,comment,reply,author,authorid,oppose,aegis,time) 
 			VALUES ('".$data['comment'][$i]['id']."','".$data['comment'][$i]['did']."','".$data['comment'][$i]['comment']."','".$data['comment'][$i]['reply']."','".$data['comment'][$i]['author']."','".$data['comment'][$i]['authorid']."','".$data['comment'][$i]['oppose']."','".$data['comment'][$i]['aegis']."','".$data['comment'][$i]['time']."')");
 		}
-		for($i=0,$count=count($data['attachment']);$i<$count;$i++){
+		for($i=0,$count=getCount($data['attachment']);$i<$count;$i++){
 			$this->db->query("INSERT INTO  ".DB_TABLEPRE."attachment (id,did,time,filename,description,filetype,filesize,attachment,downloads,isimage,uid) 
 			VALUES ('".$data['attachment'][$i]['id']."','".$data['attachment'][$i]['did']."','".$data['attachment'][$i]['time']."','".$data['attachment'][$i]['filename']."','".$data['attachment'][$i]['description']."','".$data['attachment'][$i]['filetype']."','".$data['attachment'][$i]['filesize']."','".$data['attachment'][$i]['attachment']."','".$data['attachment'][$i]['downloads']."','".$data['attachment'][$i]['isimage']."','".$data['attachment'][$i]['uid']."')");
 		}
-		for($i=0,$count=count($data['synonym']);$i<$count;$i++){
+		for($i=0,$count=getCount($data['synonym']);$i<$count;$i++){
 			$this->db->query("INSERT INTO  ".DB_TABLEPRE."synonym (id,srctitle,destdid,desttitle) VALUES ('".$data['synonym'][$i]['id']."','".$data['synonym'][$i]['srctitle']."','".$data['synonym'][$i]['destdid']."','".$data['synonym'][$i]['desttitle']."')");
 		}
 	}
@@ -882,7 +882,7 @@ class docmodel {
 				}
 				$first = 0;
 			}
-			for($i=0; $i<count($doclist); $i++){
+			for($i=0; $i<getCount($doclist); $i++){
 				if(isset($didtocat[$doclist[$i]['did']])) { 
 					$doclist[$i]['category'] = $didtocat[$doclist[$i]['did']];
 				}
@@ -953,7 +953,7 @@ class docmodel {
 		while($edition=$this->db->fetch_array($query)){
 			$eidlist[] = $edition['eid'];
 		}
-		$count=count($eidlist);
+		$count=getCount($eidlist);
 		foreach($eidlist as $i => $eids){
 			if ($eids == $eid){
 				if($i==0){
@@ -1184,7 +1184,7 @@ class docmodel {
 	}
 
 	function add_randomstr(&$body,$random_text){
-		$totalitem = count($random_text);
+		$totalitem = getCount($random_text);
 		if($totalitem==0){
 			return $body;
 		}
@@ -1327,7 +1327,7 @@ class docmodel {
 	 */
 	function join_categories(&$doclist) {
 		$dids = array();
-		$doclistcount = count($doclist);
+		$doclistcount = getCount($doclist);
 		for($i = 0; $i < $doclistcount; $i++) {
 			$dids[] = $doclist[$i]['did'];
 		}
@@ -1354,7 +1354,7 @@ class docmodel {
 			}
 			$first = 0;
 		}
-		for($i=0; $i<count($doclist); $i++){
+		for($i=0; $i<getCount($doclist); $i++){
 			$doclist[$i]['category'] = $didtocat[$doclist[$i]['did']];
 		}
 		return true;
@@ -1402,7 +1402,7 @@ class docmodel {
 		$coopdoc = array();
 		$cooperatedocs = explode(';',$this->base->setting['cooperatedoc']);
 		if($num==0){
-			$counts = count($cooperatedocs);
+			$counts = getCount($cooperatedocs);
 		}else{
 			$counts = $num;
 		}

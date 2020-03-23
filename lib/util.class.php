@@ -111,7 +111,7 @@ class util{
 	
 	function getimagesnum($string){
 		preg_match_all("/<img.+?src=[\\\\]?\"(.+?)[\\\\]?\"/i",$string,$imgs);
-		return count($imgs[0]);
+		return getCount($imgs[0]);
 	}
 	
     /**

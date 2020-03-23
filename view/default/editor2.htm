@@ -16,7 +16,7 @@
 <div id="nav-top">
 	<ul class="l">
 		<li><a href="{WIKI_URL}" target="_blank">{lang index}</a></li>
-		<!--{if count($channellist)!=0}-->
+		<!--{if getCount($channellist)!=0}-->
 		<!--{loop $channellist $channel}-->
 		<li><a href="{$channel['url']}" target="_blank">{$channel['name']}</a></li>
 		<!--{/loop}-->

@@ -109,7 +109,7 @@ class XMLParser{
      */
    function dataHandler($parser, $data){
        if(!empty($data)) {
-           $_output_idx = count($this->output) - 1;
+           $_output_idx = getCount($this->output) - 1;
            if(!isset($this->output[$_output_idx]['content']))
              $this->output[$_output_idx]['content'] = $data;
            else
@@ -124,9 +124,9 @@ class XMLParser{
      * @param string $name the XML tag name
      */
    function endHandler($parser, $name){
-       if(count($this->output) > 1) {
+       if(getCount($this->output) > 1) {
            $_data = array_pop($this->output);
-           $_output_idx = count($this->output) - 1;
+           $_output_idx = getCount($this->output) - 1;
            $this->output[$_output_idx]['child'][] = $_data;
        }
    }

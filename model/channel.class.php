@@ -49,7 +49,7 @@ class channelmodel {
 	}
 	
 	function updateorder($order){
-		$count=count($order);
+		$count=getCount($order);
 		for($i=0;$i<$count;$i++){
 			if(intval($order[$i]) != 0){
 				$this->db->query("UPDATE ".DB_TABLEPRE."channel SET displayorder=$i WHERE id=".$order[$i]);

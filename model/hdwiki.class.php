@@ -35,7 +35,7 @@ class hdwiki {
 		}
 		$this->get = explode('-' , $querystring);
 		
-		if (count($this->get) <= 3 && count($_POST) == 0 && substr($querystring, 0, 6) == 'admin_' && substr($querystring, 0, 10) != 'admin_main'){
+		if (getCount($this->get) <= 3 && getCount($_POST) == 0 && substr($querystring, 0, 6) == 'admin_' && substr($querystring, 0, 10) != 'admin_main'){
 			$this->querystring = $querystring;
 		}
 		
@@ -46,7 +46,7 @@ class hdwiki {
 			$this->get[1]='default';
 		}
 
-		if(count($this->get)<2){
+		if(getCount($this->get)<2){
 			exit(' Access Denied !');
 		}
 		//unset($_ENV, $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_COOKIE_VARS, $HTTP_SERVER_VARS, $HTTP_ENV_VARS);

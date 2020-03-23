@@ -156,7 +156,7 @@ class Text_Wiki_Parse_Wikilink extends Text_Wiki_Parse {
         // Prefix ?
         if (!empty($matches[2])) {
             $prefix = explode(':', substr($matches[2], 0, -1));
-            $count = count($prefix);
+            $count = getCount($prefix);
             $i = -1;
             // Autolink
             if (isset($this->conf['project']) &&

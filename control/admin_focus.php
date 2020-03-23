@@ -44,7 +44,7 @@ class control extends base{
 	/*doc order*/
 	function doreorder(){
 		$all_focus_did=$this->post['all_focus_did'];
-		$count=count($all_focus_did);
+		$count=getCount($all_focus_did);
 		for($i=0;$i<$count;$i++){
 			$focusorder='order'.$all_focus_did[$i];
 			$order=$this->post[$focusorder];

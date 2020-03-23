@@ -26,7 +26,7 @@ class dirmodel {
 		$path = $this->dir_path($path);
 		$temp = explode('/', $path);
 		$cur_dir = '';
-		$max = count($temp) - 1;
+		$max = getCount($temp) - 1;
 		for($i=0; $i<$max; $i++)
 		{
 			$cur_dir .= $temp[$i].'/';

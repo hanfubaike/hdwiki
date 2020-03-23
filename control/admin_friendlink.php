@@ -66,7 +66,7 @@ class control extends base{
 	}
 	
 	function doremove(){
-		if(count($this->post['link_id'])!=0){
+		if(getCount($this->post['link_id'])!=0){
 			$_ENV['friendlink']->removelink($this->post['link_id']);
 			$this->cache->removecache('data_'.$GLOBALS['theme'].'_index');
 			$this->message($this->view->lang['friendLinkRemoveSuccess'],'index.php?admin_friendlink');

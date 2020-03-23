@@ -51,7 +51,7 @@ function str_get_html($str, $lowercase=true) {
 function dump_html_tree($node, $show_attr=true, $deep=0) {
     $lead = str_repeat('    ', $deep);
     echo $lead.$node->tag;
-    if ($show_attr && count($node->attr)>0) {
+    if ($show_attr && getCount($node->attr)>0) {
         echo '(';
         foreach($node->attr as $k=>$v)
             echo "[$k]=>\"".$node->$k.'", ';
@@ -130,13 +130,13 @@ class simple_html_dom_node {
 
     // returns the first child of node
     function first_child() {
-        if (count($this->children)>0) return $this->children[0];
+        if (getCount($this->children)>0) return $this->children[0];
         return null;
     }
 
     // returns the last child of node
     function last_child() {
-        if (($count=count($this->children))>0) return $this->children[$count-1];
+        if (($count=getCount($this->children))>0) return $this->children[$count-1];
         return null;
     }
 
@@ -144,7 +144,7 @@ class simple_html_dom_node {
     function next_sibling() {
         if ($this->parent===null) return null;
         $idx = 0;
-        $count = count($this->parent->children);
+        $count = getCount($this->parent->children);
         while ($idx<$count && $this!==$this->parent->children[$idx])
             ++$idx;
         if (++$idx>=$count) return null;
@@ -155,7 +155,7 @@ class simple_html_dom_node {
     function prev_sibling() {
         if ($this->parent===null) return null;
         $idx = 0;
-        $count = count($this->parent->children);
+        $count = getCount($this->parent->children);
         while ($idx<$count && $this!==$this->parent->children[$idx])
             ++$idx;
         if (--$idx<0) return null;
@@ -260,12 +260,12 @@ class simple_html_dom_node {
     // find elements by css selector
     function find($selector, $idx=null) {
         $selectors = $this->parse_selector($selector);
-        if (($count=count($selectors))===0) return array();
+        if (($count=getCount($selectors))===0) return array();
         $found_keys = array();
 
         // find each selector
         for ($c=0; $c<$count; ++$c) {
-            if (($levle=count($selectors[0]))===0) return array();
+            if (($levle=getCount($selectors[0]))===0) return array();
             if (!isset($this->_[HDOM_INFO_BEGIN])) return array();
 
             $head = array($this->_[HDOM_INFO_BEGIN]=>1);
@@ -295,7 +295,7 @@ class simple_html_dom_node {
 
         // return nth-element or array
         if (is_null($idx)) return $found;
-		else if ($idx<0) $idx = count($found) + $idx;
+		else if ($idx<0) $idx = getCount($found) + $idx;
         return (isset($found[$idx])) ? $found[$idx] : null;
     }
 
@@ -413,7 +413,7 @@ class simple_html_dom_node {
                 $result = array();
             }
         }
-        if (count($result)>0)
+        if (getCount($result)>0)
             $selectors[] = $result;
         return $selectors;
     }
@@ -929,7 +929,7 @@ class simple_html_dom {
         $count = preg_match_all($pattern, $this->doc, $matches, PREG_SET_ORDER|PREG_OFFSET_CAPTURE);
 
         for ($i=$count-1; $i>-1; --$i) {
-            $key = '___noise___'.sprintf('% 3d', count($this->noise)+100);
+            $key = '___noise___'.sprintf('% 3d', getCount($this->noise)+100);
             $idx = ($remove_tag) ? 0 : 1;
             $this->noise[$key] = $matches[$i][$idx][0];
             $this->doc = substr_replace($this->doc, $key, $matches[$i][$idx][1], strlen($matches[$i][$idx][0]));

@@ -14,7 +14,7 @@ class anticopymodel {
 			return false;
 		}
 		$random_text = explode('<br />', nl2br($this->base->setting['random_text']));
-		$totalitem = count($random_text);
+		$totalitem = getCount($random_text);
 		if(0 == $totalitem) {
 			return false;
 		}

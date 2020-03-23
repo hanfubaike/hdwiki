@@ -282,7 +282,7 @@ function ReadCentralDir($zip,$zip_name)
 			$pth[0]="/".$pth[0];
 		}
 		$mydir = '';
-		for($i=0;$i<count($pth)-1;$i++)
+		for($i=0;$i<getCount($pth)-1;$i++)
 		{
 			if(!$pth[$i]) continue;
 			$mydir .= $pth[$i]."/";

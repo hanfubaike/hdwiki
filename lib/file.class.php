@@ -185,7 +185,7 @@ class file {
 		}
 		if(''==$filename){
 			$tem=explode('/',$filepath);
-			$num=count($tem)-1;
+			$num=getCount($tem)-1;
 			$filename=$tem[$num];
 			$filetype=substr($filepath,strrpos($filepath,".")+1);
 		}else{

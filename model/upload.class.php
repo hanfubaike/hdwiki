@@ -37,7 +37,7 @@ class uploadmodel {
 		$this->alowexts = $alowexts;
 		$this->maxsize = $maxsize;
 		$this->overwrite = $overwrite;
-		$this->uploads = count($_FILES[$inputname]['name']);
+		$this->uploads = getCount($_FILES[$inputname]['name']);
 		if(1 == $this->uploads)
 		{
 			$this->uploads = 1;

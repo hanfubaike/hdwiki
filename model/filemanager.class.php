@@ -16,17 +16,17 @@ class filemanagermodel {
 		$dir = "./";
 		$mainpath_info           = array_filter(explode('/', $mainpath));
 		$relativepath_info       = array_filter(explode('/', $relativepath));
-		$relativepath_info_count = count($relativepath_info);
+		$relativepath_info_count = getCount($relativepath_info);
 		for ($i=0; $i<$relativepath_info_count; $i++) 
 		{
 			if ($relativepath_info[$i] == '.' || $relativepath_info[$i] == '') continue;
 			if ($relativepath_info[$i] == '..')
 			{
-				$mainpath_info_count = count($mainpath_info);
+				$mainpath_info_count = getCount($mainpath_info);
 				unset($mainpath_info[$mainpath_info_count-1]);
 				continue;
 			}
-			$mainpath_info[count($mainpath_info)+1] = $relativepath_info[$i];
+			$mainpath_info[getCount($mainpath_info)+1] = $relativepath_info[$i];
 		}
 		return implode('\\', $mainpath_info);
 	}

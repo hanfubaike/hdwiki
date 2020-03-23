@@ -81,7 +81,7 @@ class pmcontrol extends base {
 				}
 			}
 			$this->load('friend');
-			if(count($msgto) > 1 && !($is_friend = $_ENV['friend']->is_friend($fromuid, $msgto, 3))) {//note 如果有群发但是目标并非发信人的好友则不允许发送
+			if(getCount($msgto) > 1 && !($is_friend = $_ENV['friend']->is_friend($fromuid, $msgto, 3))) {//note 如果有群发但是目标并非发信人的好友则不允许发送
 				return PMMSGTONOTFRIEND;
 			}
 			$pmlimit1day = $this->settings['pmlimit1day'] && $_ENV['pm']->count_pm_by_fromuid($this->user['uid'], 86400) > $this->settings['pmlimit1day'];

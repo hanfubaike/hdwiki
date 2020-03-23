@@ -506,7 +506,7 @@ class ftpmodel {
 			
 		   $flag=false;
 		   $ar_files = $this->nlist($path);
-		   if (count($ar_files)){ // makes sure there are files
+		   if (getCount($ar_files)){ // makes sure there are files
 			   for ($i=0;$i<sizeof($ar_files);$i++){ // for each file
 					$st_file = $ar_files[$i];
 				   if($st_file == '.' || $st_file == '..') continue;
@@ -592,7 +592,7 @@ class ftpmodel {
 		   $ar_files = $this->nlist($dst_dir);
 		   $systype = $this->systype();
 		   $is_windows = stristr($systype,"UNIX Type: L8")!==FALSE;
-		   if (count($ar_files)>1){ // makes sure there are files
+		   if (getCount($ar_files)>1){ // makes sure there are files
 			   for ($i=0;$i<sizeof($ar_files);$i++){ // for each file
 					$st_file = $ar_files[$i];
 					if($st_file == '.' || $st_file == '..') continue;
@@ -666,7 +666,7 @@ class ftpmodel {
 		   $realmode = "";
 		   $legal =  array("","w","r","x","-");
 		   $attarray = preg_split("//",$mode);
-		   for($i=0;$i<count($attarray);$i++){
+		   for($i=0;$i<getCount($attarray);$i++){
 			   if($key = array_search($attarray[$i],$legal))
 				   $realmode .= $legal[$key];
 		   }

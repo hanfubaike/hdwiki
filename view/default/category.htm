@@ -1,7 +1,7 @@
 {template header}
 <div class="wrap hd_map"> <a href="{WIKI_URL}">{$setting[site_name]}</a>&gt;&gt;<a href="{url category}"> {lang wikiCategory} </a>
 <!--{loop $category['navigation'] $key $navigation}-->&gt;&gt; 
-<!--{if $key<count($category['navigation'])-1}--><a href="{url category-view-$navigation['cid']}"> {$navigation['name']} </a><!--{else}--> {$navigation['name']} <!--{/if}-->
+<!--{if $key<getCount($category['navigation'])-1}--><a href="{url category-view-$navigation['cid']}"> {$navigation['name']} </a><!--{else}--> {$navigation['name']} <!--{/if}-->
 <!--{/loop}-->
 </div>
 <section class="wrap clearfix">
@@ -10,7 +10,7 @@
 		<span class="r f14 gray9">{lang categoryHaveFront}{$count}{lang categoryHaveBack} <a href="{url doc-create-$category['cid']}" target="_blank" class="clink">{lang createCategoryDoc}</a></span>
 	"{$category['name']}" {lang categoryDoc}
 	</h2>
-	<!--{if count($list)>0}-->
+	<!--{if getCount($list)>0}-->
 	<!--{loop $list $key $doc}-->
 	<dl class="col-dl">
 		<dt class="h2"><a class="clink f20" href="{url doc-view-$doc['did']}" >{$doc['title']}</a></dt>

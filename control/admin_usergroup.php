@@ -50,7 +50,7 @@ class control extends base{
 		$this->view->assign('usergroupSystemList', $usergrouplist);
 		$usergrouplist=$_ENV['usergroup']->get_all_list(2, 'g.creditslower asc');
 		if (is_array($usergrouplist)){
-			$x = count($usergrouplist);
+			$x = getCount($usergrouplist);
 			for($i=0; $i<$x; $i++){
 				if ($i == 0){
 					$usergrouplist[$i]['creditshigher'] = 0;
@@ -70,7 +70,7 @@ class control extends base{
 		$this->view->assign('usergroupMemberList', $usergrouplist);
 		$usergrouplist=$_ENV['usergroup']->get_all_list(0);
 		if (is_array($usergrouplist)){
-			$x = count($usergrouplist);
+			$x = getCount($usergrouplist);
 			for($i=0; $i<$x; $i++){
 				$usergrouplist[$i]['empty'] = $_ENV['usergroup']->is_empty($usergrouplist[$i]['groupid']);
 			}
@@ -100,10 +100,10 @@ class control extends base{
 					}
 					$_ENV['usergroup']->change_usergroup($deleteids, 2,'delete');
 				}
-				if (count($usergroup) > 0)
+				if (getCount($usergroup) > 0)
 				$_ENV['usergroup']->change_usergroup($usergroup, 2,'update');
 				$usergroupadd = $this->post['usergroupadd'];
-				if (count($usergroupadd) > 0)
+				if (getCount($usergroupadd) > 0)
 				$_ENV['usergroup']->change_usergroup($usergroupadd, 2,'insert');
 				$_ENV['usergroup']->cache_memberlevel();
 				break;
@@ -121,10 +121,10 @@ class control extends base{
 					}
 					$_ENV['usergroup']->change_usergroup($deleteids, 1,'delete');
 				}
-				if (count($usergroup) > 0)
+				if (getCount($usergroup) > 0)
 				$_ENV['usergroup']->change_usergroup($usergroup, 0,'update');
 				$usergroupadd = $this->post['usergroupadd'];
-				if (count($usergroupadd) > 0)
+				if (getCount($usergroupadd) > 0)
 				$_ENV['usergroup']->change_usergroup($usergroupadd, 0,'insert');
 				break;	
 		}

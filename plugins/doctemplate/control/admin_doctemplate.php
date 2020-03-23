@@ -46,7 +46,7 @@ class control extends base{
 			$all_category = $_ENV['category']->get_all_category();
 			$this->cache->writecache('category',$all_category);
 		}
-		for($i=0;$i<count($all_category);$i++){
+		for($i=0;$i<getCount($all_category);$i++){
 			$all_category_js[]="{'cid':'".$all_category[$i]['cid']."','pid':'".$all_category[$i]['pid']."','name':'".$all_category[$i]['name']."'}";
 		}
 		$this->view->assign("cid",$this->get[2]);

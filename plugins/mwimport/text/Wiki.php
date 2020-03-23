@@ -1045,7 +1045,7 @@ class Text_Wiki {
                     // yes; are we ending the section?
                     if ($char == $this->delim) {
 
-                        if (count($this->_renderCallbacks) == 0) {
+                        if (getCount($this->_renderCallbacks) == 0) {
                             $this->output .= $this->_block;
                             $this->_block = '';
                         }
@@ -1054,7 +1054,7 @@ class Text_Wiki {
                             if ($opts['type'] == 'start') {
                                 array_push($tokenStack, $rule);
                             } elseif ($opts['type'] == 'end') {
-                                if ($tokenStack[count($tokenStack) - 1] != $rule) {
+                                if ($tokenStack[getCount($tokenStack) - 1] != $rule) {
                                     return Text_Wiki::error('Unbalanced tokens, check your syntax');
                                 } else {
                                     array_pop($tokenStack);
@@ -1095,11 +1095,11 @@ class Text_Wiki {
             }
         }
 
-        if (count($this->_renderCallbacks)) {
+        if (getCount($this->_renderCallbacks)) {
             return $this->error('Render callbacks left over after processing finished');
         }
         /*
-        while (count($this->_renderCallbacks)) {
+        while (getCount($this->_renderCallbacks)) {
             $this->popRenderCallback();
         }
         */
@@ -1136,16 +1136,16 @@ class Text_Wiki {
     }
 
     function popRenderCallback() {
-        if (count($this->_renderCallbacks) == 0) {
+        if (getCount($this->_renderCallbacks) == 0) {
             return Text_Wiki::error('Render callback popped when no render callbacks in stack');
         } else {
             $callback = array_pop($this->_renderCallbacks);
             $this->_block = call_user_func($callback, $this->_block);
-            if (count($this->_blocks)) {
+            if (getCount($this->_blocks)) {
                 $parentBlock = array_pop($this->_blocks);
                 $this->_block = $parentBlock.$this->_block;
             }
-            if (count($this->_renderCallbacks) == 0) {
+            if (getCount($this->_renderCallbacks) == 0) {
                 $this->output .= $this->_block;
                 $this->_block = '';
             }

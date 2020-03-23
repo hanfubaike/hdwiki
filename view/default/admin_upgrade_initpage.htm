@@ -10,7 +10,7 @@ ul span { position: absolute; right: 0; top: 0; }
 <![endif]-->
 <div class="page_wrap">
 
-{if !empty($packages) && count($packages) > 0 }
+{if !empty($packages) && getCount($packages) > 0 }
 <div class="head_title">待安装的升级包：（建议在升级前 <a href="index.php?admin_setting-seo" target="_parent">关闭 Rewrite 支持</a>，并在 <a href="index.php?admin_setting-base" target="_parent">站点设置</a> 中暂时关闭网站。）</div>
 <ul>
 {loop $packages $name $info}

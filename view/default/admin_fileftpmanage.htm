@@ -33,7 +33,7 @@
 	<tr>
 		<td colspan=5 class="top_manage_td">
 			当前目录：<a href="index.php?admin_fileftpmanage-default-{$rootpath}">{$rootpath}</a>&nbsp;&nbsp;&nbsp;<a href="index.php?admin_fileftpmanage-default-{$setting['FTP_PATH']}">☞返回主目录</a>
-			&nbsp;共<!--{eval echo count($dirs);}-->个目录，<!--{eval echo count($filelist);}-->个文件
+			&nbsp;共<!--{eval echo getCount($dirs);}-->个目录，<!--{eval echo getCount($filelist);}-->个文件
 		</td>
 	</tr>
 	<tr>

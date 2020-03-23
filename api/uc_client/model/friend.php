@@ -96,7 +96,7 @@ class friendmodel {
 		} elseif($direction == 3) {
 			$sqladd = "uid='$uid' AND friendid IN ('$friendid_str') AND direction='3'";
 		}
-		if($this->db->result_first("SELECT COUNT(*) FROM ".UC_DBTABLEPRE."friends WHERE $sqladd") == count($friendids)) {
+		if($this->db->result_first("SELECT COUNT(*) FROM ".UC_DBTABLEPRE."friends WHERE $sqladd") == getCount($friendids)) {
 			return true;
 		} else {
 			return false;

@@ -120,7 +120,7 @@ class categorymodel {
 
 	function get_categrory_tree($allcategory){
 		$categrorytree='';
-		$total=count($allcategory);
+		$total=getCount($allcategory);
 		for($i=0;$i<$total;$i++){
 			if($allcategory[$i]['pid']==0){
 				$categrorytree .= "<option value=\"{$allcategory[$i]['cid']}\">{$allcategory[$i]['name']}</option>";
@@ -186,13 +186,13 @@ class categorymodel {
 	
 	function recover($data){
 		$data=_string::haddslashes($data,1);
-		if(count($data['category'])){
+		if(getCount($data['category'])){
 			foreach($data['category'] as  $category){
 				$csqladd.="('".$category['cid']."','".$category['pid']."','".$category['name']."','".$category['displayorder']."','".$category['docs']."','".$category['image']."','".$category['navigation']."','".$category['description']."'),";
 			}
 			$this->db->query("INSERT INTO  ".DB_TABLEPRE."category (cid,pid,name,displayorder,docs,image,navigation,description) VALUES ".substr($csqladd,0,-1));
 		}
-		if(count($data['categorylink'])){
+		if(getCount($data['categorylink'])){
 			foreach($data['categorylink'] as $categorylink){
 				$clsqladd.="('".$categorylink['id']."','".$categorylink['did']."','".$categorylink['cid']."'),";
 			}

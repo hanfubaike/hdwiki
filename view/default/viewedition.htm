@@ -44,7 +44,7 @@
 	<!--{/if}--></td>
 		<td>{$edition['words']}</td>
 		<td>{$edition['images']}</td>
-		<td>{eval echo count($sectionlist)}</td>
+		<td>{eval echo getCount($sectionlist)}</td>
 		<td class="orange"><!--{if $edition['reason']!=''}-->{$edition['reason']}<!--{else}--> <!--{/if}--></td>
 	</tr>
 </table>

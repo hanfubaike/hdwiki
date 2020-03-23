@@ -151,16 +151,16 @@ class control extends base{
 		}else{
 			$minprice=$this->post['minprice'];
 			$maxprice=$this->post['maxprice'];
-			for($i=0;$i<count($minprice);$i++){
+			for($i=0;$i<getCount($minprice);$i++){
 				if(is_numeric($minprice[$i]))
 					$arraymin[]=$minprice[$i];
 			}
-			for($i=0;$i<count($maxprice);$i++){
+			for($i=0;$i<getCount($maxprice);$i++){
 				if(is_numeric($maxprice[$i]))
 					$arraymax[]=$maxprice[$i];
 			}
-			if(count($arraymin)>0 && count($arraymax)>0){
-				if(count($arraymax)!=count($arraymin))
+			if(getCount($arraymin)>0 && getCount($arraymax)>0){
+				if(getCount($arraymax)!=getCount($arraymin))
 					$this->message($this->view->lang['usermanageOpterror'],'index.php?admin_gift-price');
 				$gift_range=array_combine($arraymin,$arraymax);//一个数组做键，另一个数组的做value
 			}

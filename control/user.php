@@ -61,7 +61,7 @@ class control extends base{
 				if($uid){
 					$_ENV['user']->refresh_user($uid);
 					$user_credit = $this->setting['credit_register'];
-					if($inviter && count($inviter = explode('|', $inviter)) == 2) {
+					if($inviter && getCount($inviter = explode('|', $inviter)) == 2) {
 						$user_credit += $this->setting['invitee_credit'];
 						$_ENV['user']->add_credit($inviter[1], 'user-register', $this->setting['inviter_credit']);
 					}

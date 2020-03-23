@@ -206,7 +206,7 @@ class notemodel {
 	//note 判断是否需要关闭通知
 	function _close_note($note, $apps, $returnsucceed, $appid) {
 		$note['app'.$appid] = $returnsucceed ? 1 : $note['app'.$appid] - 1;
-		$appcount = count($apps);
+		$appcount = getCount($apps);
 		foreach($apps as $key => $app) {
 			$appstatus = $note['app'.$app['appid']];
 			if(!$app['recvnote'] || $appstatus == 1 || $appstatus <= -UC_NOTE_REPEAT) {

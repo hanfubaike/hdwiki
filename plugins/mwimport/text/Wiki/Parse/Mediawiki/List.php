@@ -122,7 +122,7 @@ class Text_Wiki_Parse_List extends Text_Wiki_Parse {
             $text = $val[3];
 
             // add a level to the list?
-            $tmp = count($stack);
+            $tmp = getCount($stack);
             while ($level > $tmp) {
                 // the current indent level is greater than the
                 // number of stack elements, so we must be starting
@@ -141,12 +141,12 @@ class Text_Wiki_Parse_List extends Text_Wiki_Parse {
             }
             
             // remove a level from the list?
-            while (count($stack) > $level) {
+            while (getCount($stack) > $level) {
                 // so we don't keep counting the stack, we set up a temp
                 // var for the count.  -1 becuase we're going to pop the
                 // stack in the next command.  $tmp will then equal the
                 // current level of indent.
-                $tmp = count($stack) - 1;
+                $tmp = getCount($stack) - 1;
                 
                 // as long as the stack count is greater than the
                 // current indent level, we need to end list types. 
@@ -215,12 +215,12 @@ class Text_Wiki_Parse_List extends Text_Wiki_Parse {
         // the last list-item may have been indented.  go through the
         // list-type stack and create end-list tokens until the stack
         // is empty.
-        while (count($stack) > 0) {
+        while (getCount($stack) > 0) {
             $return .= $this->wiki->addToken(
                 $this->rule, 
                 array (
                     'type' => array_pop($stack) . '_list_end',
-                    'level' => count($stack)
+                    'level' => getCount($stack)
                 )
             );
         }

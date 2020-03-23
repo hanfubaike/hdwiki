@@ -61,7 +61,7 @@ class control extends base{
 					break;
 			}
 			if($sizelimit<512){$this->message($this->view->lang['dblimitsizeSmall'],'BACK');}
-			if(count($tables)==0){$this->message($this->view->lang['dbChooseOne'],'BACK');}
+			if(getCount($tables)==0){$this->message($this->view->lang['dbChooseOne'],'BACK');}
 			if(!file_exists($filedir)) {file::forcemkdir($filedir);}
 			if(!file::iswriteable($filedir)){$this->message($this->view->lang['dbFileNotWrite'],'index.php?admin_db-backup');}
 			if(in_array(DB_TABLEPRE."usergroup",$tables)){
@@ -80,7 +80,7 @@ class control extends base{
 				}
 			}
 			$complete = TRUE;
-			for(; $complete && $tableid < count($tables) && strlen($sqldump) + 500 < $sizelimit * 1000; $tableid++) {
+			for(; $complete && $tableid < getCount($tables) && strlen($sqldump) + 500 < $sizelimit * 1000; $tableid++) {
 				$result=$_ENV['db']->sqldumptable($tables[$tableid],$complete,$sizelimit, $startfrom, strlen($sqldump));
 				$sqldump .= $result['tabledump'];
 				$complete=$result['complete'];
@@ -188,7 +188,7 @@ class control extends base{
 		$ret = $list = array();
 		$chip=0;
 		$ret=$_ENV['db']->show_table_status();
-		$count=count($ret);
+		$count=getCount($ret);
 		for ($i=0;$i<$count;$i++ ){
 			$res=$_ENV['db']->check_table($ret[$i]['Name']);
 			$type = $dbversion>'4.1'?$ret[$i]['Engine']:$ret[$i]['Type'];

@@ -55,7 +55,7 @@ class control extends base{
 			$privtetitlescount = 0;
 			
 			if (is_array($titles)){
-				$privtetitlescount = count($titles);
+				$privtetitlescount = getCount($titles);
 				$this->view->assign('privtetitles', join("\n", $titles));
 			}
 			

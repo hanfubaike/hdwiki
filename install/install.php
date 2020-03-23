@@ -93,7 +93,7 @@ $site_url="http://".$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'],0,-20);
 <ul class="sidemenu">
 <li class="navtitle"><?php echo $lang['commonSetupNavigate']?></li>
 <?php
-$steptotal = count($arrTitle);
+$steptotal = getCount($arrTitle);
 for ($i = 1; $i < $steptotal; $i++) {
 	if ($step >= $arrStep[$i]) {
 		if($step==$i) {

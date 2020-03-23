@@ -94,7 +94,7 @@ class Text_Wiki_Parse_Deflist extends Text_Wiki_Parse {
 
         // look for same-line definitions and split them
         // foreach() cannot be used because we are modifying the array directly
-        for ($i = 0; $i < count($list); $i++) {
+        for ($i = 0; $i < getCount($list); $i++) {
             $val = $list[$i];
 
             // only check definition term lines
@@ -146,7 +146,7 @@ class Text_Wiki_Parse_Deflist extends Text_Wiki_Parse {
             $text = $val[3];
 
             // add a level to the list?
-            if ($level > count($stack)) {
+            if ($level > getCount($stack)) {
 
                 // the current indent level is greater than the
                 // number of stack elements, so we must be starting
@@ -176,13 +176,13 @@ class Text_Wiki_Parse_Deflist extends Text_Wiki_Parse {
             }
 
             // remove a level from the list?
-            while (count($stack) > $level) {
+            while (getCount($stack) > $level) {
                 echo ".";
                 // so we don't keep counting the stack, we set up a temp
                 // var for the count.  -1 becuase we're going to pop the
                 // stack in the next command.  $tmp will then equal the
                 // current level of indent.
-                $tmp = count($stack) - 1;
+                $tmp = getCount($stack) - 1;
                 
                 // as long as the stack count is greater than the
                 // current indent level, we need to end list types. 
@@ -262,7 +262,7 @@ class Text_Wiki_Parse_Deflist extends Text_Wiki_Parse {
         // the last list-item may have been indented.  go through the
         // list-type stack and create end-list tokens until the stack
         // is empty.
-        $level = count($stack);
+        $level = getCount($stack);
         while ($level > 0) {
             array_pop($stack);
                 $return .= $this->wiki->addToken(
@@ -283,7 +283,7 @@ class Text_Wiki_Parse_Deflist extends Text_Wiki_Parse {
                     )
                 );
             }
-            $level = count($stack);
+            $level = getCount($stack);
         }
         
         // we're done!  send back the replacement text.

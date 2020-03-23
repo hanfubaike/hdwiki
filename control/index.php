@@ -19,7 +19,7 @@ class control extends base{
 			    $recentupdatelist=$_ENV['doc']->get_list_cache(1,'',0,$this->setting['index_recentupdate']);
 			    $hotdocs=$_ENV['doc']->get_focus_list(0,$this->setting['index_hotdoc'],2);
 			    $wonderdocs=$_ENV['doc']->get_focus_list(0,$this->setting['index_wonderdoc'],3);
-			    if(count($wonderdocs)>0){
+			    if(getCount($wonderdocs)>0){
 				    $fistwonderdoc=is_array($wonderdocs)?array_shift($wonderdocs):array();
 				    $fistwonderdoc['image'] = str_replace('s_','',$fistwonderdoc['image']);
 			    }

@@ -29,7 +29,7 @@ class control extends base{
 		
 		$comments=$_ENV['comment']->get_comments($this->get[2],$start_limit,$num);
 		$doc['comments2']=$comments;
-		$comnum=count($comments);
+		$comnum=getCount($comments);
 		if($comnum<$num){
 			$comments = array_pad($comments,$num,'');
 			if($comnum!=$doc['comments'] && $page==1){
