@@ -19,7 +19,7 @@ class innerlinkmodel {
 		//这种方式，当内容当中的两个内链，前面的某个是后面的某个内链的前部分时，
 		//在替换前面这个内容时，将也把后面那个内链给替换，导致出现类似http://domain/doc-view-60SD 内链
 		//$this->re = '/(?:http:[\/\w-\.]{8,80}|index\.php\?)doc-innerlink-([^\'\"]+)/';
-		$this->re = '/[\'\"]?(?:http:[\/\w-\.]{8,80}|index\.php\?)doc-innerlink-([^\'\"]+)[\'\"]?/';
+		$this->re = '/[\'\"]?(?:http:[\/\w\-\.]{8,80}|index\.php\?)doc-innerlink-([^\'\"]+)[\'\"]?/';
 	}
 	
 	/*
