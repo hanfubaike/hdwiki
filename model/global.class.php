@@ -11,7 +11,7 @@ class globalmodel {
 		$this->base = $base;
 		$this->db = $base->db;
 	}
-	
+	 
 	/**
 	* 构造 UC 头像地址
 	*/
@@ -43,7 +43,7 @@ class globalmodel {
 	 * @return array (0-新消息数,1-总消息数,2-私有消息数,3-公有消息数)
 	 */
 	function newpms($uid){
-		$newpms=$totalpms=0;
+		$newpms=$totalpms=$pripms=$pubpms=0;
 		$blacklist=$this->db->fetch_first('select blacklist from '.DB_TABLEPRE.'blacklist where uid='.$uid);
 		if('[ALL]'!=$blacklist['blacklist']){
 			$blackuser=str_replace(",","','",$blacklist['blacklist']);
@@ -90,7 +90,7 @@ class globalmodel {
 		}
 	}
 	
-	function adv_index_filter($advertisement){
+function adv_index_filter($advertisement){
 		$advlist=array();
 		foreach($advertisement as $adv){
 			if(($adv['starttime']=='0'||$adv['starttime']<=$this->base->time)&&($adv['endtime']=='0'||$adv['endtime']>=$this->base->time)){
@@ -111,12 +111,15 @@ class globalmodel {
 	
 	function adv_category_filter($advertisement){
 		$advlist=array();
+		$this->base->get[2] = isset($this->base->get[2]) ? $this->base->get[2] : NULL ;
 		$categorys=array('all',$this->base->get[2]);
-		foreach($advertisement as $adv){
-			if(in_array($adv['type'],array('0','1','7','8'))&&($adv['starttime']=='0'||$adv['starttime']<=$this->base->time)&&($adv['endtime']=='0'||$adv['endtime']>=$this->base->time)){
-				$adv['targets']=explode(';',$adv['targets']);
-				if($adv['type']=='7'||$adv['type']=='8'||array_intersect($adv['targets'], $categorys)){
-					$advlist[$adv['type']][]=$adv;
+		if(!empty($advertisement)) {
+			foreach($advertisement as $adv){
+				if(in_array($adv['type'],array('0','1','7'))&&($adv['starttime']=='0'||$adv['starttime']<=$this->base->time)&&($adv['endtime']=='0'||$adv['endtime']>=$this->base->time)){
+					$adv['targets']=explode(';',$adv['targets']);
+					if($adv['type']=='7'||array_intersect($adv['targets'], $categorys)){
+						$advlist[$adv['type']][]=$adv;
+					}
 				}
 			}
 		}
@@ -137,6 +140,7 @@ class globalmodel {
 	}
 	
 	function writelog($regular,$pluginid){
+		$menu=null;
 		if('admin'==substr($this->base->get[0],0,5)){
 			if(''==$pluginid){
 				$menu=$this->db->fetch_first("select name from ".DB_TABLEPRE."regular where regular like'%".$regular."%'");
@@ -153,7 +157,7 @@ class globalmodel {
 		}
 	}
 	
-	function block_file($theme,$filetxt){
+	function block_file($theme,$filetxt){ 
 		$dir=HDWIKI_ROOT.'/block/';
 		$filename=$dir.$theme.$filetxt;
 		if(!file_exists($filename)){

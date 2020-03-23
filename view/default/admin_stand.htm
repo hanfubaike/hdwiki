@@ -11,11 +11,11 @@
 		<td>{lang unedit_user} {$stand[unedit_user]}</td>
 	</tr>
 	<tr>
-		<td>{lang new_user} <a href="{$setting['seo_prefix']}user-space-{$stand[new_user][uid]}{$setting['seo_suffix']}" target="_blank">{$stand[new_user][username]}</a></td>
+		<td>{lang new_user} <a href="{$setting['seo_prefix']}user-space-{$stand[new_user][uid]}{$setting['seo_suffix']}" target="_blank">{$stand[new_user]['username']}</a></td>
 		<td>{lang edit_user_percent} {$stand[edit_user_percent]}</td>
 	</tr>
 	<tr>
-		<td>{lang star_today} <a href="{$setting['seo_prefix']}user-space-{$stand[star_today][authorid]}{$setting['seo_suffix']}" target="_blank">{$stand[star_today][author]}</a></td>
+		<td>{lang star_today} <a href="{$setting['seo_prefix']}user-space-{$stand[star_today][authorid]}{$setting['seo_suffix']}" target="_blank">{$stand[star_today]['author']}</a></td>
 		<td>{lang average_edition} {$stand[average_edition]}</td>
 	</tr>
 </table>
@@ -24,7 +24,7 @@
 	<tr>
 		<td style="width:200px;">{lang category_num} {$stand[category_num]}</td>
 		<td style="width:200px;">{lang average_day_doc} {$stand[average_day_doc]}</td>
-		<td>{lang hot_category} <a href="{$setting['seo_prefix']}category-view-{$stand[hot_category][cid]}{$setting['seo_suffix']}" target="_blank" >{$stand[hot_category][name]}</a></td>
+		<td>{lang hot_category} <a href="{$setting['seo_prefix']}category-view-{$stand[hot_category][cid]}{$setting['seo_suffix']}" target="_blank" >{$stand[hot_category]['name']}</a></td>
 	</tr>
 	<tr>
 		<td>{lang create_doc_num} {$stand[create_doc_num]}</td>
@@ -39,7 +39,7 @@
 	<tr>
 		<td>{lang day_recent_user} {$stand[day_recent_user]}</td>
 		<td>{lang activity_index} {$stand[activity_index]}</td>
-		<td>UV/PV: {if $count} $count[0]/$count[1]{else}暂无{/if}</td>
+		<td>UV/PV: {if isset($count)} $count[0]/$count[1]{else}暂无{/if}</td>
 	</tr>
 </table>
 <table class="table">

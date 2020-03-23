@@ -24,13 +24,13 @@
 		}
 	}
 </script>
-<div class="hd_map">
+<div class="hd_map wrap">
 	<a href="{WIKI_URL}">{$setting['site_name']}</a> &gt; <a href="{url user-profile}">{lang selfManage}</a> &gt; {lang manageSave}</div>
-	
-<div class="r w-710 o-v m-t10 p-b10 gl_manage_main">
-	<h2 class="h3 bold">{lang manageSave}</h2>
+<section class="wrap clearfix">	
+<div class="r group1 bor-ccc gl_manage_main">
+	<h2 class="col-h2">{lang manageSave}</h2>
 	<form  name="delform" id="form1" action="{url doc-delsave}" method="post">
-		<table width="95%" cellpadding="0" cellspacing="0" class="table l">
+		<table width="95%" cellpadding="0" cellspacing="0" class="table">
 			<thead class="bold">
 			<tr>
 				<td ><input name="checkbox" type="checkbox"  id="chkall" onclick="selectAll();"/></td>
@@ -64,26 +64,27 @@
 		<div id="fenye">{$departstr}</div>
 	</form>
 </div>
-<div class="l w-230">
-<div class="m-t10 p-b10 sidebar gl_manage">
-	<h2 class="col-h2"><span onclick="expand('usermanage');">{lang profile}</span></h2>	
+<aside class="l group2">
+<div class="sidebar bor-ccc gl_manage">
+	<h2 class="col-h2 cblue"><span onclick="expand('usermanage');">{lang profile}</span></h2>	
 	<ul id="usermanage">
-		<li><a href="{url user-profile}" target="_self"><img alt="" src="style/default/gl_manage/grzl.gif" />{lang profile}</a></li>
-		<li><a href="{url user-editprofile}" target="_self" ><img src="style/default/gl_manage/grzl_set.gif"/>{lang editProfile}</a></li>
-		<li><a href="{url user-editpass}" target="_self"><img src="style/default/gl_manage/change_pw.gif"/>{lang editPass}</a></li>
-		<li><a href="{url user-editimage}" target="_self"><img src="style/default/gl_manage/grzl_set.gif" />{lang editImage}</a></li>
-		<li><a href="{url doc-managesave}" target="_self" class="on"><img src="style/default/gl_manage/ctbccgx.gif"/>{lang manageSave}</a></li>
-		<li><a href="{url user-invite}" target="_self"><img src="style/default/gl_manage/invite.png"/>{lang regInvite}</a></li>
+		<li><a href="{url user-profile}" target="_self">{lang profile}</a></li>
+		<li><a href="{url user-editprofile}" target="_self" >{lang editProfile}</a></li>
+		<li><a href="{url user-editpass}" target="_self">{lang editPass}</a></li>
+		<li><a href="{url user-editimage}" target="_self">{lang editImage}</a></li>
+		<li class="on"><a href="{url doc-managesave}" target="_self">{lang manageSave}</a></li>
+		<li><a href="{url user-invite}" target="_self">{lang regInvite}</a></li>
 	</ul>
-	<h2 class="col-h2"><span onclick="expand('userpms');">{lang shortmessage}</span></h2>
+</div><div class="sidebar columns gl_manage">
+	<h2 class="col-h2 cblue"><span onclick="expand('userpms');">{lang shortmessage}</span></h2>		
 	<ul id="userpms">
-		<li><a href="{url pms-box-inbox}" target="_self"><img alt="" src="style/default/gl_manage/sjx.gif" />{lang inbox}</a></li>
-		<li><a href="{url pms-box-outbox}" target="_self" ><img src="style/default/gl_manage/fjx.gif"/>{lang outbox}</a></li>
-		<li><a href="{url pms-sendmessage}" target="_self" ><img src="style/default/gl_manage/fdxx.gif"/>{lang sendmessage}</a></li>
-		<li><a href="{url pms-box-drafts}" target="_self"><img src="style/default/gl_manage/cgx.gif" />{lang draft}</a></li>
-		<li><a href="{url pms-blacklist}" target="_self"><img src="style/default/gl_manage/hllb.gif"/>{lang blacklist}</a></li>
+		<li><a href="{url pms-box-inbox}" target="_self">{lang inbox}</a></li>
+		<li><a href="{url pms-box-outbox}" target="_self" >{lang outbox}</a></li>
+		<li><a href="{url pms-sendmessage}" target="_self" >{lang sendmessage}</a></li>
+		<li><a href="{url pms-box-drafts}" target="_self">{lang draft}</a></li>
+		<li><a href="{url pms-blacklist}" target="_self">{lang blacklist}</a></li>
 	</ul>
 </div>
-</div>
-<div class="c-b"></div>
+</aside>
+</section>
 {template footer}

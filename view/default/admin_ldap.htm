@@ -25,24 +25,24 @@
     <tbody>
     <tr height="26">
        <td width="180"><strong>开启LDAP</strong></td>
-       <td width="250"><input name="ldap_open" type="radio" value="1" <!--{if $ldap_open == "1"}-->checked="checked"<!--{/if}-->/> 
-		{lang adv_enable}   <input name="ldap_open" type="radio" value="0" <!--{if $ldap_open != "1"}-->checked="checked"<!--{/if}-->/> {lang adv_disable}</td>
+       <td width="250"><input name="ldap_open" type="radio" value="1" <!--{if !empty($ldap_open) &&  $ldap_open == "1"}-->checked="checked"<!--{/if}-->/>
+		{lang adv_enable}   <input name="ldap_open" type="radio" value="0" <!--{if !empty($ldap_open) && $ldap_open != "1"}-->checked="checked"<!--{/if}-->/> {lang adv_disable}</td>
       <td>选择开启或者关闭LDAP支持</td>
     </tr>
     <tr height="26">
       <td width="180"><strong>LDAP服务器地址：</strong></td>
-      <td width="250"><input maxlength="120" style="width: 200px;" class="inp_txt" name="ldap_server" value="{$ldap_server}" type="text"></td>
+      <td width="250"><input maxlength="120" style="width: 200px;" class="inp_txt" name="ldap_server" value="<!--{if !empty($ldap_server)}-->{$ldap_server}<!--{/if}-->" type="text"></td>
       <td>填写LDAP服务器地址,例如 ldap.example.com。</td>
     </tr>
     <tr height="26">
       <td><strong>LDAP RDN字符串：</strong></td>
-      <td><input style="width: 200px;" class="inp_txt" name="ldap_user" type="inp_txt" value="{$ldap_user}"></td>
+      <td><input style="width: 200px;" class="inp_txt" name="ldap_user" type="inp_txt" value="<!--{if !empty($ldap_user)}-->{$ldap_user}<!--{/if}-->"></td>
       <td>例如：uid=LDAP_USER_NAME,ou=People,dc=auth,dc=baike,dc=com   ;LDAP_USER_NAME 将会替换为登录时用户名 </td>
     </tr>
     <tr height="26">
       <td><strong>邮箱后缀</strong></td>
-      <td><input style="width: 200px;" class="inp_txt" name="ldap_email" type="inp_txt" value="{$ldap_email}"></td>
-      <td>不需要‘@’例如：hudong.com  </td>
+      <td><input style="width: 200px;" class="inp_txt" name="ldap_email" type="inp_txt" value="<!--{if !empty($ldap_email)}-->{$ldap_email}<!--{/if}-->"></td>
+      <td>不需要‘@’例如：baike.com  </td>
     </tr>
     <tr>
       <td height="40">

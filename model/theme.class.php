@@ -98,7 +98,7 @@ class thememodel {
 			$xmlarray['path']=$filenames;
 			for($x=0;$x<$xmlcounts;$x++){
 				if($values[$x]['level']==2){
-					$values[$x]['value']=string::hiconv($values[$x]['value']);
+					$values[$x]['value']=isset($values[$x]['value']) ? string::hiconv($values[$x]['value']) : '';
 					$xmlarray[$values[$x]['tag']]=$values[$x]['value'];
 				}
 			}
@@ -158,10 +158,10 @@ class thememodel {
 	function choose_theme_name($path){
 		$style=$this->db->fetch_first("SELECT * FROM ".DB_TABLEPRE."theme WHERE path='$path'");
 		$xmlstyle=$this->read_xml($style['path']);
-		$xmlstyle[tag]=explode(" ",$xmlstyle['tag']);
-		$xmlstyle[charset]=explode(" ",$xmlstyle['charset']);
+		$xmlstyle['tag']=isset($xmlstyle['tag']) ? explode(" ",$xmlstyle['tag']) : null;
+		$xmlstyle['charset']=isset($xmlstyle['charset']) ? explode(" ",$xmlstyle['charset']) : null;
 		return $xmlstyle;
-	}
+	} 
 	
 	function get_style_list($type){
 		$toaddlist=array();
@@ -342,7 +342,8 @@ class thememodel {
 			    'space' => 'index.php?user-space');
 	}
 
-	function visual_url($dir,$theme){
+	function visual_url($dir,$theme) {
+		$writecache = false;
 	    $url=array();
 	    if(is_dir($dir)){
 		    $d = dir($dir);

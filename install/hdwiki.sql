@@ -17,7 +17,9 @@ CREATE TABLE wiki_attachment (
   `focus` tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `did` (`did`),
-  KEY `uid` (`uid`)
+  KEY `uid` (`uid`),
+  KEY `time` (`time`),
+  KEY `downloads` (`downloads`)
 ) TYPE=MyISAM;
 
 

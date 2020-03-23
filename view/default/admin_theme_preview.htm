@@ -108,7 +108,7 @@ li.select {border: #f00 dashed 1px;background: #fff;color: #333 !important;}
 
 	
 	function bindblk(){
-		area = hd$("div[id^='block_']");//所有可以添加区块的区域。
+		area = hd$("div[id^='block_'],aside[id^='block_']");//所有可以添加区块的区域。
 		blocks = area.children('div');//所有区域里面的已添加的区块。
 		
 		hd$("a").click(function(){

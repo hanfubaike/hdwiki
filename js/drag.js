@@ -155,7 +155,10 @@ var Action={
 		
 		//按住左键，移动鼠标
 		$(Fdocument).mousemove(function(e){
-			var x=e.clientX + Fdocument.documentElement.scrollLeft, y=e.clientY + Fdocument.documentElement.scrollTop;//得到当前的鼠标值，包括滚动条。
+			//console.log(e.clientY, $(Fdocument).scrollTop())
+			var sl = $(Fdocument).scrollLeft()
+			var st = $(Fdocument).scrollTop()
+			var x=e.clientX + sl, y=e.clientY + st;//得到当前的鼠标值，包括滚动条。
 			var left = x, top = y-15;
 			obj.css({left:left -Action.offsetBody -self.offsetClick.width, top:top});//block随着鼠标移动。
 			self.move(x,y);//将鼠标坐标传给self.move.

@@ -4,7 +4,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load("doc");
 		$this->load("category");
 		$this->load("user");
@@ -17,15 +17,18 @@ class control extends base{
 	}
 
 	function doview() {
+        
 		$this->_anti_copy();
 		$this->load("reference");
 		if(!is_numeric(@$this->get[2])){
 			$this->message($this->view->lang['parameterError'],'index.php',0);
 		}
 		$doc=$this->db->fetch_by_field('doc','did',$this->get[2]);
+		$this->view->assign('synonymdoc', NULL);
 		if(!(bool)$doc){
 			$this->message($this->view->lang['docNotExist'],'index.php',0);
 		}elseif($synonym=$_ENV['synonym']->get_synonym_by_src(addslashes($doc['title']))){
+			$synonym['srctitle'] = !empty($synonym['srctitle']) ? $synonym['srctitle'] : NULL;
 			$this->view->assign('synonymdoc',$synonym['srctitle']);
 			$this->get[2]=$synonym['destdid'];
 			$this->doview();
@@ -48,27 +51,27 @@ class control extends base{
 		$doc['tag']=$_ENV['doc']->spilttags($doc['tag']);
 		$doc['rawtitle']=$doc['title'];
 		$editors=$_ENV['usergroup']->get_userstar( array($doc['authorid'],$doc['lasteditorid']) );
-		
+
 		//eval($this->plugin['ucenter']['hooks']['doc_user_image']);
 		UC_OPEN && $_ENV['ucenter']->doc_user_image($editors,$doc);
 		$author=$editors[$doc['author']];
 		$author?$this->view->assign('author',$author)
 			:$this->view->assign('author_removed',1);
-			
+
 		if ($doc['lasteditorid'] > 0 && $doc['time'] < $doc['lastedit']){
 			$lasteditor = $editors[$doc['lasteditor']];
-			
+
 			$lasteditor ? $this->view->assign('lasteditor',$lasteditor)
 				:$this->view->assign('lasteditor_removed',1);
 		}
 		$doc['lastedit']=date('Y-m-d',$doc['lastedit']);
 		$navigation= $_ENV['doc']->get_cids_by_did($doc['did']);
-		
+
 		if(!empty($this->setting['random_open'])){
 			$this->load('anticopy');
 			$_ENV['anticopy']->add_randomstr($doc['content']);
-		}		
-		
+		}
+		$doc['content'] = string::filter_expression($doc['content']);
 		$doc['content']=$_ENV['innerlink']->get($doc['did'], $doc['content']);
 		$doc['sectionlist']=$_ENV['doc']->splithtml($doc['content']);
 		$doc['doctitle'] = $doc['title'];
@@ -89,24 +92,26 @@ class control extends base{
 		//adv start
 		$this->load('adv');
 		$categorys=array();
-		foreach($navigation as $category){
-			$categorys[]=$category['cid'];
+		if(!empty($navigation)) {
+			foreach($navigation as $category){
+				$categorys[]=$category['cid'];
+			}
 		}
 		$advlist=$_ENV['adv']->adv_doc_filter($this->advertisement,$categorys);
 		if($advlist){
 			$this->view->assign('advlist',$advlist);
 		}
 		//adv end
-		
+
 		if($this->setting['attachment_open']){
 			$attachment=$_ENV['attachment']->get_attachment('did',$doc['did'],0);
 			$this->view->assign('attachment',$attachment);
 		}
 		$synonyms=$_ENV['synonym']->get_synonym_by_dest('',$doc['title']);
 		$referencelist = ($this->setting['base_isreferences'] === '0')? array() :$_ENV['reference']->getall($doc['did']);
-		$doc['title']=htmlspecialchars(stripslashes($doc['title']));
+		$doc['title']=htmlspecial_chars(stripslashes($doc['title']));
 		$doc['doctitle']=$doc['title'];
-		
+
 		$relatelist = array();
 		$relatelist = $_ENV['doc']->get_related_doc($doc['did']);
 		if(!count($relatelist)){
@@ -114,12 +119,18 @@ class control extends base{
 				$relatelist = array_unique(explode(';',$this->setting['relateddoc']));
 			}
 		}
-		
+
 		$neighbor=$_ENV['doc']->get_neighbor($this->get[2]);
+		$neighbor['predoc']['title'] =htmlspecial_chars(stripslashes($neighbor['predoc']['title']));
+		$neighbor['nextdoc']['title'] =htmlspecial_chars(stripslashes($neighbor['nextdoc']['title']));
 		$coin_download = isset($this->setting['coin_download'])?$this->setting['coin_download']:10;
-		
+
 		//nav
 		$nav = $_ENV['doc']->get_nav($this->get[2]);
+		$nav = empty($nav) ? NULL : $nav;
+		//用于分享的摘要 处理换行
+		$doc['share_summary'] = str_replace(PHP_EOL, '', $doc['summary']);
+
 		// 用分分享到腾讯微博的 图片
 		$this->load('pic');
 		$pic_list = $_ENV['pic']->get_pic_by_did($this->get[2]);
@@ -138,6 +149,10 @@ class control extends base{
 		if(100< $tem_strlen) {
 			$doc['qq_title'] = string::substring($doc['qq_title'], 0, 99).'...';
 		}
+	//	var_dump($sectionlist);exit;
+        // 获取摘要图
+        $doc['img'] = util::getfirstimg($doc['content']);
+
 		$this->view->assign('docletter',$doc['letter']);
 		$this->view->assign('neighbor',$neighbor);
 		$this->view->assign('relatelist',$relatelist);
@@ -156,7 +171,6 @@ class control extends base{
 		$this->view->assign('comment_add',$this->checkable('comment-add'));
 		$this->view->assign('doc_edit',$this->checkable('doc-edit'));
 		$this->view->assign('doc_editletter',$this->checkable('doc-editletter'));
-		
 		$this->view->assign('navtitle',$doc['doctitle'].'-');
 		$this->view->assign("searchtext",$doc['title']);
 		$this->view->assign('editlock',$editlock);
@@ -166,36 +180,43 @@ class control extends base{
 		$this->view->assign("coin", $this->user['credit1']);
 		$this->view->assign("coin_download", $coin_download);
 		$this->view->assign("nav", $nav);
-		
+
 		//$this->view->display('viewdoc');
-		$_ENV['block']->view('viewdoc');
+		$this->isMobile() ? $_ENV['block']->view('wap-viewdoc') : $_ENV['block']->view('viewdoc');
+		//$_ENV['block']->view('viewdoc');
 	}
 
 	function docreate(){
+        
 		if(4 != $this->user['groupid'] && ($this->time-$this->user['regtime'] < $this->setting['forbidden_edit_time']*60)){
 			$this->message($this->view->lang['editTimeLimit1'].$this->setting['forbidden_edit_time'].$this->view->lang['editTimeLimit2'],'BACK',0);
 		}
-		
+
 		if($this->setting['verify_doc'] == -1) { //首次编辑审核
 			if($this->setting['max_newdocs'] != 0 && $this->user['newdocs'] >= $this->setting['max_newdocs']) {
 				$this->message('您的首次可创建或编辑词条数的数量已达最大值,请等待管理员审核', 'BACK', 0);
 			}
 		}
-		
-		if(!isset($this->post['create_submit'])){
+        
+        if (!$this->check_csrf_token()){
+            $this->message('缺少TOKEN参数', 'BACK',0);
+        }
+            
+		if(!isset($this->post['create_submit'])){//点击创建文章
+			$category = array();
 			if('0' === $this->user['checkup']){
 				$this->message($this->view->lang['createDocTip17'],'BACK',0);
 			}
 			if(isset($this->post['title'])){
-				$this->view->assign('title',htmlspecialchars(stripslashes($this->post['title'])));
+				$this->view->assign('title',htmlspecial_chars(stripslashes($this->post['title'])));
 			}
 			if(@is_numeric($this->get[2])){
 				$category=$_ENV['category']->get_category($this->get[2]);
-				$this->view->assign("category",$category);
 			}
+			$this->view->assign("category",$category);
 			$this->view->assign('navtitle',$this->view->lang['createDoc']."-");
 			$this->view->display('createdoc');
-		}else if(!isset($this->post['publishsubmit'])){
+		}else if(!isset($this->post['publishsubmit'])){//点击创建词条-跳转到编辑器页面
 			if(trim($this->post['title'])=="" ){
 				$this->message($this->view->lang['createDocTip1'],'BACK',0);
 			}
@@ -219,10 +240,10 @@ class control extends base{
 			if((bool)$data){
 				$this->header('doc-view-'.$data['did']);
 			}
-			$doc['title']=htmlspecialchars($title);
+			$doc['title']=htmlspecial_chars($title);
 			$doc['cid']=$this->post['category'];
 			$doc['did']=$_ENV['doc']->add_doc_placeholder($doc);
-			
+
 			$this->view->assign("savetime",60000);
 			$this->view->assign("filter_external",$this->setting['filter_external']);
 			//eval($this->plugin['hdapi']['hooks']['readcontent']);
@@ -237,23 +258,23 @@ class control extends base{
 					if(is_string($content) && !empty($content)){$doc["content"]=$content;}
 				}
 			}
-			
+
 			$this->view->assign('navtitle',"$title-".$this->view->lang['createDoc']."-");
 			$this->view->assign("page_action","create");
 			$this->view->assign("attachment_open",$this->setting['attachment_open']);
 			//$this->view->assign("attachment_type","['".implode("','",$_ENV['attachment']->get_attachment_type())."']");
 			$this->view->assign('attachment_size',$this->setting['attachment_size']);
-			
+
 			$doc['title']=stripcslashes($doc['title']);
 			eval($this->plugin['doctemplate']['hooks']['doctemplate']);//载入类别模版。
 			$this->view->assign('doc',$doc);
 			$this->view->assign("doc_verification_create_code", ($this->setting['checkcode']!=3 && $this->setting['doc_verification_create_code']));
-			
+
 			$this->view->assign('g_img_big',$this->setting['img_width_big']);
 			$this->view->assign('g_img_small',$this->setting['img_width_small']);
 			//$this->view->display('editor');
 			$_ENV['block']->view('editor');
-		}else{
+		}else{//点击发布词条
 			if($this->setting['checkcode']!=3 && $this->setting['doc_verification_create_code'] && strtolower($this->post['code'])!=$_ENV['user']->get_code()){
 				$this->message($this->view->lang['codeError'],'BACK',0);
 			}
@@ -268,21 +289,30 @@ class control extends base{
 			if(!(bool)$_ENV['category']->vilid_category($this->post['category'])){
 				$this->message($this->view->lang['categoryNotExist'],'BACK',0);
 			}
-			if(@!(bool)$this->post['summary']){
+			if((bool)$this->post['summary']){
 				$doc['summary']=trim(strip_tags($_ENV['doc']->replace_danger_word($this->post['summary'])));
 			}
-			$doc['did']=$this->post['did'];
+			$doc['did']=intval($this->post['did']);
 			$doc['letter']=string::getfirstletter($this->post['title']);
 			$doc['category']=$this->post['category'];
-			
+
 			//$doc['tags']=$_ENV['doc']->jointags($this->post['tags']);
 			$doc['tags']=$this->post['tags'];
 			$doc['tags']=$_ENV['doc']->replace_danger_word($doc['tags']);
-			$doc['content']=string::stripscript($_ENV['doc']->replace_danger_word($this->post['content']));
-			$doc['content']= $this->setting['auto_picture']?$_ENV['doc']->auto_picture($doc['content'],$doc['did']):$doc['content'];
-			$doc['summary']=trim(strip_tags($_ENV['doc']->replace_danger_word($this->post['summary'])));
-			$doc['summary']=(bool)$doc['summary']?$doc['summary']:$doc['content'];
-			$doc['summary']=trim(string::convercharacter(string::substring(strip_tags($doc['summary']),0,100)));
+			$doc['tags'] = htmlspecial_chars(string::stripscript($doc['tags']));
+			
+			$doc['content'] = $_ENV['doc']->replace_danger_word($this->post['content']);
+			$doc['content'] = preg_replace('/(<embed.*?(?:allowscriptaccess)=)\\\?([\'"]?)(\w*?)\\\?\2(.*?>)/i','$1$2never$2$4',$doc['content']);//将embed标签中的allowscriptaccess属性设置为never
+			$doc['content'] = preg_replace('/(<embed(?:(?!allowscriptaccess).)+?)(>)/i','$1 allowscriptaccess="never" $2',$doc['content']);//将embed标签中如果不存在allowscriptaccess属性则添加属性并设为never
+
+			$doc['content'] = addslashes(string::stripscript(stripslashes($doc['content'])));
+			$doc['content'] = $this->setting['auto_picture']?$_ENV['doc']->auto_picture($doc['content'],$doc['did']):$doc['content'];
+			$doc['content'] = string::filter_expression($doc['content']);
+			$doc['summary'] = trim(strip_tags($_ENV['doc']->replace_danger_word($doc['summary'])));//去除敏感词
+			$doc['summary'] = (bool)$doc['summary']?$doc['summary']:$doc['content'];
+			$doc['summary'] = trim(string::convercharacter(string::substring(strip_tags($doc['summary']),0,100)));//去除换行符截断字符串
+			$doc['summary'] = htmlspecial_chars(addslashes(stripslashes(string::stripscript(strip_tags($doc['summary'])))));//去除特殊字符 去除javascript代码
+
 			$doc['images']=util::getimagesnum($doc['content']);
 			$doc['time']=$this->time;
 			$doc['words']=string::hstrlen($doc['content']);
@@ -290,14 +320,14 @@ class control extends base{
 
 			if(strpos($this->user['regulars'], 'doc-immunity') === false && 4 != $this->user['groupid']) {
 				if(!$_ENV['doc']->check_submit_interval($this->user['uid'])) {
-					if($this->setting['save_spam']) { 
+					if($this->setting['save_spam']) {
 						$doc['visible'] = 0;
 					} else {
 						$this->message(sprintf($this->view->lang['submit_interval_msg'], $this->setting['submit_min_interval']),"BACK",0);
 					}
 				}
 				if(!$_ENV['doc']->check_eng_pcnt($doc['content']) || !$_ENV['doc']->check_extlink_pcnt($doc['content'])) {
-					if($this->setting['save_spam']) { 
+					if($this->setting['save_spam']) {
 						$doc['visible'] = 0;
 					} else {
 						$this->message($this->view->lang['spam_msg'],"BACK",0);
@@ -307,54 +337,53 @@ class control extends base{
 			if(strpos($this->user['regulars'], 'doc-immunity') !== false || 4 == $this->user['groupid'] || !$this->setting['verify_doc'] || ($this->setting['verify_doc'] == -1 && $this->user['newdocs'] == -1)){
 				$doc['visible'] = 1;
 			}
-			
+
 			if($this->setting['verify_doc'] == -1) { //首次编辑审核
 				if($this->user['newdocs'] != -1) {
-					$_ENV['user']->update_newdocs($this->user['uid'], +1); 
+					$_ENV['user']->update_newdocs($this->user['uid'], +1);
 				}
 			}
-			
+
 			if($doc['visible'] == 1){
 				$_ENV['user']->add_credit($this->user['uid'],'doc-create',$this->setting['credit_create'],$this->setting['coin_create']);
 			}
 			/*foreach($this->post['tags'] as $search_tags){
 				$doc['search_tags'] .=string::convert_to_unicode($search_tags).";";
 			}*/
-			
 			$did=$_ENV['doc']->add_doc($doc);
-			$_ENV['user']->update_field('creates',$this->user['creates']+1,$this->user['uid']);	
+			$_ENV['user']->update_field('creates',$this->user['creates']+1,$this->user['uid']);
 			//$_ENV['category']->update_category_docs($this->post['category']);
 			//多个分类下添加词条,更新分类下词条数量调整到doc.class.php->add_doc_placeholder()->add_doc_category()
-			
+
 			//附件已经不再编辑页面上传
 			//$message=$_ENV['attachment']->upload_attachment($did);
-			
+
 			$_ENV['innerlink']->update($doc['title'], $did);
 			$_ENV['doc']->unset_editlock($doc['did'],$this->user['uid']);
-			
+
 			$this->load('noticemail');
 			$_ENV['noticemail']->doc_create($doc);
 
 			//eval($this->plugin["ucenter"]["hooks"]["create_feed"]);
 			UC_OPEN && $_ENV['ucenter']->create_feed($doc,$did);
-			
+
 			//eval($this->plugin['hdapi']['hooks']['postcontent']);
 			$this->load("hdapi");
 			if($this->setting['site_nick'] && $this->setting["hdapi_bklm"]){
 				$_ENV["hdapi"]->post_content($doc["title"],$doc["content"]);
 			}
-			
+
 			if(1 == $this->setting['cloud_search'] && 1 == $doc['visible'] ) {
 				// 创建词条 通知云搜索
 				$_ENV['search']->cloud_change(array('dids'=>$did,'mode'=>'1'));
 			}
-			
+
 			if((bool)$message){
 				$this->message($message,$this->setting['seo_prefix']."doc-view-".$did.$this->setting['seo_suffix'],0);
 			}else{
 				$msg=$this->view->lang['docPublishSuccess'];
 				if($this->setting['hdapi_autoshare_create']){$msg.="<script>$.get('index.php?hdapi-hdautosns-create-'+$did);</script>";}
-			
+
 				$this->message($msg, $this->setting['seo_prefix']."doc-view-".$did.$this->setting['seo_suffix'], 0);
 			}
 		}
@@ -380,7 +409,7 @@ class control extends base{
 			$this->message("0","",2);
 		}
 	}
-	
+
 	function doedit(){
 		$this->_anti_copy();
 		if(isset($this->post['predoctitle'])){
@@ -423,7 +452,7 @@ class control extends base{
 		if($doc['visible']=='0'&&!$this->checkable('doc-audit') && $doc['lasteditorid']!= $this->user['uid']){
 			$this->message($this->view->lang['viewDocTip4'],'index.php',0);
 		}
-		
+
 		$increase_edition = true;
 		if($this->setting['verify_doc'] == -1) { //首次编辑审核
 			if($this->user['newdocs'] != -1) {
@@ -436,7 +465,7 @@ class control extends base{
 				}
 			}
 		}
-		
+
 		if(!isset($this->post['publishsubmit'])){
 			$this->load("reference");
 			$editlockuid=$_ENV['doc']->iseditlocked($did);
@@ -458,7 +487,7 @@ class control extends base{
 			if($doc['locked']){
 				$this->header("doc-view-".$doc['did']."-locked");
 			}
-			
+
 			$this->view->assign("savetime",60000);
 			$ramus=isset($this->get[3])?$this->get[3]:'';
 			$autosave=$_ENV['doc']->is_autosave($this->user['uid'],$doc['did']);
@@ -466,8 +495,8 @@ class control extends base{
 				$doc['content']=$autosave['content'];
 				$doc['autosavetime']=$this->date($autosave['time']);
 			}
+			$doc['content'] = string::filter_expression($doc['content']);
 			$referencelist = $_ENV['reference']->getall($doc['did']);
-			//$doc['tag']=$_ENV['doc']->spilttags($doc['tag']);
 			//$attachment=$_ENV['attachment']->get_attachment('did',$doc['did'],0);
 			//$this->view->assign('attachment',$attachment);
 			$this->view->assign('navtitle',$doc['title'].'-'.$this->view->lang['editDoc'].'-');
@@ -476,7 +505,9 @@ class control extends base{
 			//$this->view->assign("attachment_type","['".implode("','",$_ENV['attachment']->get_attachment_type())."']");
 			$this->view->assign("filter_external",$this->setting['filter_external']);
 			$doc = str_replace("&", "&amp;", $doc);
-			$doc['title']=htmlspecialchars(stripslashes($doc['title']));
+			$doc['title']=htmlspecial_chars(stripslashes($doc['title']));
+			$doc['tag']=html_entity_decode($doc['tag']);
+			$doc['summary']=html_entity_decode($doc['summary']);
 			$this->view->assign("doc",$doc);
 			$this->view->assign("referencelist", $referencelist);
 			$this->view->assign("doc_verification_edit_code", ($this->setting['checkcode']!=3 && $this->setting['doc_verification_edit_code']));
@@ -494,18 +525,28 @@ class control extends base{
 			//$doc['tags']=$_ENV['doc']->jointags($this->post['tags']);
 			$doc['tags']=$this->post['tags'];
 			$doc['tags']=$_ENV['doc']->replace_danger_word($doc['tags']);
-			$doc['content']=string::stripscript($_ENV['doc']->replace_danger_word($this->post['content']));
+			$doc['tags'] = htmlspecial_chars(string::stripscript($doc['tags']));
+
+			$doc['content'] = $_ENV['doc']->replace_danger_word($this->post['content']);
+			$doc['content'] = preg_replace('/(<embed.*?(?:allowscriptaccess)=)\\\?([\'"]?)(\w*?)\\\?\2(.*?>)/i','$1$2never$2$4',$doc['content']);//将embed标签中的allowscriptaccess属性设置为never
+			$doc['content'] = preg_replace('/(<embed(?:(?!allowscriptaccess).)+?)(>)/i','$1 allowscriptaccess="never" $2',$doc['content']);//将embed标签中如果不存在allowscriptaccess属性则添加属性并设为never
+
+			$doc['content'] = addslashes(string::stripscript(stripslashes($doc['content'])));
 			$doc['content']= $this->setting['auto_picture']?$_ENV['doc']->auto_picture($doc['content'], $did):$doc['content'];
-			$doc['summary']=trim(strip_tags($_ENV['doc']->replace_danger_word($this->post['summary'])));
-			$doc['summary']=(bool)$doc['summary']?$doc['summary']:$doc['content'];
-			$doc['summary'] =trim(string::convercharacter(string::substring(strip_tags($doc['summary']),0,100)));
-			$doc['time']=$this->time;
+			$doc['content'] = string::filter_expression($doc['content']);
+
+
+			$doc['summary'] = trim(strip_tags($_ENV['doc']->replace_danger_word($this->post['summary'])));//去除敏感词
+			$doc['summary'] = (bool)$doc['summary']?$doc['summary']:$doc['content'];
+			$doc['summary'] = trim(string::convercharacter(string::substring(strip_tags($doc['summary']),0,100)));//去除换行符截断字符串
+			$doc['summary'] = htmlspecial_chars(addslashes(stripslashes(string::stripscript(strip_tags($doc['summary'])))));//去除特殊字符 去除javascript代码
 			
-			$doc['reason']=htmlspecialchars(trim(implode(',',$this->post['editreason'])," \t\n,"));
+			$doc['time']=$this->time;
+			$doc['reason']=htmlspecial_chars(trim(implode(',',$this->post['editreason'])," \t\n,"));
 			/*foreach($this->post['tags'] as $search_tags){
 				$doc['search_tags'] .=string::convert_to_unicode($search_tags).";";
 			}*/
-			
+
 			if (0 == $doc['visible'] && $this->user['uid'] == $doc['lasteditorid'] && $this->user['type'] == 2){
 				if(!$this->setting['save_spam']) {
 					if (!$_ENV['doc']->check_submit_interval($this->user['uid'])) {
@@ -522,37 +563,37 @@ class control extends base{
 				}
 				$this->message($this->view->lang['docPublishSuccess'],$this->setting['seo_prefix']."doc-view-".$doc['did'].$this->setting['seo_suffix'],0);
 			}
-			
+
 			if( strpos($this->user['regulars'], 'doc-audit') !== false
 				|| strpos($this->user['regulars'], 'doc-immunity') !== false
 				|| (empty($this->user['regulars']) && $this->user['type'] == 1)
-				|| ($this->setting['verify_doc'] == -1 && $this->user['newdocs'] == -1) 
+				|| ($this->setting['verify_doc'] == -1 && $this->user['newdocs'] == -1)
 			){
 				$doc['visible'] = 1;
 			}else{
 				$doc['visible']=$this->setting['verify_doc']?'0':'1';
-				
+
 				if(!$_ENV['doc']->check_submit_interval($this->user['uid'])) {
-					if($this->setting['save_spam']) { 
+					if($this->setting['save_spam']) {
 						$doc['visible'] = 0;
 					} else {
 						$this->message(sprintf($this->view->lang['submit_interval_msg'], $this->setting['submit_min_interval']),"BACK",0);
 					}
 				}
-				
+
 				if(!$_ENV['doc']->check_eng_pcnt($doc['content']) || !$_ENV['doc']->check_extlink_pcnt($doc['content'])) {
-					if($this->setting['save_spam']) { 
+					if($this->setting['save_spam']) {
 						$doc['visible'] = 0;
 					} else {
 						$this->message($this->view->lang['spam_msg'],"BACK",0);
 					}
 				}
 			}
-			
+
 			if( $this->setting['verify_doc'] == -1 && $this->user['newdocs'] != -1 && $increase_edition) { //如果开启首次编辑审核,且用户尚未通过审核,且编辑的是他从未编辑过的词条
 				$_ENV['user']->update_newdocs($this->user['uid'], +1); //则newdocs +1
 			}
-			
+
 			$_ENV['doc']->edit_doc($doc,"1", $increase_edition);
 			$_ENV['doc']->unset_editlock($doc['did'],$this->user['uid']);
 			if($doc['visible']==1 && $_ENV['doc']->is_addcredit($doc['did'],$this->user['uid'])){
@@ -576,10 +617,10 @@ class control extends base{
 			*/
 			$this->load('noticemail');
 			$_ENV['noticemail']->doc_edit($doc);
-			
+
 			//eval($this->plugin["ucenter"]["hooks"]["edit_feed"]);
 			UC_OPEN && $_ENV['ucenter']->edit_feed($doc);
-			
+
 			//eval($this->plugin['hdapi']['hooks']['postcontent']);
 			$this->load("hdapi");
 			if($this->setting['site_nick'] && $this->setting["hdapi_bklm"]){
@@ -589,7 +630,7 @@ class control extends base{
 			if(1 == $this->setting['cloud_search']) {
 				$_ENV['search']->cloud_change(array('dids'=>$did,'mode'=>'2'));
 			}
-			if((bool)$message){
+			if((bool)!empty($message)){
 				$this->message($message,$this->setting['seo_prefix']."doc-view-".$doc['did'].$this->setting['seo_suffix'],0);
 			}else{
 				$msg=$this->view->lang['docPublishSuccess'];
@@ -626,7 +667,7 @@ class control extends base{
 				if(is_string($content) && !empty($content)){$doc["content"]=$content;}
 			}
 		}
-			
+
 		if(!(bool)$doc){
 			$this->message($this->view->lang['docNotExist'],'index.php',0);
 		}
@@ -647,7 +688,7 @@ class control extends base{
 			}
 			//$doc['tag']=$_ENV['doc']->spilttags($doc['tag']);
 			$doc['content']=$array_section[$id+1]['value'];
-			
+
 			$this->view->assign("savetime",60000);
 			$ramus=isset($this->get[4])?$this->get[4]:'';
 			$autosave=$_ENV['doc']->is_autosave($this->user['uid'],$doc['did']);
@@ -660,14 +701,14 @@ class control extends base{
 					$this->view->assign("autosave",$autosave);
 				}
 			}
-			
+
 			$doc['content']= $this->setting['auto_picture']?$_ENV['doc']->auto_picture($doc['content'],$did):$doc['content'];
 			$doc['title']=$doc['title']."-".$array_section[$id]['value'];
 			$doc['section_id']=$id;
 			$this->view->assign('navtitle',$doc['title'].'-'.$this->view->lang['editionEdit'].'-');
 			$this->view->assign("page_action","editsection");
 			$doc = str_replace("&", "&amp;", $doc);
-			$doc['title']=htmlspecialchars(stripslashes($doc['title']));
+			$doc['title']=htmlspecial_chars(stripslashes($doc['title']));
 			$this->view->assign("doc",$doc);
 			$this->view->assign("doc_verification_edit_code", ($this->setting['checkcode']!=3 && $this->setting['doc_verification_edit_code']));
 			$this->view->assign('g_img_big',$this->setting['img_width_big']);
@@ -690,31 +731,32 @@ class control extends base{
 			$doc['summary']=trim(strip_tags($_ENV['doc']->replace_danger_word($this->post['summary'])));
 			$doc['summary']=(bool)$doc['summary']?$doc['summary']:$doc['content'];
 			$doc['summary'] =trim(string::convercharacter(string::substring(strip_tags($doc['summary']),0,100)));
+			$doc['summary'] = htmlspecial_chars(addslashes(stripslashes(string::stripscript(strip_tags($doc['summary'])))));//去除特殊字符 去除javascript代码
 			$doc['images']=util::getimagesnum($doc['content']);
 			$doc['time']=$this->time;
 			$doc['visible']=$this->setting['verify_doc']?'0':'1';
 			$doc['words']=string::hstrlen($doc['content']);
-			$doc['reason']=htmlspecialchars(trim(implode(',',$this->post['editreason']),' \t\n,'));
+			$doc['reason']=htmlspecial_chars(trim(implode(',',$this->post['editreason']),' \t\n,'));
 			/*foreach($this->post['tags'] as $search_tags){
 				$doc['search_tags'] .=string::convert_to_unicode($search_tags).";";
 			} */
-			
+
 			if(!$_ENV['doc']->check_submit_interval($this->user['uid'])) {
-				if($this->setting['save_spam']) { 
+				if($this->setting['save_spam']) {
 					$doc['visible'] = 0;
 				} else {
 					$this->message(sprintf($this->view->lang['submit_interval_msg'], $this->setting['submit_min_interval']),"BACK",0);
 				}
 			}
-			
+
 			if(!$_ENV['doc']->check_eng_pcnt($doc['content']) || !$_ENV['doc']->check_extlink_pcnt($doc['content'])) {
-				if($this->setting['save_spam']) { 
+				if($this->setting['save_spam']) {
 					$doc['visible'] = 0;
 				} else {
 					$this->message($this->view->lang['spam_msg'],"BACK",0);
 				}
-			}	
-			
+			}
+
 			$_ENV['doc']->edit_doc($doc,"2");
 			$_ENV['doc']->unset_editlock($doc['did'],$this->user['uid']);
 			if($doc['visible']==1 && $_ENV['doc']->is_addcredit($doc['did'],$this->user['uid'])){
@@ -722,22 +764,22 @@ class control extends base{
 			}
 			$_ENV['user']->update_field('edits',$this->user['edits']+1,$this->user['uid']);
 			$_ENV['doc']->del_autosave('',$this->user['uid'],$doc['did']);
-			
+
 			$this->load('noticemail');
 			$_ENV['noticemail']->doc_edit($doc);
-			
+
 			//eval($this->plugin['hdapi']['hooks']['postcontent']);
 			$this->load("hdapi");
 			if($this->setting['site_nick'] && $this->setting["hdapi_bklm"]){
 				$_ENV["hdapi"]->post_content($doc["title"],$doc["content"]);
 			}
-			
+
 			//#clode#
 			if(1 == $this->setting['cloud_search']) {
 				// 编辑段落 通知云搜索
 				$_ENV['search']->cloud_change(array('dids'=>$did,'mode'=>'2'));
 			}
-			
+
 			$msg=$this->view->lang['docPublishSuccess'];
 			if($this->setting['hdapi_autoshare_edit']){$msg.="<script>$.get('index.php?hdapi-hdautosns-edit-'+$did);</script>";}
 			$this->message($msg, $this->setting['seo_prefix']."doc-view-".$doc['did'].$this->setting['seo_suffix'],0);
@@ -771,8 +813,8 @@ class control extends base{
 				$title = $tmp["title"];
 				$_ENV["hdapi"]->un_lock($title);
 			}
-			
-			
+
+
 			$this->header("doc-view-".$this->get[2]);
 		}
 	}
@@ -784,7 +826,7 @@ class control extends base{
 		if($this->setting['seo_suffix']){
 			$title=str_replace($this->setting['seo_suffix'],'',$title);
 		}
-		
+
 		$doc=$this->db->fetch_by_field('doc','title',$title);
 		$this->view->assign("docrewrite","1");
 		if(!(bool)$doc){
@@ -815,18 +857,18 @@ class control extends base{
 		}
 		$title=trim($title);
 		$title2 = $title;
-		
+
 		$title=urldecode($title);
 		if(string::hstrtoupper(WIKI_CHARSET)=='GBK'){
 			$title=string::hiconv($title,$to='gbk',$from='utf-8');
 		}
-		$doc=$this->db->fetch_by_field('doc','title',addslashes($title));
+		$doc=$this->db->fetch_by_field('doc','title',$title);
 		if((bool)$doc){
 			$doc['image']=util::getfirstimg($doc['content']);
 			$doc['url']=WIKI_URL."/".$this->setting['seo_prefix']."doc-view-".$doc['did'].$this->setting['seo_suffix'];
 			$doc_exists=1;
 		}else{
-			$url = 'http://www.hudong.com/validateDocSummary.do?doc_title='.$title2;
+			$url = 'http://www.baike.com/validateDocSummary.do?doc_title='.$title2;
 			$data = util::hfopen($url);
 			$doc_exists=1;
 			if($data && stripos($data,'<flag>true</flag>') && preg_match_all("/<\!\[CDATA\[(.*)\]\]>/", $data, $matches)){
@@ -836,13 +878,13 @@ class control extends base{
 				if ($image == 'null') $image = '';
 				$doc = array(
 					'image'=>$image,
-					'url'=>'http://www.hudong.com/wiki/'.$title2,
+					'url'=>'http://www.baike.com/wiki/'.$title2,
 					'summary'=>$summary
 				);
 			}else{
 				$doc_exists=0;
 			}
-			
+
 		}
 		$this->view->assign("doc_exists",$doc_exists);
 		$this->view->assign("doc",$doc);
@@ -855,7 +897,7 @@ class control extends base{
 	function dosandbox(){
 		$did = $this->setting['sandbox_id'];
 		$maxid =  $_ENV['doc']->get_maxid();
-		
+
 		if (!is_numeric($did) || $did < 1 || $did > $maxid){
 			$did = $maxid;
 		}
@@ -865,7 +907,7 @@ class control extends base{
 			$this->message($this->view->lang['sandboxTip1'],'index.php',0);
 		}
 	}
-	
+
 	function dosetfocus(){
 		if(@!is_numeric($this->post['did']) || @!is_numeric($this->post['doctype'])){
 			$this->message("-1","",2);
@@ -897,7 +939,7 @@ class control extends base{
 		$categorytree=$_ENV['category']->get_categrory_tree($all_category);
 		$this->message($categorytree,"",2);
 	}
-	
+
 	function dochangename(){
 		$ajaxtitle = trim($this->post['newname']);
 		if(string::hstrtoupper(WIKI_CHARSET)=='GBK'){
@@ -912,6 +954,8 @@ class control extends base{
 			$this->message("-4","",2);
 		}elseif(@(bool)$this->db->fetch_by_field('doc','title',$title)){
 			$this->message("-2","",2);
+		}elseif(@(bool)$this->db->fetch_by_field('synonym','srctitle',$title)){
+			$this->message("-5","",2);
 		}elseif($_ENV['doc']->change_name($this->post['did'],$title)){
 			$_ENV['synonym']->synonym_change_doc($this->post['did'],$title);
 			// 云搜索通知
@@ -924,7 +968,7 @@ class control extends base{
 			$this->message("0","",2);
 		}
 	}
-	
+
 	function dochangecategory(){
 		if(@is_numeric($this->post['did'])&&$_ENV['category']->vilid_category($this->post['newcategory'])){
 			if($_ENV['doc']->change_category($this->post['did'],$this->post['newcategory'])){
@@ -975,8 +1019,8 @@ class control extends base{
 			$this->header("list");
 		}
 	}
-	
-	
+
+
 	function dorandom(){
 		$did=$_ENV['doc']->get_random();
 		if(0==$did){
@@ -985,7 +1029,7 @@ class control extends base{
 			$this->header('doc-view-'.$did);
 		}
 	}
-	
+
 	function dovote(){
 		if(@is_numeric($this->post['did'])){
 			$did=$this->post['did'];
@@ -1011,7 +1055,7 @@ class control extends base{
 		}
 		$this->message('sucess','',2);
 	}
-	
+
 	function dodelsave(){
 		$aid=isset($this->get[2])?$this->get[2]:'';
 		if(empty($aid)){
@@ -1020,13 +1064,17 @@ class control extends base{
 			if($num>0){
 				$aids='';
 				for($i=0;$i<$num;$i++){
-					$aids.=$aid[$i].',';
+					$aid[$i] = is_numeric($aid[$i]) ? $aid[$i] : 0;
+					if($aid[$i]){
+						$aids.=$aid[$i].',';
+					}
 				}
 				$aids=substr($aids,0,-1);
 				$_ENV['doc']->del_autosave($aids);
 				$this->message($this->view->lang['saveDelSucess'],'index.php?doc-managesave',0);
 			}else{
 				$did=isset($this->post['did'])?$this->post['did']:'';
+				$did = is_numeric($did) ? $did : 0;
 				if(is_numeric($did)){
 					$_ENV['doc']->del_autosave('',$this->user['uid'],$did);
 				}else{
@@ -1038,7 +1086,7 @@ class control extends base{
 		}
 		$this->message('sucess','',2);
 	}
-	
+
 	function domanagesave(){
 		$page = max(1, intval($this->get[2]));
 		$num = isset($this->setting['list_prepage'])?$this->setting['list_prepage']:20;
@@ -1046,25 +1094,25 @@ class control extends base{
 		$count=$_ENV['doc']->get_autosave_number($this->user['uid']);
 		$savelist=$_ENV['doc']->get_autosave_by_uid($this->user['uid'],$start_limit,$num);
 		$departstr=$this->multi($count, $num, $page,"doc-managesave");
-		
+
 		$this->view->assign('departstr',$departstr);
 		$this->view->assign('savelist',$savelist);
 		$this->view->assign('count',$count);
 		$this->view->display('managesave');
 	}
-	
+
 	function dogetrelateddoc(){
 		$did = trim($this->post['did']);
 		$relateddoc=$_ENV['doc']->get_related_doc($did);
-		$doclist = json_encode($relateddoc);	
+		$doclist = json_encode($relateddoc);
 		$this->message($doclist,"",2);
 	}
-	
+
 	function doaddrelatedoc(){
 		$did = trim($this->post['did']);
 		if(is_numeric($did)){
 			$relate = trim($this->post['relatename']);
-			$title = htmlspecialchars(trim($this->post['title']));
+			$title = htmlspecial_chars(trim($this->post['title']));
 			if(string::hstrtoupper(WIKI_CHARSET)=='GBK'){
 				$relate=string::hiconv($relate,'gbk','utf-8');
 				$title=string::hiconv($title,'gbk','utf-8');
@@ -1074,7 +1122,7 @@ class control extends base{
 			if($relate){
 				$list = array_unique(explode(';',$relate));
 				foreach($list as $key => $relatename){
-					$relatename = htmlspecialchars($relatename);
+					$relatename = htmlspecial_chars($relatename);
 					if($_ENV['doc']->have_danger_word($relatename)){
 						unset($list[$key]);
 						$this->message("2","",2);
@@ -1087,7 +1135,7 @@ class control extends base{
 	}
 
 	function docooperate(){
-		
+
 		$coopdoc = array();
 		$cooperatedocs = explode(';',$this->setting['cooperatedoc']);
 		$counts = count($cooperatedocs);
@@ -1103,7 +1151,7 @@ class control extends base{
 		//$this->view->display('cooperate');
 		$_ENV['block']->view('cooperate');
 	}
-	
+
 	function hdgetcat(){
 		$evaljs = '';
 		$did=intval($this->post['did']);
@@ -1116,7 +1164,7 @@ class control extends base{
 		}
 		$this->message($evaljs,'',2);
 	}
-	
+
 	function doeditletter(){
 		$first_letter = trim($this->post['first_letter']);
 		if(preg_match("/^[a-zA-Z]$/i" , $first_letter)){
@@ -1129,9 +1177,9 @@ class control extends base{
 			}
 		}else{
 			$this->message("-1","",2);
-		} 
+		}
 	}
-	
+
 	function _anti_copy() {
 		if(!empty($this->setting['check_useragent'])) {
 			$this->load('anticopy');

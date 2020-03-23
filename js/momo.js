@@ -1,7 +1,7 @@
 /*
  * hudong摸摸(hdmomo) v2.0β - New Javascript Editor
  *
- * Copyright (c) 2008 互动在线（北京）科技有限公司(hudong.com) 
+ * Copyright (c) 2008 互动在线（北京）科技有限公司(baike.com) 
  * 
  * @Date: 2008-12-18
  *
@@ -173,7 +173,7 @@
             try {
                 //var iframeWin = window.frames['momoFrame'];
                 //iframeWin.document.open();
-                //iframeWin.document.write('<html><body> <span style="color:green;font-weight:bold;">'+$word+'</span> <br /><br /> <img src="http://www.hudong.com/hdmomo/img/loading.gif" /> <p style="font-size:12px;">&#27491;&#22312;&#36733;&#20837;&#20869;&#23481;...</p> </body></html>');
+                //iframeWin.document.write('<html><body> <span style="color:green;font-weight:bold;">'+$word+'</span> <br /><br /> <img src="http://www.baike.com/hdmomo/img/loading.gif" /> <p style="font-size:12px;">&#27491;&#22312;&#36733;&#20837;&#20869;&#23481;...</p> </body></html>');
                 //iframeWin.document.close();
             } 
             catch (ex) {
@@ -267,16 +267,16 @@
         area: document.getElementById(this.elementid) || document,
         divstr: '<p style="margin: 0pt; padding: 0pt 0pt 5px; width: 315px; float: left;">' +
         '<span style="float: left; font-size: 12px; margin-left: 5px;">' +
-        '<img align="absmiddle" src="http://www.hudong.com/hdmomo/img/logo.png"/>互动摸摸' +
+        '<img align="absmiddle" src="http://www.baike.com/hdmomo/img/logo.png"/>互动摸摸' +
         '</span>' +
         '<span style="float: right; margin-right: 5px">' +
-        '<img  border="0" src="http://www.hudong.com/images/momo/guanbi_normal.gif" onclick = "momo.div.undisplay();"/>' +
+        '<img  border="0" src="http://www.baike.com/images/momo/guanbi_normal.gif" onclick = "momo.div.undisplay();"/>' +
         '</span>' +
         '</p>' +
         '<div style="padding: 5px; margin: 0pt; padding: 5px; float: left; width: 305px; background-color: #FFFFFF;">' +
         '<iframe width="100%" scrolling="no" height="145" frameborder="0" src="" name="momoFrame" id="momoFrame"/>' +
         '</div><div align="center" style="margin: 0pt; padding: 0pt 0pt 5px; width: 290px; float: left;">' +
-        '<span style=" font-size: 12px;">©2003-2008<a target="_blank" href="http://www.hudong.com/"><b><font color="#2ea8ed">hudong.com</font></b></a>互动百科</span>' +
+        '<span style=" font-size: 12px;">©2003-2008<a target="_blank" href="http://www.baike.com/"><b><font color="#2ea8ed">baike.com</font></b></a>互动百科</span>' +
         '</div>',
         
         keylength: 16

@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->view->setlang($this->setting['lang_name'],'back');
 		$this->load("attachment");
 		$this->load("doc");
@@ -64,7 +64,7 @@ class control extends base{
 
 	function doremove(){
 		$ids=$this->post['attach'];
-		if(is_array($ids)){
+		if(is_array($ids) && $ids){
 			foreach($ids as $id){
 				$delid[]=substr($id,0,strpos($id,'_'));
 			}

@@ -1,25 +1,32 @@
 {template header}
-<div id="category" class="l w-710 o-v bor-c_dl category">
-	<div class="hd_map">
+<div class="wrap hd_map">
 	<a href="{WIKI_URL}">{$setting[site_name]}</a> &gt;&gt;{lang wikiCategory}
-	</div>
+</div>
+<section class="wrap clearfix">
+<div id="category" class="l group1 bor-ccc category">
+	<!--{if !empty($subcategory)}-->
 	<!--{loop $subcategory  $category}-->
-	<dl class="i6-ff m-t10 p-b10">
-	  <dt><a href="{url category-view-$category['parent']['cid']}" >{$category['parent']['name']}</a></dt>
-	  <!--{if isset($category['child'])}-->
-	  <!--{loop $category['child']  $child}--><dd><a href="{url category-view-$child['cid']}">{$child['name']}</a></dd><!--{/loop}-->
+	<dl class="f14">
+	  <dt><a class="clink f18" href="{url category-view-$category['parent']['cid']}" >{$category['parent']['name']}</a></dt>
+	  <!--{if !empty($category['child'])}-->
+	  <!--{loop $category['child']  $child}--><dd><a class="clink" href="{url category-view-$child['cid']}">{$child['name']}</a></dd><!--{/loop}-->
 	 <!--{/if}-->
 	</dl>
 	<!--{/loop}-->
+	<!--{/if}-->
 </div>
-<div class="r w-230">
+<aside class="r group2">
     <div id="block_right">{block:right/}</div>
 	<!--ad start -->
-	<div class="ad" id="advlist_7">
 	<!--{if isset($advlist[7]) && isset($setting[advmode]) && '1'==$setting[advmode]}-->
+	<div class="ad" id="advlist_7">
 	{$advlist[7][code]}
-	<!--{/if}-->
 	</div>
+	<!--{/if}-->
 	<!--ad end -->	
-</div>
+</aside>
+<script>
+$('#block_right .columns').eq(0).css('margin-top', 0)
+</script>
+</section>
 {template footer}

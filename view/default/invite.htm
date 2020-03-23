@@ -22,38 +22,35 @@ function autoPreview(val, id) {
 }
 
 </script>
-<div class="hd_map">
+<div class="wrap hd_map">
 	<a href="{WIKI_URL}">{$setting['site_name']}</a> &gt; <a href="{url user-profile}">{lang selfManage}</a> &gt; {lang editProfile}</div>
-	
-	<div class="r w-710 o-v m-t10 p-b10 gl_manage_main">
-		<h2 class="h3 bold">{lang myInviteLink}</h2>
-		
-		
-		
-		<div style="padding: 10px 20px; color: #666;">
+<section class="wrap clearfix">
+	<div class="r group1 bor-ccc gl_manage_main">
+		<h2 class="col-h2">{lang myInviteLink}</h2>		
+		<div style="padding: 10px 25px; color: #999;">
 		{lang inviteLinkTip}<br />
 			<span style="font-size: 16px; font-weight: bold;">
-			<a onclick="javascript:copyTxt(this.href);return false;" href="{$invite_url}">{$invite_url}</a>
+			<a onclick="javascript:copyTxt(this.href);return false;" class="clink" href="{$invite_url}"><!--{if !empty($invite_url)}-->{$invite_url}<!--{/if}--></a>
 			</span>
 		</div>
 		<br />
 		
-		<h2 class="h3 bold">{lang emailInvite}</h2>
-		<div style="padding: 10px 20px; color: #666;">
+		<h2 class="col-h2">{lang emailInvite}</h2>
+		<div style="padding: 10px 25px; color: #999;">
 		{lang emailInviteTip}<br />
-		<form action="{url user-invite}" style="color: #000;" method="POST">
+		<form action="{url user-invite}" method="POST">
 		{lang insertYourEmail}<br />
-		<textarea name="toemails" cols="70" rows="8" />{$toemails}</textarea><br />
-		<span style="color:red">{$mail_error}</span><br />
+		<textarea name="toemails" class="inp_txt" cols="70" rows="8" /><!--{if !empty($toemails)}-->{$toemails}<!--{/if}--></textarea><br />
+		<span style="color:red"><!--{if !empty($mail_error)}-->{$mail_error}<!--{/if}--></span>&nbsp;<br />
 		{lang inviteWords}<br />
-		<textarea name="ps" cols="70" rows="3" onkeyup="autoPreview(this.value, 'PreContainer')">{$ps}</textarea><br />
-		<span style="color:red">{$ps_error}</span><br />
-		<input type="submit" name="submit" value="{lang sendInvite}" />
+		<textarea name="ps" cols="70" class="inp_txt" rows="3" onkeyup="autoPreview(this.value, 'PreContainer')"><!--{if !empty($ps)}-->{$ps}<!--{/if}--></textarea><br />
+		<span style="color:red"><!--{if !empty($ps_error)}-->{$ps_error}<!--{/if}--></span>&nbsp;<br />
+		<input type="submit" name="submit" class="btn_inp blue" value="{lang sendInvite}" />
 		</form>
 		<br />
 		{lang invitePreview}
-		<div style="border: 1px solid #CCC; background: #F0F0F0; padding: 10px; line-height: 14px;">
-		{$preview}
+		<div style="border: 1px solid #ddd; background: #fcfcfc; padding: 10px; line-height: 14px;">
+		<!--{if !empty($preview)}-->{$preview}<!--{/if}-->
 		</div>
 		</div>
 		
@@ -61,26 +58,27 @@ function autoPreview(val, id) {
 	
 </div>
 
-<div class="l w-230">
-<div class="m-t10 p-b10 sidebar gl_manage">
-	<h2 class="col-h2"><span onclick="expand('usermanage');">{lang profile}</span></h2>	
+<aside class="l group2">
+<div class="sidebar bor-ccc gl_manage">
+	<h2 class="col-h2 cblue"><span onclick="expand('usermanage');">{lang profile}</span></h2>	
 	<ul id="usermanage">
-		<li><a href="{url user-profile}" target="_self"><img alt="" src="style/default/gl_manage/grzl.gif" />{lang profile}</a></li>
-		<li><a href="{url user-editprofile}" target="_self"><img src="style/default/gl_manage/grzl_set.gif"/>{lang editProfile}</a></li>
-		<li><a href="{url user-editpass}" target="_self"><img src="style/default/gl_manage/change_pw.gif"/>{lang editPass}</a></li>
-		<li><a href="{url user-editimage}" target="_self"><img src="style/default/gl_manage/grzl_set.gif" />{lang editImage}</a></li>
-		<li><a href="{url doc-managesave}" target="_self"><img src="style/default/gl_manage/ctbccgx.gif"/>{lang manageSave}</a></li>
-		<li><a href="{url user-invite}" target="_self" class="on"><img src="style/default/gl_manage/invite.png"/>{lang regInvite}</a></li>
+		<li><a href="{url user-profile}" target="_self">{lang profile}</a></li>
+		<li><a href="{url user-editprofile}" target="_self" >{lang editProfile}</a></li>
+		<li><a href="{url user-editpass}" target="_self">{lang editPass}</a></li>
+		<li><a href="{url user-editimage}" target="_self">{lang editImage}</a></li>
+		<li><a href="{url doc-managesave}" target="_self">{lang manageSave}</a></li>
+		<li class="on"><a href="{url user-invite}" target="_self">{lang regInvite}</a></li>
 	</ul>
-	<h2 class="col-h2"><span onclick="expand('userpms');">{lang shortmessage}</span></h2>		
+</div><div class="sidebar columns gl_manage">
+	<h2 class="col-h2 cblue"><span onclick="expand('userpms');">{lang shortmessage}</span></h2>		
 	<ul id="userpms">
-		<li><a href="{url pms-box-inbox}" target="_self"><img alt="" src="style/default/gl_manage/sjx.gif" />{lang inbox}</a></li>
-		<li><a href="{url pms-box-outbox}" target="_self" ><img src="style/default/gl_manage/fjx.gif"/>{lang outbox}</a></li>
-		<li><a href="{url pms-sendmessage}" target="_self" ><img src="style/default/gl_manage/fdxx.gif"/>{lang sendmessage}</a></li>
-		<li><a href="{url pms-box-drafts}" target="_self"><img src="style/default/gl_manage/cgx.gif" />{lang draft}</a></li>
-		<li><a href="{url pms-blacklist}" target="_self"><img src="style/default/gl_manage/hllb.gif"/>{lang blacklist}</a></li>
+		<li><a href="{url pms-box-inbox}" target="_self">{lang inbox}</a></li>
+		<li><a href="{url pms-box-outbox}" target="_self" >{lang outbox}</a></li>
+		<li><a href="{url pms-sendmessage}" target="_self" >{lang sendmessage}</a></li>
+		<li><a href="{url pms-box-drafts}" target="_self">{lang draft}</a></li>
+		<li><a href="{url pms-blacklist}" target="_self">{lang blacklist}</a></li>
 	</ul>
 </div>
-</div>
-<div class="c-b"></div>
+</aside>
+</section>
 {template footer}

@@ -141,7 +141,7 @@ class hddb {
 			$output .="<b>HDwiki Error Info</b><table><tr><td width='100px'><b>Message</b></td><td>$msg</td></tr>\n";
 			$output .="<tr><td><b>Time</b></td><td>".date("Y-m-d H:i:s")."<br /></td></tr>\n";
 			$output .="<tr><td><b>Script</b></td><td> ".$_SERVER['PHP_SELF']."<br /></td></tr>\n\n";
-			$output .="<tr><td><b>SQL</b></td><td> ".htmlspecialchars($sql)."<br />\n</td></tr><tr><td><b>Error</b></td><td>  ".$this->error()."</td></tr><br />\n";
+			$output .="<tr><td><b>SQL</b></td><td> ".htmlspecial_chars($sql)."<br />\n</td></tr><tr><td><b>Error</b></td><td>  ".$this->error()."</td></tr><br />\n";
 			$output .="<tr><td><b>Errno.</b></td><td>  ".$this->errno()."</td></tr></table>";
 			$output .='<p style="font-family: Verdana, Tahoma; font-size: 12px; background: #FFFFFF;"><a href="http://kaiyuan.hudong.com/faq.php?type=mysql&dberrno='.$this->errno().'&dberror='.rawurlencode($this->error()).'" target="_blank">&#x5230; http://kaiyuan.hudong.com &#x641c;&#x7d22;&#x6b64;&#x9519;&#x8bef;&#x7684;&#x89e3;&#x51b3;&#x65b9;&#x6848;</a></p>';
 			$output .="\n</body></html>";

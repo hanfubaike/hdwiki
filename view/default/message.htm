@@ -9,12 +9,13 @@
 <root><![CDATA[{$message}]]></root>
 <!--{else}-->
 {template header}
-<div class="success">
+<section class="wrap">
+<div class="columns success">
  	<dl>
- 	<dt class="h2">{lang message_title}:</dt>
+ 	<dt class="f20 fn"><i class="ico-warnn"></i>{lang message_title}</dt>
  	<dd>{$message}</dd>
  	<!--{if $redirect == 'BACK'}-->
-	<dd><a href="javascript:void(0);" onclick="history.back();return false;">{lang message_back}</a></dd>
+	<dd><a href="javascript:void(0);" class="clink" onclick="history.back();return false;">{lang message_back}</a></dd>
 	<!--{elseif $redirect}-->
 	<dd>{lang messageTip}</dd>
 	<script type="text/javascript">
@@ -26,5 +27,6 @@
 	<!--{/if}-->
  	</dl>
 </div>
+</section>
 {template footer}
 <!--{/if}-->

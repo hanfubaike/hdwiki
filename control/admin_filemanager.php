@@ -3,7 +3,7 @@
 
 class control extends base{
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base( $get, $post);
 		$this->load('filemanager');
 		$this->load('dir');
 		$this->load('upload');
@@ -115,7 +115,8 @@ class control extends base{
 				$r['filepath'] = $basedir.$f;
 				$r['fileext'] = $_ENV['filemanager']->fileext($fpath);
 				//if(!key_exists($r['fileext'],$filetype)) $r['fileext'] = 'other';
-				$r['preview'] = in_array($r['fileext'],array('gif','jpg','jpeg','png','bmp')) ? "<img src=".$r['filepath']." border=0>" : "&nbsp;".$LANG['not_picture_flash']."&nbsp;";
+				$nopicflash = isset($LANG['not_picture_flash']) ? $LANG['not_picture_flash'] : false;
+				$r['preview'] = in_array($r['fileext'],array('gif','jpg','jpeg','png','bmp')) ? "<img src=".$r['filepath']." border=0>" : "&nbsp;".$nopicflash."&nbsp;";
 				$files[] = $r;
 				$fnum++;
 			}

@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get, $post);
+		$this->base( $get, $post);
 		$this->load('search');
 		$this->load('doc');
 		$this->load("synonym");
@@ -14,10 +14,10 @@ class control extends base{
 	
 	function dodefault() {
 		$title=trim($this->post['searchtext']);
-		if($title==''){
+		/*if($title==''){
 			$this->header();
 			exit;
-		}
+		}*/
 		// 同义词查找
 		$synonym=$_ENV['synonym']->get_synonym_by_src($title);
 		if($synonym){
@@ -39,7 +39,7 @@ class control extends base{
 	}
 	
 	function dofulltext(){
-		if(!$this->get[3] && !$this->get[10]){
+		 if(!$this->get[3] && !$this->get[10]){
 			if(1 == $this->setting['cloud_search']){
 				// 云搜索开启后，关闭本地搜索
 				$this->header();
@@ -50,7 +50,7 @@ class control extends base{
 			$this->view->assign("categorytree",$categorytree);
 			$_ENV['block']->view('search');
 		}else{
-			$page=isset($this->get[11])?$this->get[11]:'';
+			$page=isset($this->get[11])?intval($this->get[11]):'';
 			if(empty($page) || !is_numeric($page)){
 				$page=1;
 				// 指定时间内只能进行一次搜索
@@ -159,7 +159,7 @@ class control extends base{
 				}
 			}
 			
-			$title=htmlspecialchars(stripslashes($element['keyword']));
+			$title=htmlspecial_chars(stripslashes($element['keyword']));
 
 			$this->view->assign("title",$title);
 			$this->view->assign("keyword",rawurlencode($element['keyword']));
@@ -174,7 +174,11 @@ class control extends base{
 			$this->view->assign('navtitle',$this->view->lang['search'].'-'.stripslashes(stripslashes($element['keyword'])));
 			$this->view->assign("departstr",$departstr);
 			//$this->view->display("searchresult");
-			$_ENV['block']->view('searchresult');
+			 if ($this->isMobile()){
+				 $_ENV['block']->view('wap-searchresult');
+			 } else {
+				 $_ENV['block']->view('searchresult');
+			 }
 		}
 	}
 

@@ -6,7 +6,7 @@ class control extends base{
 	var $json;
 	
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('user');
 		$this->load('doc');
 		$this->load('hdapi');
@@ -234,7 +234,7 @@ class control extends base{
 			$_ENV['user']->update_field('creates',$this->user['creates']+1,$this->user['uid']);
 			$_ENV['category']->update_category_docs($this->post['category']);
 			$_ENV['innerlink']->update($title, $did);
-			//$data = array('did'=>$did, 'name'=>'互动百科 '.$title, 'url'=>'http://www.hudong.com/wiki/'.urlencode($this->post['title']));
+			//$data = array('did'=>$did, 'name'=>'互动百科 '.$title, 'url'=>'http://www.baike.com/wiki/'.urlencode($this->post['title']));
 			//$_ENV['reference']->add($data);
 			
 			$this->message(1,'',2);

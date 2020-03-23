@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('attachment');
 		$this->load('user');
 		$this->load("watermark");
@@ -21,9 +21,9 @@ class control extends base{
 			if(isset($this->setting['watermark'])){
 				$_ENV['watermark']->image($destfile,$destfile);
 			}
-			$uid=$this->user['uid']?$this->user['uid']:0;
-			$did=$this->get['2']?$this->get['2']:0;
-			$_ENV['attachment']->add_attachment($uid ,$did,$imgname ,$destfile ,htmlspecialchars($this->post['picAlt']) ,$extname);
+			$uid=intval($this->user['uid']);
+			$did=intval($this->get['2']);
+			$_ENV['attachment']->add_attachment($uid ,$did,$imgname ,$destfile ,htmlspecial_chars($this->post['picAlt']) ,$extname);
 			
 			$img_width_big=$this->setting['img_width_big'];
 			$img_height_big=$this->setting['img_height_big'];
@@ -50,7 +50,7 @@ class control extends base{
 	
 	function doupload(){
 		@header('Content-type: text/html; charset='.WIKI_CHARSET);
-		$did=$this->post['did']?$this->post['did']:0;
+		$did=intval($this->post['did']);
 		if(!$this->setting['attachment_open']){
 			exit;
 		}

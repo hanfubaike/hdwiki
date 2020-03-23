@@ -8,7 +8,7 @@ class control extends base{
 	var $filename;
 	
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->view->setlang($this->setting['lang_name'],'back');
 		$this->tempfile=HDWIKI_ROOT."/data/tmp/".$GLOBALS['theme'].'_temp.php';
 		$this->load('theme');
@@ -145,6 +145,9 @@ class control extends base{
 	
 	function docreatestyle(){
 		$style = $this->post['style'];
+		if($style['desc']!=""){
+			$style['desc'] = string::stripscript($style['desc']);
+		}
 		$stylelist=$_ENV['theme']->get_style_list(0);
 		if(in_array($style[path],$stylelist)){
 			$this->message($this->view->lang['styledocpathexist'],BACK);
@@ -184,7 +187,7 @@ class control extends base{
 			if (!is_dir($filedir.$filename) && '.'!=$filename && '..'!=$filename && substr($filename,0,6)!="admin_" && substr($filename,-4)==".htm"){
 				$tpl=substr($filename,0,-4);
 				$viewlist[$tpl]=isset($url[$tpl])?1:0;
-				$stylelang[$tpl]=$this->view->lang['style'.$tpl];
+				$stylelang[$tpl]=isset($this->view->lang['style'.$tpl]) ? $this->view->lang['style'.$tpl] : null;
 			}
 		}
 		closedir($handle);
@@ -197,7 +200,7 @@ class control extends base{
 			if (!is_dir($filedir.$filename) && '.'!=$filename && '..'!=$filename && substr($filename,0,6)!='admin_' && substr($filename,-4)=='.css' || substr($filename,-4)=='.xml'){
 				$style_key=str_replace('.','',substr($filename,-4));
 				$stylelist[substr($filename,0,-4)]=$style_key;
-				$stylelang[substr($filename,0,-4)]=$this->view->lang['style'.substr($filename,0,-4)];
+				$stylelang[substr($filename,0,-4)]=isset($this->view->lang['style'.substr($filename,0,-4)]) ? $this->view->lang['style'.substr($filename,0,-4)] : null;
 			}
 			if(is_file($filedir.'screenshot.jpg')){
 				$styleimg=1;
@@ -450,7 +453,7 @@ class control extends base{
 	
 	function dolist(){
 		$num = 10;
-		$page = max(1, intval($this->get[3]));
+		$page = isset($this->get[3]) ? max(1, intval($this->get[3])) : 1;
 		$orderby = $this->get[2];
 		if(!$orderby)$orderby='time';
 		$wiki_list_url=$this->setting['app_url']."/hdapp.php?action=download&type=template&charset=".WIKI_CHARSET."&page=".$page."&orderby=".$orderby."&version=".urlencode(HDWIKI_VERSION);

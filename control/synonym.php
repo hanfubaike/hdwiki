@@ -4,7 +4,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load("synonym");
 		$this->load("doc");
 	}
@@ -26,10 +26,12 @@ class control extends base{
 		}
 
 		$synonyms=array();
-		foreach($this->post['srctitles'] as $srctitle) {
-			$srctitle = htmlspecialchars(string::haddslashes(string::hiconv(trim($srctitle))));
-			if('' != $srctitle) {
-				$synonyms[] = $srctitle;
+		if(!empty($this->post['srctitles'])) {
+			foreach($this->post['srctitles'] as $srctitle) {
+				$srctitle = htmlspecial_chars(string::haddslashes(string::hiconv(trim(string::stripscript($srctitle)))));
+				if('' != $srctitle) {
+					$synonyms[] = $srctitle;
+				}
 			}
 		}
 		$desttitle=trim($this->post['desttitle']);
@@ -52,10 +54,11 @@ class control extends base{
 			$num=$_ENV['synonym']->savesynonym($destdid,$desttitle,$srctitles); 
 			if($num > 0) {
 				$synonyms_list=$_ENV['synonym']->get_synonym_by_dest($destdid,'');
-				$str='';
+				$str='<ul class="doc-list" id="str">';
 				for($i=0;$i<count($synonyms_list);$i++){
-					$str.="<a href='index.php?doc-innerlink-".urlencode($synonyms_list[$i]['srctitle'])."' name='synonym'> ".$synonyms_list[$i]['srctitle']."</a>";
+					$str.="<li><a href='index.php?doc-innerlink-".urlencode($synonyms_list[$i]['srctitle'])."' name='synonym'> ".$synonyms_list[$i]['srctitle']."</a></li>";
 				}
+				$str .='</ul>';
 				exit($str);
 			} else {
 				exit('0');

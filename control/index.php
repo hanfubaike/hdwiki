@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get,  $post);
 		$this->load('category');
 	}
 
@@ -74,7 +74,12 @@ class control extends base{
 		    $this->view->assign('passport',defined('PP_OPEN')&&PP_OPEN);
 		    $this->view->assign('loginTip2',$loginTip2);
 		}
-		$_ENV['block']->view('index');
+
+		if($this->isMobile()){
+			$_ENV['block']->view('wap-index');
+		}else{
+			$_ENV['block']->view('index');
+		}
 	}
 
  	function dosettheme() {

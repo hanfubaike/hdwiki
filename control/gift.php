@@ -3,7 +3,7 @@
 class control extends base{
 	
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('gift');
 		$this->load('user');
 	}
@@ -30,13 +30,21 @@ class control extends base{
 		}else{
 			$total=$this->db->fetch_total('gift','available=1');//总礼品记录数
 		}
+		$this->get[3] = empty($this->get[3]) ? 0 : $this->get[3];
 		$page = max(1, intval($this->get[3])); //当前页面		
 		$limit=10;//每页显示数
-		$page=($page - 1) * $limit>$total?1:$page;
+		//$page=($page - 1) * $limit>$total?1:$page; //移动端报错，当没有数据的时候不执行操作
 	 	$start_limit = ($page - 1) * $limit;
-		$giftlist=$_ENV['gift']->get_list($title='',$beginprice ,$endprice ,$begintime='',$endtime='',$start_limit,$limit);		
+		$giftlist=$_ENV['gift']->get_list($title='',$beginprice ,$endprice ,$begintime='',$endtime='',$start_limit,$limit);
+
+		//调用判断是否移动端请求
+		if($this->isMobile() && $page > 1){
+			exit(json_encode($giftlist));
+		}
+
 		/*分页字符串*/
 		$departstr=$this->multi($total, $limit, $page,'gift-default-'.$beginprice);
+		$this->view->assign('beginprice',$beginprice);
 		$this->view->assign('giftlist',$giftlist);
 		$this->view->assign('departstr',$departstr);
 		$this->view->assign('page',$page);
@@ -44,13 +52,18 @@ class control extends base{
 		$loglist=$_ENV['gift']->get_loglist();
 		$this->view->assign('loglist',$loglist);
 	//	$this->view->display('giftlist');
-		$_ENV['block']->view('giftlist');
+		if ($this->isMobile()){
+			$_ENV['block']->view('wap-giftlist');
+		} else {
+			$_ENV['block']->view('giftlist');
+		}
 	}
 
 	/*礼品申请*/
 	function doapply(){
 		/*获取用户提交参数*/
 		$gid =$this->post['gid']; //礼品id
+		$gid = is_numeric($gid) ? $gid : 0;
 		$truename =$this->post['truename']; 
 		$telephone =$this->post['telephone']; 
 		$email =$this->post['email']; 

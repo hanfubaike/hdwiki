@@ -102,7 +102,7 @@ function kaiyuan_pop(){
 	if(typeof hdwiki_tip_content=='string'){
 		_kaiyuan_tip();
 	}else{
-		loadScript('./tip.js', function(){
+		loadScript('http://kaiyuan.hudong.com/tips/tip.js', function(){
 			setTimeout(function(){_kaiyuan_tip()}, 2000);
 		});
 	}

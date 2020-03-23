@@ -1,6 +1,6 @@
-<div  class="columns i6-ff p-b8 rmbq {$data['config']['style']}" bid="{$bid}">
-	<h2 class="col-h2">{lang hotTag}</h2>
-	<ul class="col-ul list-s">
+<div  class="columns p-b8 rmbq {$data['config']['style']}" bid="{$bid}">
+	<h2 class="col-h2">热门标签</h2>
+	<ul class="col-ul list-s clearfix">
 	<!--{loop $data['hottag'] $tag}-->
 		<!--{if $tag['tagcolor']=='red'}-->
 			<li><a href="{url search-tag-{eval echo urlencode($tag['tagname'])}}" class="red">{$tag['tagname']}</a></li>

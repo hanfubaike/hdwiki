@@ -4,7 +4,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('ftp');
 		$this->load('setting');
 		$this->view->setlang($this->setting['lang_name'],'back');
@@ -16,7 +16,7 @@ class control extends base{
 		if(!function_exists('ftp_connect')){
 			$status=1;
 		}
-		if($this->post['sure']!=""){
+		if(isset($this->post['sure']) && $this->post['sure']!=""){
 			$setting['FTP_ENABLE'] = $this->post['FTP_ENABLE'];
 			$setting['FTP_HOST'] = $this->post['FTP_HOST'];
 			$setting['FTP_PORT'] = $this->post['FTP_PORT'];

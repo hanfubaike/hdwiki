@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('plugin');
 		$this->view->setlang($this->setting['lang_name'],'back');
 	}
@@ -23,7 +23,7 @@ class control extends base{
 	
 	/*plugin will to be installed*/
 	function dowill(){
-		$page = max(1, intval($this->get[3]));
+		$page = !empty($this->get[3]) ? max(1, intval($this->get[3])) : 1;
 		$orderby = $this->get[2];
 		if(!$orderby)$orderby='time';
 		$remotes=$_ENV['plugin']->find_remote_plugins($page,$orderby);

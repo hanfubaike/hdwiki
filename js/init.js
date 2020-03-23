@@ -7,14 +7,14 @@ function _dictInit(){
   h += '"><tr><td>';
   h += '<div width="100%" style="cursor:move;background-color:#C8DAF3;border:0px;" onmouseover="_dict_onmove=1;" onmouseout="_dict_onmove=0;">' ;
   h += '<table width="100%"><tr><td align="left" width="80%" style="background-color:#C8DAF3;">';
-  h += '<div style="color:#1A9100;font-size:14px;background-color:#C8DAF3;"><img src="http://www.hudong.com/hdmomo/img/logo.png" align="top" /> &#20114;&#21160;&#25720;&#25720;</div>';
+  h += '<div style="color:#1A9100;font-size:14px;background-color:#C8DAF3;"><img src="http://www.baike.com/hdmomo/img/logo.png" align="top" /> &#20114;&#21160;&#25720;&#25720;</div>';
   h += '</td>';
   h += '<td align="right" style="background-color:#C8DAF3;">';
   h += '<a href="'+_dict_help+'" target="_blank" title="&#24110;&#21161;">';
-  h += '<img src="http://www.hudong.com/hdmomo/img/help.gif" style="border:none;display:inline;" align="absmiddle">';
+  h += '<img src="http://www.baike.com/hdmomo/img/help.gif" style="border:none;display:inline;" align="absmiddle">';
   h += '</a> ';
   h += '<a href="javascript:_dictClose()" title="&#20851;&#38381;" target="_self">';
-  h += '<img src="http://www.hudong.com/hdmomo/img/close.gif" style="border:none;display:inline;" align="absmiddle">';
+  h += '<img src="http://www.baike.com/hdmomo/img/close.gif" style="border:none;display:inline;" align="absmiddle">';
   h += '</a>';
   h += '</td></tr></table>';
   h += '</div>';
@@ -26,7 +26,7 @@ function _dictInit(){
   h += '<iframe id="_dictFrame" name="_dictFrame" scrolling="no"  src="about:blank" FRAMEBORDER="0" height="145" width="100%"></iframe>';
   h += '</td></tr><tr align="center"><td width="100%" height="20">';
   h += '<font color="#000000" size="1" face="Arial">&copy;2003-2008 ';
-  h += '<a href="http://www.hudong.com/" target="_blank"><b><font color="#2EA8ED">hudong.com</font></b></a>&#20114;&#21160;&#30334;&#31185;</font>';
+  h += '<a href="http://www.baike.com/" target="_blank"><b><font color="#2EA8ED">baike.com</font></b></a>&#20114;&#21160;&#30334;&#31185;</font>';
   h += '</td></tr></table></fieldset></td></tr></table>';
   h += '</td></tr></table>';
   try{
@@ -274,7 +274,7 @@ function _dictShow(word){
         _dict_iframe.src='about:blank';
         var iframeWin = window.frames['_dictFrame'];
         iframeWin.document.open();
-        iframeWin.document.write('<html><body> <span style="color:green;font-weight:bold;">'+word+'</span> <br /><br /> <img src="http://www.hudong.com/hdmomo/img/loading.gif" /> <p style="font-size:12px;">&#27491;&#22312;&#36733;&#20837;&#20869;&#23481;...</p> </body></html>');
+        iframeWin.document.write('<html><body> <span style="color:green;font-weight:bold;">'+word+'</span> <br /><br /> <img src="http://www.baike.com/hdmomo/img/loading.gif" /> <p style="font-size:12px;">&#27491;&#22312;&#36733;&#20837;&#20869;&#23481;...</p> </body></html>');
         iframeWin.document.close();
     }catch(x){
     }
@@ -384,13 +384,13 @@ function _dictStatus(){
     }else{
       h += '[<a href="'+_dict_help+'" title="&#25105;&#35201;&#26597;&#30475;&#25720;&#25720;&#24110;&#21161;" target="_blank" style="color:#1A9100;font-size:14px;background-color:#e7f7f7;">&#20114;&#21160;&#25720;&#25720;</a>&#24050;<a href="javascript:_dictEnable()" title="&#25105;&#35201;&#24320;&#21551;&#20114;&#21160;&#25720;&#25720;" target="_self" style="color:#1A9100;font-size:14px;background-color:#e7f7f7;">&#31105;&#29992;</a>]';
     }
-    h +=' <a href="javascript:_dictRemove();" target="_self"><img src="http://www.hudong.com/hdmomo/img/close.gif" border=0 align=absmiddle></a>';
+    h +=' <a href="javascript:_dictRemove();" target="_self"><img src="http://www.baike.com/hdmomo/img/close.gif" border=0 align=absmiddle></a>';
     return h;
 }
 if(! document.getElementById('_dict_layer')){
 var _dict_is_ie = true;
-var _dict_host = 'http://www.hudong.com/';
-var _dict_help = "http://www.hudong.com/wiki/%E4%BA%92%E5%8A%A8%E5%9C%A8%E7%BA%BF%E5%B8%AE%E5%8A%A9";
+var _dict_host = 'http://www.baike.com/';
+var _dict_help = "http://www.baike.com/wiki/%E4%BA%92%E5%8A%A8%E5%9C%A8%E7%BA%BF%E5%B8%AE%E5%8A%A9";
 var _dict_old_word = "";
 var _dict_moving = 0;
 var _dict_onmove = 0;

@@ -28,7 +28,7 @@ class searchmodel {
 			$doc['time']=$this->base->date($doc['time']);
 			$doc['tag']=$_ENV['doc']->spilttags($doc['tag']);
 			$doc['rawtitle']=$doc['title'];
-			$doc['title']=htmlspecialchars($doc['title']);
+			$doc['title']=htmlspecial_chars($doc['title']);
 			$doclist[]=$doc;
 		}
 		return $doclist;
@@ -42,27 +42,7 @@ class searchmodel {
 			$element['author']="";
 			$element['categoryid'][0]='all';
 		}else{
-			$arraylist = split(" ",$keywords); //将查询关键字通过空格进行分解
-                       
-                        $sqlkeywords .= "(";
-                        for($i=0; $i<count($arraylist); $i++) //把它们全部输出来
-                        {
-                                $keyword = $arraylist[$i];
-                                $sqlkeywords .="d.".$element['searchtype']." LIKE '%$keyword%' and ";
-                        }
-                        $strleng = strlen($sqlkeywords);
-                        $temp =  substr($sqlkeywords, 0, $strleng-4);            
-
-                        $temp .= ") or (";
-                        for($i=0; $i<count($arraylist); $i++) //把它们全部输出来
-                        {
-                                $keyword = $arraylist[$i];
-                                $temp .="d.content LIKE '%$keyword%' and ";
-                        }
-                        $templeng = strlen($temp);
-                        $temp =  substr($temp, 0, $templeng-4);
-                        $temp .= ")";
-                        $sqlkeywords = $temp; 
+			$sqlkeywords .="d.".$element['searchtype']." LIKE '%$keywords%'";
 		}	
 		
 		$sqladd=(trim($sqlkeywords)!='')?' AND ('.$sqlkeywords.")":"";
@@ -170,7 +150,7 @@ class searchmodel {
 			$jsondata = $this->get_jason_data(array());
 			// 发送数据
 			$timeout = isset($this->setting['cloud_search_timeout'])?$this->setting['cloud_search_timeout']:5;
-			$flag = util::hfopen(CLOUD_REGISTER_URL, '',$jsondata,'','','',$timeout);;
+			$flag = util::hfopen(CLOUD_REGISTER_URL, '',$jsondata,'','','',$timeout);
 		}
 		
 		if(empty($flag) || $privateip) {

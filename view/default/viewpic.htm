@@ -1,20 +1,4 @@
 {template header}
-<style type="text/css">
-<!--
-.a-img1 img {
-max-width:60px;
-max-height:60px;
-width: expression(this.width > 60 && this.width/this.height >= 1 ? 60 : true);
-height: expression(this.height > 60 && this.width/this.height < 1 ? 60 : true);
-}
-.arrleft {
-	cursor: url("style/default/arr_left.cur"), auto;
-}
-.arrright {
-	cursor: url("style/default/arr_right.cur"), auto;
-}
--->
-</style>
 
 <script type="text/javascript">
 function updateverifycode() {
@@ -119,14 +103,14 @@ var pic={
 	},
 	li_p_n:function(){
 		if(this.start_key==0){
-			$('#pre_li')[0].src='style/default/tpbk/view_prev2.jpg';
-			$('#next_li')[0].src='style/default/tpbk/view_next.jpg';
+			//$('#pre_li')[0].src='style/default/tpbk/view_prev2.jpg';
+			//$('#next_li')[0].src='style/default/tpbk/view_next.jpg';
 		}else if(this.start_key+12==this.max_num){
-			$('#pre_li')[0].src='style/default/tpbk/view_prev.jpg';
-			$('#next_li')[0].src='style/default/tpbk/view_next2.jpg';
+			//$('#pre_li')[0].src='style/default/tpbk/view_prev.jpg';
+			//$('#next_li')[0].src='style/default/tpbk/view_next2.jpg';
 		}else{
-			$('#pre_li')[0].src='style/default/tpbk/view_prev.jpg';
-			$('#next_li')[0].src='style/default/tpbk/view_next.jpg';
+			//$('#pre_li')[0].src='style/default/tpbk/view_prev.jpg';
+			//$('#next_li')[0].src='style/default/tpbk/view_next.jpg';
 		}
 	},
 	next_id:function(type) {
@@ -169,18 +153,18 @@ $(function(){
 	pic.obj = $("#p_0");
 	pic.pic_p_n();
 	if(pic.max_num<=12){
-		$('#pre_li')[0].src='style/default/tpbk/view_prev2.jpg';
-		$('#next_li')[0].src='style/default/tpbk/view_next2.jpg';
+	//	$('#pre_li')[0].src='style/default/tpbk/view_prev2.jpg';
+	//	$('#next_li')[0].src='style/default/tpbk/view_next2.jpg';
 	}else{
 		pic.li_p_n();
 	}
 	pic.pic_next();
 });
 </script>
-
-<div class="tupk_view">
-<div class="m-t10  view_img">
-<a href="javascript:pic.change_list(-1)"  class="view_p"><img id="pre_li" src="style/default/tpbk/view_prev.jpg"/></a>
+<section class="wrap">
+<div class="columns tupk_view">
+<div class="view_img">
+<a href="javascript:pic.change_list(-1)"  class="view_p"></a>
 
 <ul class="j-zhong" id="pic_list">
 <!--{loop $piclist $key $data}-->
@@ -188,15 +172,14 @@ $(function(){
 <!--{/loop}-->
 </ul>
 
-<a href="javascript:pic.change_list(1)" class="view_n"><img id="next_li" src="style/default/tpbk/view_next.jpg" /></a>
+<a href="javascript:pic.change_list(1)" class="view_n"></a>
 </div>
 
 
 <div class="a-c"><!--需要控制ie6下图片的最大宽度为930px;-->
 <p class="view_datu" id="p_0"><img src="{$pic['attachment']}"/></p>
-<p id="fenye" class="w-230 wrap"><span id="pre_pic"><a href="javascript:pic.next_id(-1)" class="m-lr8">{lang prepic}</a></span><span id="next_pic"><a href="javascript:pic.next_id(1)" class="m-lr8">{lang nextpic}</a></span></p>
-	<div class="w-630 wrap">
-	<table cellpadding="0" cellspacing="0" class="table m-t10 a-l tupian_info" >
+<p id="fenye" class=""><a id="pre_pic" href="javascript:pic.next_id(-1)" class="m-lr8">{lang prepic}</a><a id="next_pic" href="javascript:pic.next_id(1)" class="m-lr8">{lang nextpic}</a></p>
+	<table cellpadding="0" cellspacing="0" class="table a-l tupian_info" >
 		<colgroup>
 			<col class="bg-gray" style="width:190px;"></col>
 			<col style="width:450px;"></col>
@@ -211,7 +194,7 @@ $(function(){
 		</tr>
 		<tr>
 			<td>{lang conIntro}</td>
-			<td>{$pic['summary']} ... [ <a href="{url doc-view-$pic['did']}" target="_blank">{lang goin}</a> ][ <a href="{url comment-view-$pic['did']}" target="_blank">{lang commentView}</a> ]</td>
+			<td>{$pic['summary']} ... [ <a href="{url doc-view-$pic['did']}" class="clink" target="_blank">{lang goin}</a> ][ <a href="{url comment-view-$pic['did']}" class="clink" target="_blank">{lang commentView}</a> ]</td>
 		</tr>
 		<tr>
 			<td>{lang imgsize}</td>	
@@ -228,19 +211,20 @@ $(function(){
 		</tr>	
 		<tr>
 			<td>{lang uploadauth}</td>
-			<td id="p_5"><a href="{url user-space-$pic['uid']}" target="_blank">{$pic['username']}</a></td>
+			<td id="p_5"><a href="{url user-space-$pic['uid']}" target="_blank" class="clink">{$pic['username']}</a></td>
 		</tr>
 		</table>
-	</div>
-	<div class="w-630 a-l wrap columns comment">
+
+</div></div>
+<div class="columns comment">
 		<h2 class="col-h2">{lang relatedocComment}</h2>
 		<a href="{url comment-view-$pic['did']}" target="_blank" class="more">{lang viewMore}&gt;&gt;</a>
-		<table width="100%" cellpadding="0" cellspacing="0" class="table tpbk_content" >
+		<table width="1130" cellpadding="0" cellspacing="0" class="table tpbk_content">
 		<thead>
 		<tr>
 			<td width="65%" >{lang content}</td>
-			<td width="20%" >{lang author}</td>
-			<td width="15%" >{lang sendtime}</td>
+			<td width="15%" >{lang author}</td>
+			<td width="10%" >{lang sendtime}</td>
 		</tr>
 		</thead>
 		<tbody>
@@ -248,7 +232,7 @@ $(function(){
 		<!--{loop $comments $key $comment}-->
 		<tr>
 			<td>{$comment['comment']}</td>
-			<td><a href="{url user-space-$comment['authorid']}" target="_blank">{$comment['author']}</a></td>
+			<td><a href="{url user-space-$comment['authorid']}" target="_blank" class="clink">{$comment['author']}</a></td>
 			<td>{$comment['time']}</td>
 		</tr>
 		<!--{/loop}-->
@@ -258,25 +242,24 @@ $(function(){
 		<form method="post" action="{url comment-add-$pic['did']}">
 		<ul class="col-ul">
 			<li>
-			<textarea id="comment" name="comment" rows="10" cols="80"  class="area"></textarea> 
-			<!--{if $setting['comments']}-->
-			<input id='anonymity' name="anonymity" type="checkbox"  />&nbsp;{lang commentAnonymity}
-			<!--{/if}-->
-			</li>
-			
-			<li class="yzm">
-			<!--{if $setting['checkcode'] != "3"}-->
-			<span>{lang verifyCode}: </span><input name="code" type="text" /><label class="m-lr8"><img id="verifycode" src="{url user-code}" onclick="updateverifycode();" /></label><a href="javascript:updateverifycode();">{lang changeAnother}</a>
-			<!--{/if}-->&nbsp;&nbsp;&nbsp;&nbsp;
-			<span>{lang shouldNotice}: {lang commentLongSize}</span>
+			<textarea id="comment" name="comment" rows="10" cols="80"  class="inp_txt"></textarea>
 			</li>
 			<li>
-			<input name="submit" type="submit" value="{lang publishComment}" class="btn_inp"/>
+			<span class="r gray9">{lang shouldNotice}: {lang commentLongSize}</span>
+			<!--{if $setting['comments']}-->
+			<input id='anonymity' name="anonymity" type="checkbox"  /><i class="checkbox"></i>&nbsp;{lang commentAnonymity}
+			<!--{/if}-->
+			</li>			
+			<!--{if $setting['checkcode'] != "3"}-->
+			<li class="yzm">
+			<span>{lang verifyCode}: </span><input name="code" type="text" class="inp_txt" /><label class="m-lr8"><img id="verifycode" src="{url user-code}" onclick="updateverifycode();" /></label><a href="javascript:updateverifycode();">{lang changeAnother}</a>
+			</li>
+			<!--{/if}-->			
+			<li>
+			<input name="submit" type="submit" value="{lang publishComment}" class="btn_inp blue"/>
 			</li>
 		</ul>
 		</form>
 	</div>
-	</div>
-
-</div>
+</section>
 {template footer}

@@ -1,6 +1,6 @@
 {template header}
 
-<div class="hd_map">
+<div class="wrap hd_map">
 	<a href="{WIKI_URL}">{$setting[site_name]}</a> &gt;&gt;
 	<!--{if $type=='focus'}-->{lang focusDoc}
 	<!--{elseif $type=='hot'}-->{lang hotDoc}
@@ -9,13 +9,13 @@
 	<!--{elseif $type=='popularity'}-->{lang popularity}
 	<!--{elseif $type=='weekuserlist'}-->{lang weekUserList}
 	<!--{elseif $type=='allcredit'}-->{lang allcredit}
-	<!--{else}-->{lang letterOrderView}--{$letter}
+	<!--{else}-->{lang letterOrderView}--<!--{if !empty($letter)}-->{$letter}<!--{/if}-->
 	<!--{/if}-->
 </div>
 
-<div class="r w-710 o-v p-b10 columns bang_main">
-	<h2 class="col-h2 h3 a-r">
-	<span class="l h2" >
+<section class="wrap clearfix">
+<div class="group1 r bor-ccc bang_main">
+	<h2 class="col-h2">
 			<!--{if $type=='focus'}-->{lang focusDoc}
 			<!--{elseif $type=='hot'}-->{lang hotDoc}
 			<!--{elseif $type=='champion'}-->{lang wonderDoc}
@@ -23,16 +23,15 @@
 			<!--{elseif $type=='popularity'}-->{lang popularity}
 			<!--{elseif $type=='weekuserlist'}-->{lang weekUserList}
 			<!--{elseif $type=='allcredit'}-->{lang allcredit}
-			<!--{else}-->{lang letterOrderView}--{$letter}
+			<!--{else}-->{lang letterOrderView}--<!--{if !empty($letter)}-->{$letter}<!--{/if}-->
 		<!--{/if}-->
-	</span>
-	<!--{if $type=='focus' ||$type=='hotdoc' || $type=='recentdoc' ||$type=='recentupdate' ||$type=='hot' ||$type=='champion' }-->
-		<a href="{url list-rss-recentchange}"  id="rss" ><img  class="m-r8" src="style/default/rss.gif"/></a>
-	<!--{/if}-->
 	</h2>
+	<!--{if $type=='focus' ||$type=='hotdoc' || $type=='recentdoc' ||$type=='recentupdate' ||$type=='hot' ||$type=='champion' }-->
+		<a class="more" href="{url list-rss-recentchange}"  id="rss" >RSS</a>
+	<!--{/if}-->
 	<dl class="col-dl">
-	<dt class="bold">
-		<span class="l">
+	<dt class="gray9">
+		<span class="title">
 			<!--{if $type=='popularity' ||$type=='allcredit' || $type=='weekuserlist'}-->{lang userName}<!--{else}-->{lang docTitle}<!--{/if}-->
 		</span> 
 		<!--{if $type=='focus'}-->{lang focusTime}
@@ -47,34 +46,34 @@
 	
 	<!--{loop $list $key $data}-->
 		<!--{if $type=='popularity'}-->
-			<dd><a href="{url user-space-$data['uid']}"  class="l">{$data['username']}</a>{$data['views']}</dd>
+			<dd><span class="title"><a href="{url user-space-$data['uid']}">{$data['username']}</a></span>{$data['views']}</dd>
 			<!--{elseif $type=='allcredit' || $type=='weekuserlist'}-->
-			<dd><a href="{url user-space-$data['uid']}"  class="l">{$data['username']}</a>{$data['credit']}</dd>		
+			<dd><span class="title"><a href="{url user-space-$data['uid']}">{$data['username']}</a></span>{$data['credit']}</dd>		
 			<!--{else}-->
-			<dd><a href="{url doc-view-$data['did']}"  class="l">{$data['title']}</a><!--{if $type=='hotdoc'}-->{$data['edits']}<!--{else}-->{$data['time']}<!--{/if}--></dd>
+			<dd><span class="title"><a href="{url doc-view-$data['did']}">{$data['title']}</a></span><!--{if $type=='hotdoc'}-->{$data['edits']}<!--{else}-->{$data['time']}<!--{/if}--></dd>
 		<!--{/if}-->
 	<!--{/loop}-->
 		
 	</dl>
-	<div id="fenye" class="m-t10 a-r">{$departstr}</div>
+	<div id="fenye" class="a-c">{$departstr}</div>
 </div>
 
-<div class="l w-230">
-	<div class="p-b10 m-t10 sidebar">
+<aside class="l group2">
+	<div class="bor-ccc sidebar">
 	<ul>
-		<li><a href="{url list-focus-2}"  <!--{if $type=='hot'}-->class="on"<!--{/if}-->><img src="style/default/gl_space/hot.gif" />{lang hotDoc}</a></li>
-		<li><a href="{url list-focus-3}"  <!--{if $type=='champion'}-->class="on"<!--{/if}-->><img src="style/default/gl_space/champion.gif" />{lang wonderDoc}</a></li>
-		<li><a href="{url list-focus-1}"  <!--{if $type=='focus'}-->class="on"<!--{/if}-->><img src="style/default/gl_space/bang_tj.gif" />{lang focusDoc}</a></li>
-		<li><a href="{url list-recentchange}"  <!--{if $type=='recentupdate'}-->class="on"<!--{/if}-->><img src="style/default/gl_space/bang_zjgx.gif"/>{lang recentUpdate}</a></li>
-		<li><a href="{url list-weekuserlist}"  <!--{if $type=='weekuserlist'}-->class="on"<!--{/if}-->><img src="style/default/gl_space/bang_szgxb.gif"/>{lang weekUserList}</a></li>
-		<li><a href="{url list-allcredit}"  <!--{if $type=='allcredit'}-->class="on"<!--{/if}-->><img  src="style/default/gl_space/bang_z.gif" />{lang allcredit}</a></li>
-		<li><a href="{url list-popularity}" <!--{if $type=='popularity'}-->class="on"<!--{/if}-->><img src="style/default/gl_space/bang_rq.gif"/>{lang popularity}</a></li>
+		<li <!--{if $type=='hot'}-->class="on"<!--{/if}-->><a href="{url list-focus-2}">{lang hotDoc}</a></li>
+		<li <!--{if $type=='champion'}-->class="on"<!--{/if}-->><a href="{url list-focus-3}">{lang wonderDoc}</a></li>
+		<li <!--{if $type=='focus'}-->class="on"<!--{/if}-->><a href="{url list-focus-1}">{lang focusDoc}</a></li>
+		<li <!--{if $type=='recentupdate'}-->class="on"<!--{/if}-->><a href="{url list-recentchange}">{lang recentUpdate}</a></li>
+		<li <!--{if $type=='weekuserlist'}-->class="on"<!--{/if}-->><a href="{url list-weekuserlist}">{lang weekUserList}</a></li>
+		<li <!--{if $type=='allcredit'}-->class="on"<!--{/if}-->><a href="{url list-allcredit}">{lang allcredit}</a></li>
+		<li <!--{if $type=='popularity'}-->class="on"<!--{/if}-->><a href="{url list-popularity}">{lang popularity}</a></li>
 	</ul>
 	</div>
     <div id="block_left">{block:left/}</div>
-<div class=" columns i6-ff p-b10">
+<div class="columns azmsx">
 <h2 class="col-h2">{lang letterOrderView}</h2>
-<ul class="col-ul list-s">
+<ul class="col-ul clearfix">
 	<li><a href="{url list-letter-A}">A</a></li>
 	<li><a href="{url list-letter-B}">B</a></li>
 	<li><a href="{url list-letter-C}">C</a></li>
@@ -114,5 +113,6 @@
 	<li><a href="index.php?list-letter-*" >{lang otherOrderView}</a></li>
 </ul>
 </div>
-</div>
+</aside>
+</section>
 {template footer}

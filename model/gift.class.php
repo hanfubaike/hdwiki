@@ -44,6 +44,7 @@ class giftmodel {
 	
 	/*获取单个礼品信息*/
 	function get($id){
+		$id = is_numeric($id) ? $id : 0;
 		return $this->db->fetch_first("SELECT * FROM ".DB_TABLEPRE."gift WHERE id =".$id);
 	}
 	
@@ -54,6 +55,7 @@ class giftmodel {
 	
 	/*修改礼品*/
 	function edit($id,$title, $credit, $description='', $image=''){
+		$id = is_numeric($id) ? $id : 0;
 		$sql="UPDATE ".DB_TABLEPRE."gift SET title = '$title',credit='$credit', time = '".$this->base->time."'";
 		if($description)$sql.=", description ='$description'";
 		if($image)$sql.=", image ='$image'";
@@ -63,6 +65,8 @@ class giftmodel {
 	
 	/*添加礼品兑换记录*/
 	function addlog($gid,$uid,$extra=''){
+		$gid = is_numeric($gid) ? $gid : 0;
+		$uid = is_numeric($uid) ? $uid : 0;
 		//礼品的字段status=0，表示申请中，等待管理员审核
 		//礼品的字段status=1，表示已经通过申请，礼物正在寄送中		
 		$this->db->query("INSERT INTO ".DB_TABLEPRE."giftlog (gid,uid,extra,time) VALUES ('$gid','$uid','$extra','".$this->base->time."')");

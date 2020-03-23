@@ -18,6 +18,7 @@ class attachmentmodel {
 	
 	function add_attachment($uid,$did,$filename,$attachment,$description,$filetype='.jpg',$isimage=1,$coindown=0){
 		$filesize=filesize($attachment);
+		$filename=string::haddslashes($filename);
 		if(empty($coindown) || !is_numeric($coindown)) {
 			$coindown = 0;
 		}
@@ -217,7 +218,7 @@ class attachmentmodel {
 		$query=$this->db->query($sql);
 		while($attach=$this->db->fetch_array($query)){
 			$attach['time'] = $this->base->date($attach['time']);
-			$attach['title'] = htmlspecialchars($attach['title']);
+			$attach['title'] = htmlspecial_chars($attach['title']);
 			$attach['filename'] = string::substring($attach['filename'],0,28);
 			$attach['filename'] .= (strlen($attach['filename'])>28)?"......":"";
 			$attach['filesize']=sprintf('%.2f',$attach['filesize']/1024)."k";

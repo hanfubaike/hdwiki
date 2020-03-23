@@ -1,22 +1,4 @@
 {template header}
-<style>
-	.LeftFrame{
-		float:left;
-		width:48%;
-		height:570px;
-		border:solid 1px;
-		overflow-x:scroll;
-		overflow-y:scroll
-	}
-	.RightFrame{
-		float:left;
-		width:48%;
-		height:570px;
-		border:solid 1px;
-		overflow-x:scroll;
-		overflow-y:scroll
-	}
-</style>
 <script type="text/javascript">
 function DriveRightScroll(){
 	var RightDivObj = $('#RightScroll');
@@ -37,19 +19,27 @@ function DriveLeftScroll(){
 }
 </script>
 <script type = "text/javascript" src = "js/compare.js"></script>
-<div class="w-950 hd_map">
-	<a href="index.php" target="_self">{$setting['site_name']}</a> &gt;&gt; <a href="{url doc-view-$doc['did']}" target="_self">{$doc['title']}</a> &gt;&gt; {lang compare} </div>
-<div class="o-v">
-	<h1 class="title_thema bor_b-ccc"><strong class="l">{$doc['title']}</strong><a href="{url doc-view-$doc['did']}" target="_self" class="r">{lang backDoc}</a></h1>
+<section class="wrap clearfix version columns">
+	<h2 class="col-h2"><a href="index.php" target="_self">{$setting['site_name']}</a> &gt; <a href="{url doc-view-$doc['did']}" target="_self">{$doc['title']}</a> - <strong>{lang compare}</strong></h2><a href="{url doc-view-$doc['did']}" target="_self" class="more">{lang backDoc}</a>
 	<div class="edition">
-		<ul class="l">
-			<li>{lang edition}:<label>{$edition[0]['editions']}</label>&nbsp;&nbsp;{lang editTime}:<label>{$edition[0]['time']}</label>&nbsp;&nbsp;{lang editionCreator}:<a href="{url user-space-$edition[0]['authorid']}">{$edition[0]['author']}</a></li>
-			<li>{lang docLength}:<label>{$edition[0]['words']}{lang word}</label>&nbsp;&nbsp;{lang image}<label>{$edition[0]['images']}{lang piece}</label></li>
-		</ul>
-		<ul class="r">
-			<li>{lang edition}:<label>{$edition[1]['editions']}</label>&nbsp;&nbsp;{lang editTime}:<label>{$edition[1]['time']}</label>&nbsp;&nbsp;{lang editionCreator}:<a href="{url user-space-$edition[1]['authorid']}">{$edition[1]['author']}</a></li>
-			<li>{lang docLength}:<label>{$edition[1]['words']}{lang word}</label>&nbsp;&nbsp;{lang image}<label>{$edition[1]['images']}{lang piece}</label></li>
-		</ul>
+	<table class="table l"><thead><tr><td>{lang edition}</td><td>{lang editTime}</td><td>{lang editionCreator}</td><td>{lang docLength}</td><td>{lang image}</td></tr></thead>
+	<tr>
+		<td>{$edition[0]['editions']}</td>
+		<td>{$edition[0]['time']}</td>
+		<td><a href="{url user-space-$edition[0]['authorid']}">{$edition[0]['author']}</a></td>
+		<td>{$edition[0]['words']}{lang word}</td>
+		<td>{$edition[0]['images']}{lang piece}</td>
+	</tr><tr><td colspan="5" class="f20">{$doc['title']}</td></tr>
+	</table>
+	<table class="table r"><thead><tr><td>{lang edition}</td><td>{lang editTime}</td><td>{lang editionCreator}</td><td>{lang docLength}</td><td>{lang image}</td></tr></thead>
+	<tr>
+		<td>{$edition[1]['editions']}</td>
+		<td>{$edition[1]['time']}</td>
+		<td><a href="{url user-space-$edition[1]['authorid']}">{$edition[1]['author']}</a></td>
+		<td>{$edition[1]['words']}{lang word}</td>
+		<td>{$edition[1]['images']}{lang piece}</td>
+	</tr><tr><td colspan="5" class="f20">{$doc['title']}</td></tr>
+	</table>
 	</div>
 	<div id="LeftScroll" class="LeftFrame" onscroll="DriveRightScroll()">
 		<span id="LeftContent" align="left">{$edition[0]['content']}</span>
@@ -57,10 +47,8 @@ function DriveLeftScroll(){
 	<div id="RightScroll" class="RightFrame" onscroll="DriveLeftScroll()">
 		<span id="RightContent" align="left">{$edition[1]['content']}</span>
 	</div>
-	
-</div>
+
+<p class="l col-p"><label class="fanwei"></label>{lang compareTip1} <label class="dian"></label>{lang compareTip2} </p>
+</section>
 <script type="text/javascript">CompareById('LeftContent', 'RightContent');</script>
-<p class="main l mar-t8"><label class="fanwei">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</label>{lang compareTip1} <label class="dian">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</label>{lang compareTip2} </p>
 {template footer}

@@ -162,52 +162,53 @@ function updateverifycode() {
 }
 
 </script>
-<div class="register">
-	<div class="r reg-r">
-	<div class="login-static reg_main">
+<style>
+#advlist_0 {
+    display:none;
+}
+</style>
+<section class="wrap clearfix register">
+	<div class="reg_main">
 	<form id="registerform" method="post" action="{$formAction}" onsubmit="return docheck();">
-		<h2 class="h3 a-r">{lang registerTip2}<a href="{url user-login}" target="_blank" class="m-l8">{lang login}</a></h2>
-		<ul class="col-ul">
+		<h2 class="cblue">欢迎注册HDwiki账号</h2>
+		<ul>
 			<!--{if isset($forward) && $forward }-->
 			<input name="forward"   type="hidden" value='{$forward}' />
 			<!--{/if}-->
-			<!--{if (isset($error))}-->
-			<li style="color:red">{$error}</li>
-			<!--{/if}-->
-			<li><span>{lang userName}：</span>	<input name="username" tabindex="3"  id="username" type="text" maxlength="{$maxlength}" class="inp_txt" onblur="check_username()" /><label id="checkusername">{$loginTip2}</label></li>
-			<li><span>{lang password}：</span>	<input name="password" tabindex="4" id="password" type="password" class="inp_txt" onblur="check_passwd()" maxlength="32" /><label id="checkpasswd">*{lang editPassTip1}</label></li>
-			<li><span>{lang renewPass}：</span><input name="repassword" tabindex="5" id="repassword" type="password" class="inp_txt" onblur="check_repasswd()" maxlength="32"/><label id="checkrepasswd"></label></li>
-			<li><span>E-mail：</span><input name="email" tabindex="6" id="email"  type="text" class="inp_txt" onblur="check_email()"  maxlength="50"/><label id="checkemail">*{lang registerTip3}</label></li>
+			<li class="inpt-name"><span>{lang userName}：</span><input name="username" tabindex="3"  id="username" type="text" maxlength="{$maxlength}" class="inp_txt" onblur="check_username()" placeholder="{lang userName}" /><label id="checkusername">{$loginTip2}</label></li>
+			<li class="inpt-pwd"><span>{lang password}：</span><input name="password" tabindex="4" id="password" type="password" class="inp_txt" onblur="check_passwd()" maxlength="32" placeholder="{lang password}" /><label id="checkpasswd">*{lang editPassTip1}</label></li>
+			<li class="inpt-pwd"><span>{lang renewPass}：</span><input name="repassword" tabindex="5" id="repassword" type="password" class="inp_txt" onblur="check_repasswd()" maxlength="32" placeholder="{lang renewPass}" /><label id="checkrepasswd"></label></li>
+			<li class="inpt-eml"><span>E-mail：</span><input name="email" tabindex="6" id="email"  type="text" class="inp_txt" onblur="check_email()"  maxlength="50" placeholder="E-mail" /><label id="checkemail">*{lang registerTip3}</label></li>
 			<!--{if $checkcode != "3"}-->
 			<li class="yzm">
 				<span>{lang verifyCode}</span>
-				<input name="code" tabindex="7" type="text" id="code"  maxlength="4" onblur="check_code()" />
-					<label class="m-lr8"><img id="verifycode" src="{url user-code}" onclick="updateverifycode();" /></label>&nbsp;
-					<a  href="javascript:updateverifycode();">{lang codeNotClear}</a>
+				<input name="code" tabindex="7" type="text" class="inp_txt" id="code"  maxlength="4" onblur="check_code()" />
+					<label class="yzm-img"><img id="verifycode" src="{url user-code}" onclick="updateverifycode();" /></label>&nbsp;
+					<a class="clink" href="javascript:updateverifycode();">{lang codeNotClear}</a>
 					<label id="checkcode">&nbsp;</label> 
 			</li>
 			<!--{/if}-->
-			<li><input name="agree" id="agree" type="checkbox"  checked="checked" />{lang registerTip4}"<a href="{url doc-innerlink-{eval echo urlencode('{lang registerTip5}')}}" target="_blank">{lang registerTip5}</a>" <label id="chkagree">&nbsp;</label></li>
-			<li><input type="hidden" id="fromuid" name="fromuid" value="{$fromuid}"><input name="submit" tabindex="8" type="submit" value="{lang submit}" class="btn_inp" /></li>
+			<li class="a-c"><input name="agree" id="agree" type="checkbox"  checked="checked" /><i class="checkbox"></i>{lang registerTip4}"<a href="{url doc-innerlink-{eval echo urlencode('{lang registerTip5}')}}" class="clink" target="_blank">{lang registerTip5}</a>" <label id="chkagree">&nbsp;</label></li>
+			<!--{if (isset($error))}-->
+			<li class="error">{$error}</li>
+			<!--{/if}-->
+			<li><input type="hidden" id="fromuid" name="fromuid" value="{$fromuid}"><input name="submit" tabindex="8" type="submit" value="{lang submit}" class="btn_inp blue" /></li>
+			<li class="a-r gray9">{lang registerTip2} <a href="{url user-login}" target="_blank" class="clink">{lang login}></a></li>
 		</ul>
 	</form>
 	</div>
-	</div>
-<dl class="col-dl">
-<dt><img alt="{lang registTip4}"  src="style/default/reg_01.gif"/></dt>
-<dd>{lang registTip1}</dd>
-</dl>
-<dl class="col-dl">
-<dt><img alt="{lang registTip5}"  src="style/default/reg_02.gif"/></dt>
-<dd>{lang registTip2}</dd>
-</dl>
-<dl class="col-dl">
-<dt><img alt="{lang registTip6}"  src="style/default/reg_03.gif"/></dt>
-<dd>{lang registTip3}</dd>
-</dl>
-</div>
-<script type="text/javascript"> 
-$('#username').focus();
-</script>
-<div class="c-b"></div>
+	<figure class="regpic"><img src="style/default/hdwiki-regpic.png"></figure>
+	<dl class="col-dl">
+		<dt class="cblue f18">{lang registTip4}</dt>
+		<dd class="gray9">{lang registTip1}</dd>
+	</dl>
+	<dl class="col-dl">
+		<dt class="cblue f18">{lang registTip5}</dt>
+		<dd class="gray9">{lang registTip2}</dd>
+	</dl>
+	<dl class="col-dl">
+		<dt class="cblue f18">{lang registTip6}</dt>
+		<dd class="gray9">{lang registTip3}</dd>
+	</dl>
+</section>
 {template footer}

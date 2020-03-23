@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('word');
 		$this->view->setlang($this->setting['lang_name'],'back');
 	}
@@ -16,9 +16,9 @@ class control extends base{
 			$wordids = $this->post['upword_id'];
 			$find = $this->post['find'];
 			$replacement = $this->post['replacement'];
-			$newfind = string::haddslashes(htmlspecialchars($this->post['newfind']));
-			$muliword = string::haddslashes(htmlspecialchars($this->post['muliword']));
-			$newreplacement = string::substring(string::haddslashes(htmlspecialchars($this->post['newreplacement'])), 0, 18);
+			$newfind = string::haddslashes(htmlspecial_chars($this->post['newfind']));
+			$muliword = string::haddslashes(htmlspecial_chars($this->post['muliword']));
+			$newreplacement = string::substring(string::haddslashes(htmlspecial_chars($this->post['newreplacement'])), 0, 18);
 			$words = NULL;
 			if(is_array($wordids)){
 				foreach($wordids as $id => $wordid){

@@ -5,7 +5,7 @@
 class control extends base{
 	
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('sitemap');
 		$this->view->setlang($this->setting['lang_name'],'back');
 	}
@@ -35,14 +35,14 @@ class control extends base{
 	
 	function docreatedoc() {
 		$_ENV['sitemap']->rebuild();
-		$this->message('正在重建词条Sitemap，请稍候','index.php?admin_sitemap-changedoc');
+		$this->message('正在重建词条Sitemap，请稍候','index.php?admin_sitemap-updatedoc');
 	}
 	
-	function dochangedoc() {
+	function doupdatedoc() {
 		if(($next_offset = $_ENV['sitemap']->create_doc_page()) !== false) {
 			$next_offset ++;
 			$end_offset = $next_offset + 999;
-			$this->message("已完成第{$next_offset}-{$end_offset}条，正在继续，请稍候",'index.php?admin_sitemap-changedoc');
+			$this->message("已完成第{$next_offset}-{$end_offset}条，正在继续，请稍候",'index.php?admin_sitemap-updatedoc');
 		} else {
 			$this->message('Sitemap索引文件已生成。全部已完成。', 'index.php?admin_sitemap');
 		}

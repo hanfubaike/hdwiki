@@ -126,7 +126,7 @@ function docheck(){
 		$.ajax({
 			url: "index.php?user-login",
 			data: {submit:'ajax',username:$("#username").val(),password:$("#password").val(),code:$("#code").val(),indexlogin:indexlogin},
-			dataType: "data",
+			dataType: "text",
 			type: "POST",
 			//async: false,
 			success: function(data){
@@ -257,14 +257,9 @@ function doLogin(E){
 		if(typeof g_api_url != 'undefined' && g_api_url){
 			window.location.href=api_url;
 		}
-		if ($.dialog.exist("login")){
-			changeverifycode();
-			location.href='index.php?user-login';
-		//	$.dialog.box('login', Lang.Login, 'url:'+ getHDUrl('user-boxlogin'));
-		}else{
-			location.href='index.php?user-login';
-		//	changeverifycode();
-		}
+		
+		location.href='index.php?user-login';
+
 		return false;
 	}else {
 		return true;
@@ -280,14 +275,18 @@ var Message = {
 	box : function(username){
 		this.sendto = username;
 		if (doLogin()){
-			var html = '<table border="0" class="send_massage"><tr><td width="60" >'+Lang.Subject+'</td>'
-			+'<td><input id="messageSubject" type="text" style="width:300px" maxlength="35"/></td></tr><tr><td>'+Lang.Content+'</td>'
-			+'<td><textarea id="messageContent" cols="47" rows="6" style="width:300px"></textarea><br />'+Lang.TipMessageLength+'</td></tr>'
-			+'<tr><td></td><td height="40"><input id="messageSubmit" onclick="Message.send()" type="submit" value="'+Lang.Submit+'" />'
-			+'&nbsp;&nbsp;<span id="messageTip"></span></td></tr></table>';
+			var html = '<table border="0" class="send_massage" width="100%"><tr><td width="60" >'+Lang.Subject+'</td>'
+			+'<td height="40"><input id="messageSubject" type="text" style="width:80%" maxlength="35"/></td></tr><tr><td>'+Lang.Content+'</td>'
+			+'<td><textarea id="messageContent" cols="47" rows="6" style="width:80%"></textarea><br />'+Lang.TipMessageLength+'</td></tr>'
+			+'<tr><td></td><td height="40">'
+			+'<span id="messageTip"></span></td></tr></table>';
 			
-			$.dialog.box('login', Lang.sendMessage + Lang.To + ' ' +username, html);
-			
+			//$.dialog.box('login', Lang.sendMessage + Lang.To + ' ' +username, html);
+            
+			$.dialog.alert(html,function(){
+                Message.send()
+            }, Lang.sendMessage + Lang.To + ' ' +username, {width: 500});
+            
 			$("#messageSubject").val('');
 			$("#messageContent").val('');
 			$("#messageSubject").focus();
@@ -302,7 +301,7 @@ var Message = {
 		params.content = $("#messageContent").val();
 		
 		params.subject = $.trim(params.subject);
-		params.content = $.trim(params.content);		
+		params.content = $.trim(params.content);
 		
 		params.content = params.content.substr(0,300);
 		

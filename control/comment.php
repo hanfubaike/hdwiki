@@ -3,7 +3,7 @@
 
 class control extends base{
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base( $get, $post);
 		$this->load('user');
 		$this->load("doc");
 		$this->load("pms");
@@ -22,6 +22,7 @@ class control extends base{
 			$this->view->assign('locked','1');
 		}
 		$doc['rawtitle']=urlencode($doc['title']);
+		$this->get[3] = empty($this->get[3])? NULL :  $this->get[3];
 		$page = max(1, intval($this->get[3]));
 		$num = isset($this->setting['list_prepage'])?$this->setting['list_prepage']:20;
 		$start_limit = ($page - 1) * $num;
@@ -46,6 +47,7 @@ class control extends base{
 			}
 			$categorydocs=$_ENV['doc']->get_docs_by_cid($cids,0,20);
 		}
+		$doc['title'] = htmlspecial_chars(stripslashes($doc['title']));
 		$this->view->assign('doc',$doc);
 		$page=$doc['comments']<=$num?0:$page;
 		$this->view->assign('page',$page);
@@ -68,9 +70,9 @@ class control extends base{
 	}
 	
 	function doremove(){
-		$id=$this->post['id'];
-		$did=$this->post['did'];
-		$page=$this->post['page'];
+		$id=intval($this->post['id']) ? intval($this->post['id']) : 0;
+		$did=intval($this->post['did']) ?intval($this->post['did']) : 0;
+		$page=max(1, intval($this->post['page']));
 		
 		if($_ENV["comment"]->remove_comment_by_id($id))
 			$_ENV['doc']->update_field('comments',-1,$did,0);
@@ -96,8 +98,8 @@ class control extends base{
 		$did=intval(@$this->get[2]);
 		$type=isset($this->post['submit'])?0:2;
 		$message=$type==2?'0;':'';
-		$comment=htmlspecialchars(trim($this->post['comment']));
-		if(empty($did))
+		$comment=htmlspecial_chars(trim($this->post['comment']));
+		if(!$this->db->fetch_by_field('doc','did',$did))
 			$this->message($message.$this->view->lang['parameterError'],'',$type);
 		if(empty($comment))
 			$this->message($message.$this->view->lang['commentNullError'],'BACK',$type);
@@ -113,7 +115,7 @@ class control extends base{
 		
 		if (WIKI_CHARSET == 'GBK'){$comment=string::hiconv($comment);}
 		$comment=string::stripscript($_ENV['doc']->replace_danger_word($comment));
-		$comment=nl2br(htmlspecialchars($comment));
+		$comment=nl2br(htmlspecial_chars($comment));
 		if(empty($comment)){
 			$this->message(0,'',2);
 		}elseif(strlen($comment)>200){
@@ -162,7 +164,7 @@ class control extends base{
 	}
 	
 	function doedit(){
-		$id=$this->post['id'];
+		$id=intval($this->post['id']) ? $this->post['id'] : 0;
 		if(empty($id)){
 			$this->message($this->view->lang['commentError'],'',2);
 		}
@@ -175,7 +177,7 @@ class control extends base{
 	}
 	
 	function doaegis(){
-		$id=$this->post['id'];
+		$id=intval($this->post['id']) ? $this->post['id'] : 0;
 		if(empty($id)){
 			$this->message(-1,'',2);
 		}
@@ -187,7 +189,7 @@ class control extends base{
 	}
 	
 	function dooppose(){
-		$id=$this->post['id'];
+		$id=intval($this->post['id']) ? $this->post['id'] : 0;
 		if(empty($id)){
 			$this->message(-1,'',2);
 		}
@@ -200,8 +202,8 @@ class control extends base{
 	
 	function doreport(){
 		$usernames=array();
-		$id=$this->post['id'];
-		$report=trim(htmlspecialchars(WIKI_CHARSET==GBK?string::hiconv($this->post['report']):$this->post['report']));
+		$id=intval($this->post['id']) ? $this->post['id'] : 0;
+		$report=trim(htmlspecial_chars(WIKI_CHARSET==GBK?string::hiconv($this->post['report']):$this->post['report']));
 		if(empty($id)||empty($report)){
 			$this->message(-1,'',2);
 		}
@@ -225,6 +227,7 @@ class control extends base{
 			$this->message(-1,'',2);
 		}
 		$doc=$this->db->fetch_by_field('doc','did',$comment['did']);
+		$doc['title'] =htmlspecial_chars(stripslashes($doc['title']));
 		$report=$this->view->lang['commentCom'].$this->view->lang['commentUser'].$comment['author'].'<br/>'
 				.$this->view->lang['commentCom'].$this->view->lang['commentTime'].$this->date($comment['time'])."<br/>"
 				.$this->view->lang['commentId'].$comment['id'].'<br/>'.$this->view->lang['commentsDocTitle'].$doc['title']."<br/>"

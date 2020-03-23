@@ -1,4 +1,10 @@
-<?php	if(!defined('IN_HDWIKI')) {	exit('Access Denied');}
-define('HDWIKI_VERSION', '5.1');define('HDWIKI_RELEASE', '20110927');
+<?php
+	
+if(!defined('IN_HDWIKI')) {
+	exit('Access Denied');
+}
+
+define('HDWIKI_VERSION', '6.0');
+define('HDWIKI_RELEASE', '20170209');
 
 ?>

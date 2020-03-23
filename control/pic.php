@@ -1,9 +1,10 @@
 <?php
-!defined('IN_HDWIKI') && exit('Access Denied');
+!defined('IN_HDWIKI') && exit('Access Denied');
+
 class control extends base{
 	
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('pic');
 		$this->load('comment');
 		$this->view->assign('isimage',true);
@@ -11,12 +12,17 @@ class control extends base{
 
 	function dopiclist(){
 		$num=20;
-		$type=isset($this->get[2])?$this->get[2]:1;
+		$type=isset($this->get[2])?intval($this->get[2]):1;
+		$this->get[3] = empty($this->get[3]) ? 0 : $this->get[3];
 		$page = max(1, intval($this->get[3]));
 		$start_limit = ($page - 1) * $num;
 		$pic_cache=$_ENV['pic']->get_pic_cache($type);
 		$count=count($pic_cache);
 		$list=array_slice($pic_cache,$start_limit,$num);
+		//调用判断是否移动端请求
+		if($this->isMobile() && $page > 1){
+			exit(json_encode($list));
+		}
 		$departstr=$this->multi($count, $num, $page,'pic-piclist-'.$type);
 		
 		$strarray=array(1=>$this->view->lang['pic_focus'],2=>$this->view->lang['pic_new'],3=>$this->view->lang['pic_click']);
@@ -25,7 +31,11 @@ class control extends base{
 		$this->view->assign('navtitle',$strarray[$type].'-');
 		$this->view->assign("departstr",$departstr);
 		//$this->view->display('piclist');
-		$_ENV['block']->view('piclist');
+		if ($this->isMobile()){
+			$_ENV['block']->view('wap-piclist');
+		} else {
+			$_ENV['block']->view('piclist');
+		}
 	}
 
 	function doview(){
@@ -37,15 +47,19 @@ class control extends base{
 		$pic=$_ENV['pic']->get_pic_by_id($id);
 		$piclist=$_ENV['pic']->get_pic_by_did($did);
 		$comments=$_ENV['comment']->get_comments($did,$start=0,$limit=5);
-		foreach($comments as $key=>$comment){
-			$comments[$key]['comment']=(string::hstrlen($comment['comment'])>60)?string::substring($comment['comment'],0,60)."...":$comment['comment'];
+		if(!empty($comments)) {
+			foreach($comments as $key=>$comment){
+				$comments[$key]['comment']=(string::hstrlen($comment['comment'])>60)?string::substring($comment['comment'],0,60)."...":$comment['comment'];
+			}
 		}
-		
+
 		$countnum=count($piclist);
-		foreach($piclist as $key=>$val){
-			if($val['id']==$id){
-				$all_key=$key;
-				break;
+		if(!empty($piclist)) {
+			foreach($piclist as $key=>$val){
+				if($val['id']==$id){
+					$all_key=$key;
+					break;
+				}
 			}
 		}
 		if($countnum<=12){
@@ -56,7 +70,7 @@ class control extends base{
 			$li_key=$i>0?$i:0;
 			$returnlist=array_slice($piclist,$all_key-$li_key,12);
 		}
-		
+
 		$this->view->assign('did',$did);
 		$this->view->assign('max_num',$countnum);
 		$this->view->assign('all_key',$all_key);
@@ -64,10 +78,20 @@ class control extends base{
 		
 		$this->view->assign('comments',$comments);
 		$this->view->assign('pic',$pic);
-		$this->view->assign("piclist",$returnlist);
+
+		if ($this->isMobile()) {
+            $this->view->assign("piclist",json_encode($piclist));
+		} else {
+            $this->view->assign("piclist",$returnlist);
+		}
+
 		$this->view->assign('navtitle',$pic['title'].$this->view->lang['image']);
 		//$this->view->display('viewpic');
-		$_ENV['block']->view('viewpic');
+		if ($this->isMobile()){
+			$_ENV['block']->view('wap-viewpic');
+		} else {
+			$_ENV['block']->view('viewpic');
+		}
 	}
 	
 	function doajax(){
@@ -96,7 +120,7 @@ class control extends base{
 	
 	function dosearch(){
 		$num = 16;
-		$page=isset($this->get[3])?$this->get[3]:'';
+		$page=isset($this->get[3])? intval($this->get[3]) :'';
 		if(empty($page) || !is_numeric($page)){
 			$page=1;
 			//下面的search_time代码只有在此时执行。

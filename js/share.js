@@ -18,7 +18,7 @@
 		}, 500);
 	});
 	//点击转帖到Kaixin001
-		$url = "http://www.kaixin001.com/repaste/share.php?rtitle="+encodeURI($.trim($("#doctitle").html()))+"&rurl="+encodeURI(document.location.href)+"&rcontent="+encodeURI($("meta[name='description']").attr("content"));
+	/*	$url = "http://www.kaixin001.com/repaste/share.php?rtitle="+encodeURI($.trim($("#doctitle").html()))+"&rurl="+encodeURI(document.location.href)+"&rcontent="+encodeURI($("meta[name='description']").attr("content"));
 		$('.kaixin001').attr('href',$url).attr('target','_blank');
 
 	//点击人人分享
@@ -27,7 +27,7 @@
 		$("#renren_repaste").submit();
 		$("#renren_repaste").remove();	
 		return false;
-	});
+	});*/
 	
 	//新浪微博
 	/*
@@ -38,7 +38,7 @@
 	方法2：http://open.t.sina.com.cn/ 申请appkey，需新浪认证，在认证之前显示来自【微博开放平台接口】。
 	方法3：保持appkey的value值为空，那么将显示来自【新浪网内容分享】
 	*/
-	$(".sina_blog").bind("click", function(){
+	/*$(".sina_blog").bind("click", function(){
 		var sinaminblogurl = location.href;
 		var maxlength = 140;
 		var ablelength = maxlength - sinaminblogurl.length / 2 - $("#doctitle").html().length - 7;
@@ -55,4 +55,4 @@
 		$("#sinaminblogform").submit();
 		$("#sinaminblogform").remove();
 		return false;
-	});
+	});*/

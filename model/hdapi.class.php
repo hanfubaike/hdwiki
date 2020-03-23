@@ -153,7 +153,7 @@ class hdapimodel {
 		if ($this->api_error == 'timeout') {return '';}
 		
 		$t = time();
-		$data = util::hfopen($url, $limit, $post, $cookie, FALSE, '', $timeout);
+		$data = @util::hfopen($url, $limit, $post, $cookie, FALSE, '', $timeout);
 		$t = time() - $t;
 		$data = trim($data);
 		$this->setLog('time:'.$url, 'time:'.$t);
@@ -259,8 +259,8 @@ class hdapimodel {
 		$xmlarray = $this->xml2array($xmldata);
 		$content='';
 		if(isset($xmlarray['content'])){
-			//$content = str_replace("http://www.hudong.com/wiki/","index.php?doc-innerlink-",$xmlarray['content']);
-			$content = preg_replace("/href=[\"\'](http:\/\/www.hudong.com)?\/wiki\/([^\"\' >]+)[\"\']/i", "href=\"index.php?doc-innerlink-\$2\"", $xmlarray['content']);
+			//$content = str_replace("http://www.baike.com/wiki/","index.php?doc-innerlink-",$xmlarray['content']);
+			$content = preg_replace("/href=[\"\'](http:\/\/www.baike.com)?\/wiki\/([^\"\' >]+)[\"\']/i", "href=\"index.php?doc-innerlink-\$2\"", $xmlarray['content']);
 			$content=stripslashes($content);
 			$this->setLog('content', $content);
 			//cache
@@ -283,8 +283,8 @@ class hdapimodel {
 		$xmlarray = $this->xml2array($xmldata);
 		$content='';
 		if(isset($xmlarray['content'])){
-			//$content = str_replace("http://www.hudong.com/wiki/","index.php?doc-innerlink-",$xmlarray['content']);
-			$content = preg_replace("/href=[\"\'](http:\/\/www.hudong.com)?\/wiki\/([^\"\' >]+)[\"\']/i", "href=\"index.php?doc-innerlink-\$2\"", $xmlarray['content']);
+			//$content = str_replace("http://www.baike.com/wiki/","index.php?doc-innerlink-",$xmlarray['content']);
+			$content = preg_replace("/href=[\"\'](http:\/\/www.baike.com)?\/wiki\/([^\"\' >]+)[\"\']/i", "href=\"index.php?doc-innerlink-\$2\"", $xmlarray['content']);
 			$content=stripslashes($content);
 			$this->setLog('content', $content);
 			//cache

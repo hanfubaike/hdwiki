@@ -2,7 +2,7 @@
 !defined('IN_HDWIKI') && exit('Access Denied');
 class control extends base{
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load("statistics");
 		$this->view->setlang($this->setting['lang_name'],'back');
 		$this->cache_time=60*60*3;
@@ -139,17 +139,17 @@ class control extends base{
 		$admin_team=$_ENV['statistics']->get_admin_team($start_limit,$num);
 		$departstr=$this->multi($count, $num, $page,'admin_statistics-admin_team');
 		foreach($admin_team as $key => $user){
-			if($user[lasttime]){
-				$admin_team[$key][lasttime]=$this->date($user[lasttime]);
-				$admin_team[$key][leave_day]=round(($this->time-$user[lasttime])/(3600*24));
-			}elseif($user[regtime]){
-				$admin_team[$key][lasttime]=$this->date($user[regtime]);
-				$admin_team[$key][leave_day]=round(($this->time-$user[regtime])/(3600*24));
+			if($user['lasttime']){
+				$admin_team[$key]['lasttime']=$this->date($user['lasttime']);
+				$admin_team[$key]['leave_day']=round(($this->time-$user['lasttime'])/(3600*24));
+			}elseif($user['regtime']){
+				$admin_team[$key]['lasttime']=$this->date($user['regtime']);
+				$admin_team[$key]['leave_day']=round(($this->time-$user['regtime'])/(3600*24));
 			}else{
-				$admin_team[$key][lasttime]=$this->view->lang['never_login'];
-				$admin_team[$key][leave_day]=$this->view->lang['never_login'];
+				$admin_team[$key]['lasttime']=$this->view->lang['never_login'];
+				$admin_team[$key]['leave_day']=$this->view->lang['never_login'];
 			}
-			$admin_team[$key][groupid]=$user[groupid]==4?$this->view->lang['super_admin']:$this->view->lang['wiki_admin'];
+			$admin_team[$key]['groupid']=$user['groupid']==4?$this->view->lang['super_admin']:$this->view->lang['wiki_admin'];
 		}
 		$this->view->assign('admin_team',$admin_team);
 		$this->view->assign("departstr",$departstr);

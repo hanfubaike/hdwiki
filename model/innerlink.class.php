@@ -153,7 +153,7 @@ class innerlinkmodel {
 				$doclist[ urlencode($row['srctitle']) ] = -1;
 			}
 		}
-		return $doclist;
+		return empty($doclist) ? NULL : $doclist ;
 	}
 	
 	/*

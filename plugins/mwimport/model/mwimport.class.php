@@ -18,7 +18,7 @@ class mwimportmodel {
 		'identifier'=>'mwimport',
 		'description'=>'将已经安装的MediaWiki程序的用户、词条以及分类导入到HDwiki中。',
 		'type'=>'0',
-		'copyright'=>'www.hudong.com',
+		'copyright'=>'www.baike.com',
 		'version'=>'1.0',
 		'suit'=>'5.0',
 		'modules'=>'',

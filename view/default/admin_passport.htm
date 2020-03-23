@@ -32,52 +32,52 @@ function randomAuthKey(){
 	<tr>
 		<td width="100px"><span>{lang pp_open}</span></td>
 		<td>
-		<input name="ppopen" type="radio" value="1" <!--{if $pp_open == "1"}-->checked="checked"<!--{/if}-->/> 
-		{lang adv_enable}   <input name="ppopen" type="radio" value="0" <!--{if $pp_open != "1"}-->checked="checked"<!--{/if}-->/> {lang adv_disable}</td>
+		<input name="ppopen" type="radio" value="1" <!--{if !empty($pp_open) &&  $pp_open == "1"}-->checked="checked"<!--{/if}-->/>
+		{lang adv_enable}   <input name="ppopen" type="radio" value="0" <!--{if !empty($pp_open) &&  $pp_open != "1"}-->checked="checked"<!--{/if}-->/> {lang adv_disable}</td>
 	</tr>
 	<tr>
 		<td ><span>{lang pp_type}</span></td>
 		<td>
-			<input name="ppname" type="radio" value="PHPCMS" <!--{if $pp_name == "PHPCMS"}-->checked="checked"<!--{/if}-->/>PHPCMS
-			<input name="ppname" type="radio" value="DEDECMS" <!--{if $pp_name == "DEDECMS"}-->checked="checked"<!--{/if}-->/> DEDECMS
-			<input name="ppname" type="radio" value="PHPWIND" <!--{if $pp_name == "PHPWIND"}-->checked="checked"<!--{/if}-->/> PHPWIND 
+			<input name="ppname" type="radio" value="PHPCMS" <!--{if !empty($pp_name) &&  $pp_name == "PHPCMS"}-->checked="checked"<!--{/if}-->/>PHPCMS
+			<input name="ppname" type="radio" value="DEDECMS" <!--{if !empty($pp_name) &&  $pp_name == "DEDECMS"}-->checked="checked"<!--{/if}-->/> DEDECMS
+			<input name="ppname" type="radio" value="PHPWIND" <!--{if !empty($pp_name) &&  $pp_name == "PHPWIND"}-->checked="checked"<!--{/if}-->/> PHPWIND
 		</td>
 	</tr>
 	<tr>
 		<td ><span>{lang pp_way}</span></td>
 		<td>
 		<select name="pptype" onChange="if(this.value=='client'){document.getElementById('ppclient').style.display = '';}else{document.getElementById('ppclient').style.display = 'none';}">
-			<option value="server" <!--{if $pp_type != "client"}-->selected="selected"<!--{/if}-->> {lang pp_server}</option>
-			<option value="client" <!--{if $pp_type == "client"}-->selected="selected"<!--{/if}-->> {lang pp_client}</option>
+			<option value="server" <!--{if  isset($pp_type) &&  $pp_type != "client"}-->selected="selected"<!--{/if}-->> {lang pp_server}</option>
+			<option value="client" <!--{if !empty($pp_type) && $pp_type == "client"}-->selected="selected"<!--{/if}-->> {lang pp_client}</option>
 		</select></td>
 	</tr>
 	<tr>
 		<td ><span>{lang pp_key}</span></td>
-		<td><input id="authKey" type="text" class="inp_txt" name="ppkey" value="{$pp_key}" />  <a href="#" onClick="javascript:randomAuthKey();" class="sgbtn"><font color="#FF0000">{lang pp_givekey}</font></a></td>
+		<td><input id="authKey" type="text" class="inp_txt" name="ppkey" value="<!--{if !empty($pp_key)}-->{$pp_key}<!--{/if}-->" />  <a href="#" onClick="javascript:randomAuthKey();" class="sgbtn"><font color="#FF0000">{lang pp_givekey}</font></a></td>
 	</tr>
 	<tr>
 		<td ><span>{lang pp_connect_site}</span></td>
-		<td><input type="text" class="inp_txt" name="ppapi" value="{$pp_api}" />
+		<td><input type="text" class="inp_txt" name="ppapi" value="<!--{if !empty($pp_api)}-->{$pp_api}<!--{/if}-->" />
 			{lang pp_dis1}</td>
 	</tr>
 	</table>
-	<table class="table" id="ppclient" <!--{if $pp_type != "client"}-->style="display:none;"<!--{/if}-->>
+	<table class="table" id="ppclient" <!--{if !empty($pp_type) && $pp_type != "client"}-->style="display:none;"<!--{/if}-->>
 		<tr>
 			<td width="100px"><span>{lang pp_regsite}</span></td>
 			<td>
-			<input type="text" class="txt" name="ppreg" value="{$pp_reg}" />
+			<input type="text" class="txt" name="ppreg" value="<!--{if !empty($pp_reg)}-->{$pp_reg}<!--{/if}-->" />
 			{lang pp_dis2}</td>
 		</tr>
 		<tr>
 			<td ><span>{lang pp_loginsite}</span></td>
 			<td>
-			<input type="text" class="txt" name="pplogin" value="{$pp_login}" />
+			<input type="text" class="txt" name="pplogin" value="<!--{if !empty($pp_login)}-->{$pp_login}<!--{/if}-->" />
 			{lang pp_dis3}</td>
 		</tr>
 		<tr>
 			<td ><span>{lang pp_logoutsite}</span></td>
 			<td>
-			<input type="text" class="txt" name="pplogout" value="{$pp_logout}" />	
+			<input type="text" class="txt" name="pplogout" value="<!--{if !empty($pp_logout)}-->{$pp_logout}<!--{/if}-->" />
 			{lang pp_dis4}</td>
 		</tr>
 	</table>

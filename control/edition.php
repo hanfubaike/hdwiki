@@ -4,7 +4,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base( $get, $post);
 		$this->load('doc');
 		$this->load('usergroup');
 		$this->load('category');
@@ -21,7 +21,7 @@ class control extends base{
 		$doc['time']=$this->date($doc['time']);
 		$doc['tag']=$_ENV['doc']->spilttags($doc['tag']);
 		$doc['rawtitle'] = $doc['title'];
-		$doc['title']=htmlspecialchars(stripslashes($doc['title']));
+		$doc['title']=htmlspecial_chars(stripslashes($doc['title']));
 		$category=$_ENV['category']->get_category($doc['cid']);
 		$navigation=unserialize($category['navigation']);
 		$editionlist=$_ENV['doc']->get_edition_list($this->get[2], '`eid`,`time`,`author`,`authorid`,`big`,`excellent`,`reason`,`coins`');
@@ -144,7 +144,7 @@ class control extends base{
 		if(@!is_numeric($this->post['eid'][0])||@!is_numeric($this->post['eid'][1])){
 			$this->message($this->view->lang['parameterError'],'index.php',0);
 		}
-		$edition=$_ENV['doc']->get_edition($this->post['eid']);
+		$edition=$_ENV['doc']->get_edition(array_slice($this->post['eid'], 0, 2));
 		if($edition[0]['did']!=$edition[1]['did']){
 			$this->message($this->view->lang['parameterError'],'index.php',0);
 		}

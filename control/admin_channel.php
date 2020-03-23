@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base( $get, $post);
 		$this->load('channel');
 		$this->view->setlang($this->setting['lang_name'],'back');
 	}
@@ -30,7 +30,7 @@ class control extends base{
 		if(!isset($this->post['channelsubmit'])){
 			$this->view->display('admin_addchannel');
 		}else{
-			$channel['name']=trim($this->post['name']);
+			$channel['name']=string::stripscript(trim($this->post['name']));
 			$channel['url']=trim($this->post['url']);
 			$channel['position']=intval($this->post['position']);
 			$channel['available']=trim($this->post['available']);
@@ -53,7 +53,7 @@ class control extends base{
 			$this->view->assign('channel',$channel);
 			$this->view->display('admin_editchannel');
 		}else{
-			$channel['name']=trim($this->post['name']);
+			$channel['name']=string::stripscript(trim($this->post['name']));
 			$channel['url']=trim($this->post['url']);
 			$channel['available']=trim($this->post['available']);
 			$channel['position']=intval($this->post['position']);
@@ -81,7 +81,7 @@ class control extends base{
 		}
 	}
 
-	function doupdateorder(){
+	function dochangeorder(){
 		$channel_num=string::stripspecialcharacter(trim($this->post['order']));
 		$order=explode(",",$channel_num);
 		$_ENV['channel']->updateorder($order);

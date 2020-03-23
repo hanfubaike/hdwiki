@@ -9,10 +9,11 @@ class categorymodel {
 
 	function categorymodel(&$base) {
 		$this->base = $base;
-		$this->db = $base->db;
+		$this->db = $base->db; 
 	}
 
 	function get_category($cidstr, $one=1) {
+		$categorys = null; 
 		$categorylist=$this->get_category_cache();
 		$cids = explode(",", $cidstr);
 		sort($cids);
@@ -71,13 +72,15 @@ class categorymodel {
 
 	function get_site_category($pid,$categorylist){
 		$sitecategory=array();
-		foreach($categorylist as $i => $category){
-			if($pid==$category['pid']){
-				$parentid=$category['cid'];
-				$sitecategory[$i]['parent']=$category;
-				foreach($categorylist as $j => $subcategory){
-					if($parentid==$subcategory['pid']){
-						$sitecategory[$i]['child'][]=$subcategory;
+		if(!empty($categorylist)) {
+			foreach($categorylist as $i => $category){
+				if($pid==$category['pid']){
+					$parentid=$category['cid'];
+					$sitecategory[$i]['parent']=$category;
+					foreach($categorylist as $j => $subcategory){
+						if($parentid==$subcategory['pid']){
+							$sitecategory[$i]['child'][]=$subcategory;
+						}
 					}
 				}
 			}
@@ -246,8 +249,10 @@ class categorymodel {
 		$cids = explode(",", $cidstr);
 		$allcategory = $this->get_all_category();
 		$allcategoryid = array();
-		foreach($allcategory as $category){
-			$allcategoryid[] = $category['cid'];
+		if(!empty($allcategory)) {
+			foreach($allcategory as $category){
+				$allcategoryid[] = $category['cid'];
+			}
 		}
 		if($cids == array_intersect($cids, $allcategoryid)){
 			return true;
@@ -262,8 +267,8 @@ class categorymodel {
 			if($catid == 0){
 				foreach($cats as $cat){
 					//名字不需要转译;元素里面的是需要转译的
-					$catname = htmlspecialchars($cat['name']);
-					$cat['name'] = htmlspecialchars(string::haddslashes($cat['name'],1));
+					$catname = htmlspecial_chars($cat['name']);
+					$cat['name'] = htmlspecial_chars(string::haddslashes($cat['name'],1));
 					$img = $this->get_subcate($cat['cid']) ? '<input id="cat'.$cat['cid'].'" onclick="openclose(this);" type="image" src="style/default/close.gif"/>' : '';
 					$content .= '<dl class="col-dl" id="cat'.$cat['cid'].'"><dt class="bold"><label><input type="checkbox" id='.$cat['cid'].' name='.$cat['name'].' onclick="javascript:catevalue.cateOk('.$cat['cid'].',\''.$cat['name'].'\',this.checked)" />'.$catname.'</label>'.$img.'</dt>';
 					$subcats = $this->get_subcate($cat['cid']);
@@ -276,7 +281,7 @@ class categorymodel {
 				$cat = $this->get_category($catid);
 				foreach (unserialize($cat['navigation']) as $nav){
 					$catname = $nav['name'];
-					$nav['name'] = htmlspecialchars(string::haddslashes($nav['name']));
+					$nav['name'] = htmlspecial_chars(string::haddslashes($nav['name']));
 					$navlink .= '<label><input type="checkbox" id='.$nav['cid'].' name='.$nav['name'].' onclick="javascript:catevalue.cateOk('.$nav['cid'].',\''.$nav['name'].'\',this.checked)" />'.$catname.'</label>>';
 				}
 				$content .= '<dl class="col-dl"><dt class="bold">'.substr($navlink, 0, -1).'</dt>';
@@ -296,8 +301,8 @@ class categorymodel {
 	function get_catitem($catid, $cats){
 		$content = '';
 		foreach ($cats as $cat){
-			$catname = htmlspecialchars($cat['name']);
-			$navname = htmlspecialchars(string::haddslashes($catname,1));
+			$catname = htmlspecial_chars($cat['name']);
+			$navname = htmlspecial_chars(string::haddslashes($catname,1));
 			$style = $catid == 0 ? 'style="display:none;"' : '';
 			$img = $this->get_subcate($cat['cid']) ? '<input onclick="javascript:catevalue.ajax('.$cat['cid'].')" type="image" src="style/default/sign_next.gif"/>' : '';
 			$content .= '<dd '.$style.'><label><input type="checkbox" id='.$cat['cid'].' name='.$catname.' onclick="javascript:catevalue.cateOk('.$cat['cid'].',\''.$navname.'\',this.checked)"/>'.$catname.'</label>'.$img.'</dd>';

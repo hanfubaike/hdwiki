@@ -24,8 +24,8 @@ class template{
 		$this->vars[$k] = $v;
 	}
 
-	function setlang($lang_name,$filename){
-		include HDWIKI_ROOT.'/lang/'.$lang_name.'/'.$filename.'.php';
+	function setlang($langtype='zh',$filename){
+		include HDWIKI_ROOT.'/lang/'.$langtype.'/'.$filename.'.php';
 		$this->lang = &$lang;
 	}
 
@@ -33,8 +33,8 @@ class template{
 	
 	function display($file){
 		GLOBAL $starttime,$mquerynum;
-		$wgMtime = explode(' ', microtime());
-		$this->assign('runtime', number_format($wgMtime[1] + $wgMtime[0] - $starttime,6));
+		$mtime = explode(' ', microtime());
+		$this->assign('runtime', number_format($mtime[1] + $mtime[0] - $starttime,6));
 		$this->assign('querynum',$mquerynum);
 		extract($this->vars, EXTR_SKIP);
 		include $this->gettpl($file);
@@ -165,13 +165,15 @@ class template{
 	function block($area){
 		$area = trim($area);
 		$datastr='';
-		foreach((array)$GLOBALS['blocklist'][$area] as $block){
-			$datastr.='{eval $data= $GLOBALS[\'blockdata\']['.$block['id'].'];$bid="'.$block['id'].'"}';
-			$tplfile=HDWIKI_ROOT.'/block/'.$block['theme'].'/'.$block['block'].'/'.$block['tpl'];
-			if(!file_exists($tplfile)){
-				$tplfile=HDWIKI_ROOT.'/block/default/'.$block['block'].'/'.$block['tpl'];
+		if(!empty($GLOBALS['blocklist'][$area])) {
+			foreach((array)$GLOBALS['blocklist'][$area] as $block){
+				$datastr.='{eval $data= $GLOBALS[\'blockdata\']['.$block['id'].'];$bid="'.$block['id'].'"}';
+				$tplfile=HDWIKI_ROOT.'/block/'.$block['theme'].'/'.$block['block'].'/'.$block['tpl'];
+				if(!file_exists($tplfile)){
+					$tplfile=HDWIKI_ROOT.'/block/default/'.$block['block'].'/'.$block['tpl'];
+				}
+				$datastr.=file::readfromfile($tplfile);
 			}
-			$datastr.=file::readfromfile($tplfile);
 		}
 		return $datastr;
 	}

@@ -20,11 +20,12 @@ function docheck(){
 	<tr width="300px">
 		<td><span>词条历史版本存储格式</span>选择文本格式,可以节省数据库空间</td>
 		<td>
-		<label><input type="radio"  name="db_storage" value="txt" id="txt"
-		{if $setting['db_storage']=='txt'}checked{/if}/> 文本</label>
+		<label>
+			<input type="radio"  name="db_storage" value="txt" id="txt"
+		<!--{if isset($setting['db_storage'])}-->{if $setting['db_storage']=='txt'}checked{/if}<!--{/if}-->/> 文本</label>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<label><input type="radio"  name="db_storage" value="mysql" id="mysql"
-		{if $setting['db_storage']=='mysql'}checked{/if}/> Mysql</label>
+		<!--{if isset($setting['db_storage'])}-->{if $setting['db_storage']=='mysql'}checked{/if}<!--{/if}-->/> Mysql</label>
 		</td>
 	</tr>
 	<tr>

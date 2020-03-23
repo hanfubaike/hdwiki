@@ -1,7 +1,7 @@
-<div id="tjct" class="columns tjct i6-ff {$data['config']['style']}" bid="{$bid}">
+<div id="tjct" class="columns tjct {$data['config']['style']}" bid="{$bid}">
 	<h2 class="col-h2">{lang focusDoc}</h2>
 	<a href="{url list-focus}" class="more">{lang more}</a>
-	<div>
+	<div class="clearfix">
 	<!--{loop $data['list'] $key $fistcomdoc}-->
 		<!--{if $key<3}-->
 		<div class="jc_tj">
@@ -11,7 +11,7 @@
 		<!--{/if}-->
 	<!--{/loop}-->
 	</div>
-	<ul class="col-ul point c-b">
+	<ul class="col-ul point">
 		<!--{loop $data['list'] $key $commenddoc}-->
 			<!--{if $key>=3}-->
 			<li><a href="{url doc-view-$commenddoc['did']}"  title="{$commenddoc['title']}">{$commenddoc['shorttitle']}</a></li>

@@ -96,12 +96,14 @@ class pmsmodel {
 	function get_box($boxarray){
 		$start = $boxarray['start_limit'];
 		$limit = $boxarray['num'];
+		$pmslist = '';
 		if($boxarray['type'] == 'inbox'){
 			$blacklist = $this->get_blacklist($boxarray['user']['uid']);
 			
 			if($blacklist == "[ALL]"){
 				return '';
 			}else{
+				$blacklist = mysql_real_escape_string($blacklist);
 				$blackuser = str_replace(",","','",$blacklist);
 				$sqladd = $boxarray['group']=='owner' ? 'AND og=0' : 'AND og=1';
 				$sql = "SELECT * FROM ".DB_TABLEPRE."pms WHERE toid='".$boxarray['user']['uid']."' AND delstatus!=2 AND  drafts !=1 ";
@@ -121,11 +123,33 @@ class pmsmodel {
 	}
 	
 	function get_pms($id){
+		$id = is_numeric($id) ? $id : 0;
 		return $this->db->fetch_first("SELECT * FROM ".DB_TABLEPRE."pms WHERE id=$id");
 	}
 		
 	function update_pms($messageids,$type){
+		$tmp_messageids = array();
+		$messageids = empty($messageids)? NULL : explode(',', $messageids);
+		if(!empty($messageids) && is_array($messageids)) {
+			foreach($messageids as $val) {
+				if(is_numeric($val)) {
+					$tmp_messageids[] = intval($val);
+				}else{
+					continue;
+				}
+			}
+			if(!empty($tmp_messageids) && is_array($tmp_messageids)) {
+				$messageids = implode(',', $tmp_messageids);
+			}else {
+				return false;
+			}
+		}
 		$id = strpos($messageids , ',') ? substr($messageids, 0, strpos($messageids, ',')) : $messageids;
+		if(is_numeric($id)) {
+			$id = intval($id);
+		}else {
+			return false;
+		}		
 		$pms = $this->get_pms($id);
 		if($pms['delstatus'] == $type || $type == 3){
 			$result=$this->remove($messageids);
@@ -141,11 +165,13 @@ class pmsmodel {
 	}
 	
 	function get_totalpms($uid, $type, $group=''){
+		$sqladd = '';
 		if($type == 'inbox'){
 			$blacklist = $this->get_blacklist($uid);
 			if($blacklist == '[ALL]'){
 				return '0';
 			}else{
+				$blacklist = mysql_real_escape_string($blacklist);
 				$blackuser = str_replace(",","','",$blacklist);
 				if($group){
 					$sqladd = ($group == 'owner') ? 'AND og=0' : 'AND og=1';

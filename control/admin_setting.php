@@ -3,7 +3,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('setting');
 		$this->view->setlang($this->setting['lang_name'],'back');
 	}
@@ -34,6 +34,7 @@ class control extends base{
 			if('/'==substr($settings['site_url'],-1)){
 				$settings['site_url']=substr($settings['site_url'],0,-1);
 			}
+			$settings['site_url'] = string::stripspecialcharacter($settings['site_url']);
 			$setting=$_ENV['setting']->update_setting($settings);
 			$this->cache->removecache('setting');
 			$this->message($this->view->lang['baseConfigSuccess'],'index.php?admin_setting-base');
@@ -378,6 +379,7 @@ class control extends base{
 			}else if(file_exists(HDWIKI_ROOT."/.htaccess")){
 				unlink (HDWIKI_ROOT."/.htaccess");
 			}
+			$this->post['seo_headers'] = string::stripscript($this->post['seo_headers']);
 			$setting=$_ENV['setting']->update_setting($this->post);
 			$this->cache->removecache('setting');
 			file::cleardir(HDWIKI_ROOT.'/data/view');
@@ -393,7 +395,7 @@ class control extends base{
 		$this->view->display("admin_cache");
 	}
 	
-	function dosavecache(){
+	function dorenewcache(){
 		$cachelist = array('index_cache_time','list_cache_time');
 		foreach($cachelist as $cache){
 			if(!is_numeric($this->post[$cache."_value"])){
@@ -770,6 +772,7 @@ define('PP_KEY', '".$this->post['ppkey']."');
 			file :: writetofile(HDWIKI_ROOT."/data/import_uc.lock",$mes);
 			$this->message('导入用户数据成功!',$d_url);
 		}else{
+			$this->setting['ucopen'] = !empty($this->setting['ucopen']) ? $this->setting['ucopen'] : false;
 			$this->view->assign('ucopen',$this->setting['ucopen']);
 			$url="./api/ucconfig.inc.php";
 			if(!file_exists($url)){
@@ -783,7 +786,10 @@ define('PP_KEY', '".$this->post['ppkey']."');
 					$islock=1;
 				$this->view->assign('uc_api',UC_API);
 			}
-			
+
+			$this->setting['feed'] = !empty($this->setting['feed']) ? $this->setting['feed'] : false;
+			$isopen = isset($isopen) ? $isopen : 0;
+			$islock = isset($islock) ? $islock : 0;
 			$feed=unserialize($this->setting['feed']);
 			$this->view->assign('create',@in_array('create',$feed));
 			$this->view->assign('edit',@in_array('edit',$feed));

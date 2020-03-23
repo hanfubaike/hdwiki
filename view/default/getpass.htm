@@ -60,30 +60,28 @@ function docheck(){
 	}
 }
 </script>
+<section class="wrap clearfix bor-ccc m-t20">
 <div class="hd_map">
 	<a href="{WIKI_URL}">{$setting['site_name']}</a> &gt; {lang getPass}</div>
-<div class="w-550 a-r reg-back">{lang getPassTip3} <a href="{url user-register}" target="_self"> {lang register}</a></div>
 <form name="form" action="{url user-getpass}" method="post" onsubmit="return docheck();">
-<ul class="bor-ccc ul_l_s reg-bd">
-	<li><span class="l a-r">Email</span>
-	<input name="email" maxlength="50" id="email" type="text"  class="reg-inp" onblur="checkemail()"/><label id="emailinfo" class="m-lr8"></label></li>
+<ul class="login-static col-ul reg-bd">
+	<li><span>E-mail：</span>
+	<input name="email" maxlength="50" id="email" type="text"  class="inp_txt" onblur="checkemail()"/><label id="emailinfo" class="m-lr8"></label></li>
 	<!--{if $checkcode != "3"}-->
-	<li class="yzm m-t10">
-		<span class="l a-r">{lang verifyCode}</span>
-		<input name="code" id="code"  tabindex="5"  type="text" onblur="check_code()" maxlength="4" />
-			<label class="m-l8">
+	<li class="yzm">
+		<span>{lang verifyCode}：</span>
+		<input name="code" id="code"  tabindex="5"  type="text" onblur="check_code()" maxlength="4" class="inp_txt" />
+			<label class="yzm-img">
 				<img id="verifycode" src="{url user-code}" onclick="updateverifycode();" />
 			</label>&nbsp;
-			<a href="javascript:updateverifycode();">{lang codeNotClear}</a>
-			<label id="checkcode" class="m-lr8"></label>
+			<a href="javascript:updateverifycode();" class="clink">{lang codeNotClear}</a>
+			<label id="checkcode"></label>
 	</li>
 	<!--{/if}-->
-	<li><input name="submit" type="submit" value="{lang getPass}"   class="btn_inp m-t8"/></li>
+	<li class="a-r">{lang getPassTip3} <a href="{url user-register}" class="clink" target="_self"> {lang register}</a></li>
+	<li><input name="submit" type="submit" value="{lang getPass}"   class="btn_inp blue"/></li>
 </ul>
 </form>
-<script type="text/javascript"> 
-$('email').focus();
-</script>
-<div class="c-b"></div>
+</section>
 {template footer}
 

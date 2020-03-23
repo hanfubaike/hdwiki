@@ -18,15 +18,15 @@ html,body{height:100%;position:relative;overflow:hidden;}
 		if(isSetSearchWordColor){
 			return;
 		}
-		
+
 		isSetSearchWordColor = 1;
 		keywords = keywords.split(" ");
-		
+
 		$("#main").bind("load.search", function(){
 			$("#main").unbind("load.search");
 			var main = this.contentWindow.document;
 			$("td span" ,main).each(function(){
-				var o = $(this); 
+				var o = $(this);
 				$.each(keywords, function(i, n){
 					var html = o.html();
 					html = html.replace(n, "<font color='#c60a00'>"+n+"</font>");
@@ -36,7 +36,7 @@ html,body{height:100%;position:relative;overflow:hidden;}
 			isSetSearchWordColor = 0;
 		});
 	}
-	
+
 	$(function() {
 		initMenu();
 		shortcut.getShortcut();
@@ -72,9 +72,9 @@ html,body{height:100%;position:relative;overflow:hidden;}
 			}else{
 				$("#shortcut").css("display",'none');
 			}
-		},	
+		},
 		getShortcut:function (){
-			var shortstr="{$setting['shortcut']}";
+			var shortstr="<!--{if isset($setting['shortcut'])}-->{$setting['shortcut']}<!--{/if}-->";
 			var html='';
 			$('#menubox input').each(function(i){
 				if(shortstr.indexOf($(this).val()) >=0){
@@ -97,7 +97,7 @@ html,body{height:100%;position:relative;overflow:hidden;}
 				link+=$(this).val()+','+$(this).attr('title')+';';
 			});
 			$.ajax({
-				url: "index.php?admin_setting-shortcut",data: {link:link,shortcutstate:shortcutstate},cache: false,dataType: "xml",type:"post",async:false, 
+				url: "index.php?admin_setting-shortcut",data: {link:link,shortcutstate:shortcutstate},cache: false,dataType: "xml",type:"post",async:false,
 				success: function(xml){
 					var	message=xml.lastChild.firstChild.nodeValue;
 					if(message=='1'){
@@ -119,15 +119,15 @@ html,body{height:100%;position:relative;overflow:hidden;}
 			$("#shortcutmenu").css('display',dispaly);
 		}
 	}
-	
+
 	function onsearch(){
-		
+
 	}
-	
+
 	$(document).ready(function(){
 		$("form[name=search]").submit(function(){
 			var input=$(this).find(':text'), keywords=$.trim(input.val());
-			
+
 			if(!keywords){
 				alert("请输入要搜索的菜单名称关键字，如 缓存设置 等。");
 				input.focus();
@@ -137,10 +137,10 @@ html,body{height:100%;position:relative;overflow:hidden;}
 				input.focus();
 				return false;
 			}
-			
+
 		});
 	});
-</script> 
+</script>
 </head>
 <body scrolling="no">
 
@@ -150,24 +150,23 @@ html,body{height:100%;position:relative;overflow:hidden;}
 		<td colspan="2" height="76px">
 			<div class="head">
 				<p class="r a-r t-tips">
-				<a href="index.php" target="_blank">前台首页</a>|<a href="http://www.92wiki.com/hdwiki/category-view-20.html
-" target="_blank" class="red">帮助</a>|<a onclick="javascript:apply(1);" href="javascript:viod(0);">我是新手</a>|<a href="http://kaiyuan.hudong.com/kaiyuanhome/c/contact_us.htm" target="main">联系我们</a>|<a href="https://github.com/zjhxmjl/hdwiki/issues" target="_blank">我要提问</a>[<a href="index.php?admin_main-logout">退出管理中心</a>]
+				<a href="index.php" target="_blank">前台首页</a>|<a href="http://kaiyuan.hudong.com/faq/help.php" target="_blank" class="red">帮助</a>|<a onclick="javascript:apply(1);" href="javascript:viod(0);">我是新手</a>|<a href="http://kaiyuan.hudong.com/faq/kefu.php" target="_blank">联系我们</a>|<a href="http://kaiyuan.hudong.com/faq/" target="_blank">我要提问</a>[<a href="index.php?admin_main-logout">退出管理中心</a>]
 				</p>
-				<form name="search" class="seach m-r10" action="index.php?admin_actions" target="main" method="post">	
+				<form name="search" class="seach m-r10" action="index.php?admin_actions" target="main" method="post">
 				<p class="search">
 				<input name="keywords" type="text" class="inp_txt w-140" value="搜索后台功能菜单" onfocus="if (value =='搜索后台功能菜单'){value =''}" onblur="if (value ==''){value='搜索后台功能菜单'}"/> <input type="submit" value="搜菜单" class="inp_btn3"/>
 				</p>
 				</form>
 				<ul id="nav">
-				<li onclick="getMenu('index',this)" id="indexmenu" ><a href="javascript:void(0);"><span>{lang styleindex}</span></a></li>
+				<li onclick="getMenu('index',this)" id="indexmenu" ><a href="javascript:void(0);"><span>首页</span></a></li>
 				<li onclick="getMenu('global',this)" id="globalmenu"><a href="javascript:void(0);"><span>全 局</span></a></li>
-				<li onclick="getMenu('user',this)" id="usermenu"><a href="javascript:void(0);"><span>{lang commonUserManage}</span></a>|</li>
-				<li onclick="getMenu('content',this)"  id="contentmenu"><a href="javascript:void(0);"><span>{lang commonContentMng}</span></a>|</li>
+				<li onclick="getMenu('user',this)" id="usermenu"><a href="javascript:void(0);"><span>用户管理</span></a>|</li>
+				<li onclick="getMenu('content',this)"  id="contentmenu"><a href="javascript:void(0);"><span>内容管理</span></a>|</li>
 				<li onclick="getMenu('plug',this)" id="plugmenu"><a href="javascript:void(0);"><span>模板/插件</span></a>|</li>
-				<li onclick="getMenu('database',this)" id="databasemenu"><a href="javascript:void(0);"><span>{lang dbMange}</span></a>|</li>
+				<li onclick="getMenu('database',this)" id="databasemenu"><a href="javascript:void(0);"><span>数据库管理</span></a>|</li>
 				<li onclick="getMenu('unions',this)" id="toolsmenu"><a href="javascript:void(0);"><span>百科联盟</span></a>|</li>
 				<li onclick="getMenu('model',this)" id="toolsmenu"><a href="javascript:void(0);"><span>模块</span></a>|</li>
-				<li onclick="getMenu('statistics',this)" id="statisticsmenu"><a href="javascript:void(0);"><span>{lang statistics}</span></a></li>
+				<li onclick="getMenu('statistics',this)" id="statisticsmenu"><a href="javascript:void(0);"><span>站内统计</span></a></li>
 				<li onclick="getMenu('map',this)" id="mapmenu"><a href="javascript:void(0);"><span>Map</span></a></li>
 				</ul>
 			</div>
@@ -176,11 +175,11 @@ html,body{height:100%;position:relative;overflow:hidden;}
 	<tr>
 		<td valign="top">
 			<div class="left">
-				<a href="index.php?admin_main-mainframe" target="main" class="logo"><img src="style/default/admin/logo.gif" alt="HDWIKI管理后台" /></a>
+				<a href="index.php?admin_main-mainframe" target="main" class="logo"><img src="style/default/admin/HDwiki-logo.png" alt="HDWIKI管理后台" /></a>
 				<div class="sidebar">
 					<div class="menu-box">
 						<h2><span class="r m-r8"><span onclick="shortcut.displayShortcut('display');">设置</span></span>自定义菜单</h2>
-						<ul id='shortcutmenu' <!--{if $setting['shortcutstate']}--> style="display:none" <!--{/if}-->>
+						<ul id='shortcutmenu' <!--{if isset($setting['shortcutstate'])}--> style="display:none" <!--{/if}-->>
 						<!--{loop $shortlist $shorcut}-->
 							<li><a href="{$shorcut[0]}" target="main">{$shorcut[1]}</a></li>
 						<!--{/loop}-->
@@ -190,22 +189,22 @@ html,body{height:100%;position:relative;overflow:hidden;}
 					<div id='menu'>
 					</div>
 				</div>
-				
+
 				<div style="display:none" id='menulist'>
 					<div id='index'>
 						<ul>
 						<li><a href="index.php?admin_main-mainframe" target="main" class="on">首页信息</a></li>
 						</ul>
 					</div>
-					
+
 					<div id='global'>
 						<ul>
 						<li><a href="index.php?admin_setting-base" target="main"  class="on">站点设置</a></li>
-						<li><a href="index.php?admin_channel" target="main">{lang siteConfigBase}</a></li>
+						<li><a href="index.php?admin_channel" target="main">基本设置</a></li>
 						<li><a href="index.php?admin_setting-sec" target="main">扩展设置</a></li>
 						<li><a href="index.php?admin_setting-index" target="main">内容设置</a></li>
-						<li><a href="index.php?admin_friendlink" target="main">{lang siteConfigFriendlink}</a></li>
-						<li><a href="index.php?admin_adv" target="main">{lang custom_adv}</a></li>
+						<li><a href="index.php?admin_friendlink" target="main">友情链接</a></li>
+						<li><a href="index.php?admin_adv" target="main">广告管理</a></li>
 						<li><a href="index.php?admin_sitemap" target="main">Sitemap</a></li>
 						<li><a href="index.php?admin_upgrade" target="main">自动升级</a></li>
 						</ul>
@@ -214,23 +213,23 @@ html,body{height:100%;position:relative;overflow:hidden;}
 					<div id='user'>
 						<ul>
 						<li><a href="index.php?admin_setting-baseregister" target="main" >注册设置</a></li>
-						<li><a href="index.php?admin_user" target="main"  class="on">{lang commonMngUser}</a></li>
-						<li><a href="index.php?admin_regular-groupset" target="main">{lang regularMng}</a></li>
-						<li><a href="index.php?admin_usergroup" target="main">{lang commonUsergroupMng}</a></li>
+						<li><a href="index.php?admin_user" target="main"  class="on">管理用户</a></li>
+						<li><a href="index.php?admin_regular-groupset" target="main">管理权限</a></li>
+						<li><a href="index.php?admin_usergroup" target="main">管理用户组</a></li>
 						</ul>
 					</div>
 
 					<div id='content'>
 						<ul>
-							<li><a href="index.php?admin_category-list" target="main">{lang commonCatMng}</a></li>
+							<li><a href="index.php?admin_category-list" target="main">分类管理</a></li>
 							<li><a href="index.php?admin_doc" target="main"  class="on">词条管理</a></li>
 							<li><a href="index.php?admin_attachment" target="main">附件管理</a></li>
 							<li><a href="index.php?admin_comment" target="main">评论管理</a></li>
-							<li><a href="index.php?admin_tag-hottag" target="main">{lang message_hottag}</a></li>
-							<li><a href="index.php?admin_hotsearch" target="main">{lang hot_search}</a></li>
-							<li><a href="index.php?admin_word" target="main">{lang siteConfigWord}</a></li>
+							<li><a href="index.php?admin_tag-hottag" target="main">热门标签</a></li>
+							<li><a href="index.php?admin_hotsearch" target="main">热门搜索</a></li>
+							<li><a href="index.php?admin_word" target="main">词语过滤</a></li>
 							<li><a href="index.php?admin_datacall" target="main">数据调用</a></li>
-							<li><a href="index.php?admin_recycle" target="main">{lang imagerecyclemanage}</a></li>
+							<li><a href="index.php?admin_recycle" target="main">回收站</a></li>
 						</ul>
 					</div>
 
@@ -244,18 +243,18 @@ html,body{height:100%;position:relative;overflow:hidden;}
 
 					<div id='database'>
 						<ul>
-						<li><a href="index.php?admin_db-backup" target="main" class="on">{lang dbBackup}</a></li>
-						<li><a href="index.php?admin_db-tablelist" target="main">{lang dbOptimize}</a></li>
-						<li><a href="index.php?admin_db-sqlwindow" target="main">{lang sqlWindow}</a></li>
+						<li><a href="index.php?admin_db-backup" target="main" class="on">数据库备份</a></li>
+						<li><a href="index.php?admin_db-tablelist" target="main">数据库优化</a></li>
+						<li><a href="index.php?admin_db-sqlwindow" target="main">SQL查询窗口</a></li>
 						<li><a href="index.php?admin_db-storage" target="main">数据存储设置</a></li>
 						</ul>
 					</div>
-					
+
 					<div id='unions'>
 						<ul>
 						<li><a href="index.php?admin_hdapi" target="main" class="on">联盟首页</a></li>
-						<li><a href="index.php?admin_hdapi-set" target="main">云搜索</a></li>	
-						<li><a href="index.php?admin_share-set" target="main">分享到新知社</a></li>
+						<li style="display:none"><a href="index.php?admin_hdapi-set" target="main">云搜索</a></li>
+						<li style="display:none"><a href="index.php?admin_share-set" target="main">分享到新知社</a></li>
 						<li><a href="index.php?admin_hdapi-down" target="main">下载词条</a></li>
 						<li><a href="index.php?admin_hdapi-info" target="main">修改联盟资料</a></li>
 						</ul>
@@ -263,7 +262,7 @@ html,body{height:100%;position:relative;overflow:hidden;}
 
 					<div id='model'>
 						<ul>
-						<li><a href="index.php?admin_image" target="main" class="on">{lang image_wiki}</a></li>
+						<li><a href="index.php?admin_image" target="main" class="on">图片百科</a></li>
 						<li><a href="index.php?admin_gift" target="main">礼品商店</a></li>
 						<li><a href="index.php?admin_safe" target="main">木马扫描</a></li>
 						<li><a href="index.php?admin_filecheck" target="main">文件检测</a></li>
@@ -271,17 +270,17 @@ html,body{height:100%;position:relative;overflow:hidden;}
 						<li><!--{if $setting['FTP_ENABLE']==1}--><a href="index.php?admin_fileftpmanage" target="main" class="on">文件管理</a><!--{else}--><a href="index.php?admin_filemanager" target="main" class="on">文件管理</a> <!--{/if}--></li>
 						<li><a href="index.php?admin_ftpsetting" target="main">FTP设置</a></li>
 						</ul>
-					</div>	
-					
+					</div>
+
 					<div id='statistics'>
 						<ul>
-						<li><a href="index.php?admin_statistics-stand" target="main" class="on">{lang stand}</a></li>
-						<li><a href="index.php?admin_statistics-cat_toplist" target="main">{lang cat_toplist}</a></li>
-						<li><a href="index.php?admin_statistics-doc_toplist" target="main">{lang doc_toplist}</a></li>
-						<li><a href="index.php?admin_statistics-edit_toplist" target="main">{lang edit_toplist}</a></li>
-						<li><a href="index.php?admin_statistics-credit_toplist" target="main">{lang credit_toplist}</a></li>
-						<li><a href="index.php?admin_statistics-admin_team" target="main">{lang admin_team}</a></li>
-						<li><a href="index.php?admin_log" target="main">{lang siteoperationlog}</a></li>
+						<li><a href="index.php?admin_statistics-stand" target="main" class="on">基本概况</a></li>
+						<li><a href="index.php?admin_statistics-cat_toplist" target="main">分类排行</a></li>
+						<li><a href="index.php?admin_statistics-doc_toplist" target="main">词条排行</a></li>
+						<li><a href="index.php?admin_statistics-edit_toplist" target="main">编辑排行榜</a></li>
+						<li><a href="index.php?admin_statistics-credit_toplist" target="main">经验排行</a></li>
+						<li><a href="index.php?admin_statistics-admin_team" target="main">管理团队</a></li>
+						<li><a href="index.php?admin_log" target="main">后台操作记录</a></li>
 						</ul>
 					</div>
 
@@ -292,7 +291,7 @@ html,body{height:100%;position:relative;overflow:hidden;}
 					</div>
 				</div>
 			</div>
-		</td> 
+		</td>
 		<td height="90%"  valign="top">
 			<iframe name="main" id="main" marginheight="0" marginwidth="0" frameborder="0" scrolling="yes"  style="width:100%; height:100%; overflow:visible;" src="index.php?{$admin_mainframe}"></iframe>
 		</td>
@@ -307,9 +306,9 @@ html,body{height:100%;position:relative;overflow:hidden;}
 			<li><span>显示状态</span><input name="shortcutstate" type="checkbox" id="shortcutstate" <!--{if $setting['shortcutstate']}--> checked="checked" <!--{/if}-->/>折叠显示快捷菜单</li>
 			<li><span>选择功能</span><label class="s-tips">最多设置5个快捷功能</label>	<a href="javascript:void(0);" onclick="shortcut.clearShortcut();">清空选项</a></li>
 			<li id="menubox">
-				<div class="l">	
+				<div class="l">
 					<dl>
-						<dt>基本设置</dt>	
+						<dt>基本设置</dt>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_channel" title="频道管理"/>频道管理</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_setting-cache" title="缓存设置"/>缓存设置</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_setting-seo" title="SEO设置"/>SEO设置</dd>
@@ -320,20 +319,20 @@ html,body{height:100%;position:relative;overflow:hidden;}
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_setting-logo" title="LOGO设置"/>LOGO设置</dd>
 					</dl>
 					<dl>
-						<dt>友情链接</dt>	
+						<dt>友情链接</dt>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_friendlink" title="友情链接列表"/>友情链接列表</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_friendlink-add" title="添加友情链接"/>添加友情链接</dd>
-					</dl>	
+					</dl>
 					<dl>
-						<dt>广告管理</dt>	
+						<dt>广告管理</dt>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_adv-default" title="管理广告"/>管理广告</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_adv-config" title="设置广告"/>设置广告</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_adv-add" title="添加广告"/>添加广告</dd>
-					</dl>	
+					</dl>
 				</div>
-				<div class="l">		
+				<div class="l">
 					<dl>
-						<dt>内容设置</dt>	
+						<dt>内容设置</dt>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_setting-index" title="首页设置"/>首页设置</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_setting-listdisplay" title="列表设置"/>列表设置</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_setting-watermark" title="图片设置"/>图片设置</dd>
@@ -342,7 +341,7 @@ html,body{height:100%;position:relative;overflow:hidden;}
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_setting-attachment" title="附件设置"/>附件设置</dd>
 					</dl>
 					<dl>
-						<dt>扩展设置</dt>	
+						<dt>扩展设置</dt>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_setting-sec" title="防灌水设置"/>防灌水设置</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_setting-anticopy" title="防采集设置"/>防采集设置</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_setting-mail" title="邮件设置"/>邮件设置</dd>
@@ -381,7 +380,7 @@ html,body{height:100%;position:relative;overflow:hidden;}
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_theme" title="模板管理"/>模板管理</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_plugin" title="插件管理"/>插件管理</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_language" title="网站语言编辑"/>网站语言编辑</dd>
-					</dl>	
+					</dl>
 					<dl>
 						<dt>用户管理</dt>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_setting-baseregister" title="注册设置"/>注册设置</dd>
@@ -396,8 +395,8 @@ html,body{height:100%;position:relative;overflow:hidden;}
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_share-set" title="分享到新知社"/>分享到新知社</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_hdapi-down" title="下载词条"/>下载词条</dd>
 						<dd><input name="menu[]" type="checkbox" value="index.php?admin_hdapi-info" title="修改联盟资料"/>修改联盟资料</dd>
-					</dl>	
-				</div>			
+					</dl>
+				</div>
 				<div class="l">
 					<dl>
 						<dt>数据库</dt>
@@ -432,7 +431,7 @@ html,body{height:100%;position:relative;overflow:hidden;}
 		</ul>
 	</div>
 </div>
-<p class="copy">Copyright 2005-2010 HDWiki V{HDWIKI_VERSION} release {HDWIKI_RELEASE} All rights reserved</p>
+<p class="copy">Copyright &copy; HDWiKi V {HDWIKI_VERSION} ©2005-2017 baike.com Ltd. All Rights Reserved.</p>
 <!--{if $env}--><script src="{$env}"></script><!--{/if}-->
 <!--{if $diary}--><script src="{$diary}"></script><!--{/if}-->
 <script type="text/javascript" >
@@ -462,13 +461,13 @@ function loadScript(url, callback){
 </div>
 <div id="step2" class="tc_bg new_guide" style="display:none;">
 		<dl class="new_guide_c col-dl">
-		  <dt>第二步：开通百科联盟，下载词条</dt>
-		  <dd>百科联盟是Hdwiki独有的内容组建形式，帮助站长，快速搭建自己的站点。</dd>
+		  <dt>第二步：设置分类，创建词条</dt>
+		  <dd>词条是HDWiki对外展示的主要内容，分类则让词条的展示更加明晰。</dd>
 		</dl>
 		<dl class="col-dl">
 		  <dt>操作步骤：</dt>
 		  <dd>1：内容管理--&gt; 分类词条管理；创建您网站的分类</dd>
-		  <dd>2：百科联盟-—&gt; 下载词条，把获取的分类词条，导入您网站的相应的分类。</dd>
+		  <dd>2：创建词条—&gt; 创建新的词条，导入网站的相应分类。</dd>
 		  <dd>3：内容管理--&gt; 词条管理，分别设置热门词条，精彩词条，推荐词条</dd>
 		</dl>
 		<p class="a-r"><font color="green">2</font>/5   <input name="Button1" type="button" value="下一步" class="inp_btn2" onclick="javascript:apply(3);" /><span class='checkboxspan'></span>下次登录时显示</p>
@@ -489,14 +488,14 @@ function loadScript(url, callback){
 
 <div id="step4" class="tc_bg new_guide" style="display:none;">
 		<dl class="new_guide_c col-dl">
-		  <dt>第四步:定期推送精彩内容，到互动新知社，提高网站回访率</dt>
-		  <dd>Hdwiki5.0开启了独特的分享模式，不仅可以让用户，自由分享到开心，人人，新浪微薄。互动百科还为hdwiki站长度身定做了独有的分享平台--新知社。</dd>
-		  <dd>新知社，是互动百科的一个以分享知识，维基文化氛围较浓的一个平台；分享词条内容到新知社，能帮助站长快速建立自己站点的粉丝群，提高用户黏度，建立良好的，忠实的用户群体。</dd>
+		  <dt>第四步:定期推送精彩内容，提高网站回访率</dt>
+		  <dd>HDWiki开启了独特的分享模式，可以让用户自由分享到开心，人人，新浪微博等平台，通过定期推送精彩内容，可以极大地提升网站回访率。</dd>
 		</dl>
 		<dl class="col-dl">
 		  <dt>操作步骤：</dt>
-		  <dd>1：百科联盟--&gt; 分享到新知社à手动分享；定期选择精彩内容，分享到新知社，快速建立自己站点的粉丝群，培养忠实用户。</dd>
-		  <dd>2：申请开通自动触发式分享， <a href="http://kaiyuan.hudong.com/official/doc-view-3186.html" target="_blank">点击了解详情&gt;&gt;</a> </dd>
+		  <dd>1：创建词条--&gt; 选择分类创建新的词条。</dd>
+		  <dd>2：内容管理--&gt;设置热门词条，精彩词条，推荐词条。</dd>
+		  <dd>3：手动分享--&gt;在词条页面点选按钮分享至其他平台。</dd>
 		</dl>
 		<p class="a-r"><font color="green">4</font>/5 	<input name="Button1" type="button" value="下一步" class="inp_btn2" onclick="javascript:apply(5);" /><span class='checkboxspan'></span>下次登录时显示</p>
 </div>
@@ -504,7 +503,7 @@ function loadScript(url, callback){
 <div id="step5" class="tc_bg new_guide" style="display:none;">
 		<dl class="new_guide_c col-dl">
 		  <dt>第五步：使用自定义菜单，设置自己常用的菜单</dt>
-		  <dd>Hdwiki5.0增加了只定义菜单功能，站长可以设置，自己经常使用的功能菜单。最多设置5个，不能贪多哦。</dd>
+		  <dd>HDWiki提供了自定义菜单功能，站长可以设置，自己经常使用的功能菜单。最多设置5个，不能贪多哦。</dd>
 		</dl>
 		<dl class="col-dl">
 		  <dt>操作步骤：</dt>
@@ -513,11 +512,12 @@ function loadScript(url, callback){
 		  <dd>3：勾选自己常用的功能。</dd>
 		  <dd>4：点击设置按钮，确认修改。</dd>
 		</dl>
-		<p class="a-r"><font color="green">5</font>/5	<input name="Button1" type="button" value="下一步" class="inp_btn2" onclick="javascript:apply_six();" /><span class='checkboxspan'></span>下次登录时显示</p>
+	    <p class="a-r">	<input name="Button1" type="button" value="关闭" class="inp_btn2" onclick="javascript:mycancel();"/><span class='checkboxspan'></span>下次登录时显示</p>
+
 </div>
 
-<div id="step6" class="tc_bg new_guide" style="display:none;">
-		<dl class="new_guide_c col-dl">  
+<!--<div id="step6" class="tc_bg new_guide" style="display:none;">
+		<dl class="new_guide_c col-dl">
 		  <dt>广大站长朋友，我们在Hdwiki正式版，后台菜单做了如下调整</dt>
 		  <dd>1：百科联盟提升为一级菜单，调整到顶部。</dd>
 		  <dd>2：图片百科，礼品商店，木马查杀调整到一级菜单模块下。</dd>
@@ -528,7 +528,7 @@ function loadScript(url, callback){
 		  <dd>更多详情调整，请到站点地图<a href="#" target="_self" onclick="getMenu('map',this)" id="mapmenu">MAP</a>中查看</dd>
 		</dl>
 		<p class="a-r">	<input name="Button1" type="button" value="关闭" class="inp_btn2" onclick="javascript:mycancel_six();"/><span class='checkboxspan'></span>下次登录时显示</p>
-</div>
+</div>-->
 <span class="n_guide_sign" onclick="javascript:apply(1);"></span>
 </body>
 </html>

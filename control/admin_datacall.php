@@ -4,7 +4,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base( $get, $post);
 		$this->load("datacall");
 		$this->view->setlang($this->setting['lang_name'],'back');
 	}
@@ -122,6 +122,9 @@ class control extends base{
 				// 信息不完整
 				$this->message('缺少函数调用名称！','index.php?admin_datacall-addsql',0);
 			}else {
+				if($this->post['datacall']['desc']!=""){
+					$this->post['datacall']['desc'] = string::stripscript($this->post['datacall']['desc']);
+				}
 				if(false === $_ENV['datacall']->editsql($this->post['datacall'])){
 					// 插入出问题
 					$this->message('数据库插入失败，请重新操作！','index.php?admin_datacall-addsql',0);
@@ -145,6 +148,9 @@ class control extends base{
 				$this->message('信息不完整！','index.php?admin_datacall-editsql-'.$this->post[2],0);
 			}else {
 				$this->post['datacall']['editflag'] = 1;
+				if($this->post['datacall']['desc']!=""){
+					$this->post['datacall']['desc'] = string::stripscript($this->post['datacall']['desc']);
+				}
 				if(false === $_ENV['datacall']->editsql($this->post['datacall'])){
 					$this->message('数据库更新失败，请重新操作！','index.php?admin_datacall-editsql-'.$this->post[2],0);
 				}else{

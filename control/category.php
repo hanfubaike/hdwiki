@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('category');
 		$this->load('doc');
 	}
@@ -19,6 +19,7 @@ class control extends base{
 		if(!is_numeric($this->get[2])){
 			$subcategory=$_ENV['category']->get_site_category(0,$allcategory);
 			$this->view->assign('subcategory',$subcategory);
+			$indexcache=$this->cache->getcache('indexcache',$this->setting['index_cache_time']);
 			if(!(bool)$indexcache){
 			    @$hottag=unserialize($this->setting['hottag']);
 			    $cooperatedocs=empty($this->setting['cooperatedoc'])?array():explode(";", $this->setting['cooperatedoc']);
@@ -33,6 +34,7 @@ class control extends base{
 			if(!(bool)$category){
 				$this->message($this->view->lang['categoryNotExist'],'BACK',0);
 			}
+			$this->get[3] = empty($this->get[3]) ?NULL : $this->get[3] ;
 			$page = max(1, intval($this->get[3]));
 			$start_limit = ($page - 1) * $this->setting['category_view'];
 		
@@ -63,6 +65,7 @@ class control extends base{
 			if(!(bool)$category){
 				$this->message($this->view->lang['categoryNotExist'],'BACK',0);
 			}
+			$this->get[4] = empty($this->get[4]) ? NULL : $this->get[4];
 			$page = max(1, intval($this->get[4]));
 			$start_limit = ($page - 1) * $this->setting['category_letter'];
 			

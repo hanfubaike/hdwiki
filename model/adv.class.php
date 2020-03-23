@@ -157,7 +157,7 @@ class advmodel {
 	}
 	
 	function view_filter($position){
-		$view_type=array();
+		$view_type=$all_category=array();
 		$this->base->load('category');
 		if(!(bool)$all_category){
 			$all_category = $_ENV['category']->get_all_category();
@@ -182,12 +182,6 @@ class advmodel {
 		case 6:
 			$isfloat=true;
 			break;
-
-		case 8:
-			$adv_range=$this->base->view->lang['in_range2']."<optgroup label='".$this->base->view->lang['adv_cat']."'>".$catstr."</optgroup>";
-			$dis_pos=$this->base->view->lang['dis_pos_2'];
-			break;
-			
 		default:
 			break;
 		}
@@ -206,7 +200,7 @@ class advmodel {
 	function adv_filter($advlist){
 		$newtargets=array();
 		if(isset($advlist['type'])){
-			$advlist['type']=$this->base->view->lang['adv_position_'.$advlist[type]];
+			$advlist['type']=$this->base->view->lang['adv_position_'.$advlist['type']];
 		}
 		if(isset($advlist['parameters']['style'])){
 			$advlist['parameters']['style']=$this->base->view->lang['adv_style_'.$advlist['parameters']['style']];

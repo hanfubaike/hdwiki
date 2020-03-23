@@ -26,11 +26,11 @@ function docheck(url){
                 <img src="style/default/plugin.jpg" class="plugin_img"/>
             {/if}
             </dt>
-            <dd class="link_orange bold">{$plugin[name]}{$plugin[version]}</dd>
-            <dd>{lang pluginWriter}:{$plugin[copyright]} </dd>
-            <dd>{lang suit_edition}:HDWiki{$plugin[suit]} </dd>
-            <dd>{lang pluginInstalls}:{$plugin[install]} &nbsp;&nbsp;&nbsp;&nbsp;<a href="{$plugin[sites]}" target="_blank">{lang pluginInstallSites}</a></dd>
-            <dd>{lang pluginDescript}:{$plugin[description]}</dd>
+            <dd class="link_orange bold"><!--{if !empty($plugin[name])}-->{$plugin[name]}<!--{/if}--><!--{if !empty($plugin[version])}-->{$plugin[version]}<!--{/if}--></dd>
+            <dd>{lang pluginWriter}:<!--{if !empty($plugin[copyright])}-->{$plugin[copyright]}<!--{/if}--> </dd>
+            <dd>{lang suit_edition}:HDWiki<!--{if !empty($plugin[suit])}-->{$plugin[suit]}<!--{/if}--> </dd>
+            <dd>{lang pluginInstalls}:<!--{if !empty($plugin[install])}-->{$plugin[install]}<!--{/if}--> &nbsp;&nbsp;&nbsp;&nbsp;<a href="{$plugin[sites]}" target="_blank">{lang pluginInstallSites}</a></dd>
+            <dd>{lang pluginDescript}:<!--{if !empty($plugin[description])}-->{$plugin[description]}<!--{/if}--></dd>
         </dl>
         <a  class="install" href="javascript:docheck('index.php?admin_plugin-install-{$plugin[identifier]}')"><b class="block">{lang pluginInstall}</b></a>
         <b class="angle_t_l"></b>

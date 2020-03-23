@@ -3,7 +3,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('setting');
 		$this->load('attachment');
 		$this->view->setlang($this->setting['lang_name'],'back');
@@ -14,11 +14,12 @@ class control extends base{
 		$title=isset($this->post['qtitle'])?trim($this->post['qtitle']):trim($this->get[3]);
 		$author=isset($this->post['qauthor'])?trim($this->post['qauthor']):trim($this->get[4]);
 		$starttime=isset($this->post['qstarttime'])?strtotime($this->post['qstarttime']):(int)$this->get[5];
-		$endtime=isset($this->post['qendtime'])&&$this->post['qendtime']?(strtotime($this->post['qendtime'])+24*3600):(int)$this->get[6];
+		$docinfo = null;
+		$all_category = false;
 		if($title)$docinfo = $this->db->fetch_by_field('doc','title',$title);
-		
-		$userinfo = $this->db->fetch_by_field('user','username',$author);
-		
+		if(!empty($author)){
+			$userinfo = $this->db->fetch_by_field('user','username',$author);
+		}
 		$page = max(1, intval(end($this->get)));
 		$num = isset($this->setting['list_prepage'])?$this->setting['list_prepage']:20;		
 		$start_limit = ($page - 1) * $num;

@@ -14,6 +14,7 @@ class commentmodel {
 
 	/*Description: This method has already expired*/
 	function get_comment_by_id($id){
+		$id = is_numeric($id) ? $id : 0;
 		$comment=array();
 		$comment=$this->db->fetch_first("SELECT * FROM ".DB_TABLEPRE."comment WHERE id='$id'");
 		return $comment;
@@ -38,6 +39,7 @@ class commentmodel {
 	}
 	
 	function is_in_cookie($type,$id){
+		$id = is_numeric($id) ? $id : 0;
 		$ids=base::hgetcookie($type);
 		$already_ids=explode('|',$ids);
 		if(in_array($id,$already_ids)){
@@ -48,12 +50,14 @@ class commentmodel {
 	}
 	
 	function get_re_comment_by_id($id){
+		$id = is_numeric($id) ? $id : 0;
 		$comment=$this->get_comment_by_id($id);
 		$comment['author']=$this->ip_show($comment['author']);
 		return "<div class='build'>".$comment['reply']."<p class='re_user'>".$comment['author']."&nbsp;&nbsp;".$this->base->date($comment['time'])."&nbsp;&nbsp;".$this->base->view->lang['commentCom'].":</p>"."&nbsp;".$comment['comment']."</div>";
 	}
 
 	function update_field($field,$value,$id,$type=1){
+		$id = is_numeric($id) ? $id : 0;
 		if($type){
 			$sql="UPDATE ".DB_TABLEPRE."comment SET $field='$value' WHERE id= $id ";
 		}else{
@@ -63,6 +67,7 @@ class commentmodel {
 	} 
 
 	function get_comments($did,$start=0,$limit=10){
+		$did = is_numeric($did) ? $did : 0;
 		$comments=array();
 		$query=$this->db->query("SELECT * FROM ".DB_TABLEPRE."comment WHERE did='$did' ORDER BY `time` DESC LIMIT $start,$limit");
 		while($comment=$this->db->fetch_array($query)){
@@ -92,6 +97,7 @@ class commentmodel {
 	}
 	
 	function add_comment($did,$comment,$reply='',$anonymity=1){
+		$did = is_numeric($did) ? $did : 0;
 		if($anonymity){
 			$sql="INSERT INTO ".DB_TABLEPRE."comment(did,comment,reply,author,authorid,time) VALUES($did,'$comment','$reply','".$this->base->ip."',".'0'.",".$this->base->time.")";
 		}else{
@@ -102,10 +108,13 @@ class commentmodel {
 	}
 	
 	function edit_comment_by_id($id,$comment){
+		$id = is_numeric($id) ? $id : 0;
 		$this->db->query("UPDATE ".DB_TABLEPRE."comment SET comment='$comment' WHERE id=$id");
 	}
 	
 	function search_comment_num($cid='', $did='',$author='', $starttime='', $endtime='' ){
+		$cid = is_numeric($cid) ? $cid : 0;
+		$did = is_numeric($did) ? $did : 0;
 		$sql="SELECT  count(*)  FROM ".DB_TABLEPRE."comment m LEFT JOIN ".DB_TABLEPRE."doc d ON d.did = m.did WHERE 1=1 ";		
 		if($cid){
 			$query=$this->db->query("SELECT did FROM ".DB_TABLEPRE."categorylink  WHERE cid = $cid");
@@ -135,6 +144,8 @@ class commentmodel {
 	}
 	
 	function search_comment($start=0,$limit=10, $cid='', $did='',$author='', $starttime='', $endtime='' ){
+		$cid = is_numeric($cid) ? $cid : 0;
+		$did = is_numeric($did) ? $did : 0;
 		$commentlist=array();
 		$sql="SELECT  m.id,m.did,m.comment,m.author,m.authorid,m.time,d.title title FROM ".DB_TABLEPRE."comment m LEFT JOIN ".DB_TABLEPRE."doc d ON d.did = m.did WHERE 1=1 ";
 		if($cid){
@@ -166,7 +177,7 @@ class commentmodel {
 		while($comment=$this->db->fetch_array($query)){
 			$comment['time'] = $this->base->date($comment['time']);
 			$comment['comment']=$comment['comment'];
-			$comment['title']=htmlspecialchars($comment['title']);
+			$comment['title']=htmlspecial_chars($comment['title']);
 			$comment['partcomment']=(strlen($comment['comment'])>28)?string::substring($comment['comment'],0,28)."......":$comment['comment'];
 			$commentlist[]=$comment;
 		}
@@ -205,6 +216,7 @@ class commentmodel {
 		$query = $this->db->query($sql);
 		while($doc=$this->db->fetch_array($query)){
 			$doc['rawtitle']=$doc['title'];
+			$doc['title'] = htmlspecial_chars(stripslashes($doc['title']));
 			$doclist[]=$doc;
 		}
 		return $doclist;

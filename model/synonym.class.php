@@ -17,7 +17,7 @@ class synonymmodel {
 			return false;
 		}
 		while($synonym=$this->db->fetch_array($query)){
-			$synonym['title']=htmlspecialchars(stripslashes($synonym['title']));
+			$synonym['desttitle']=htmlspecial_chars(stripslashes($synonym['desttitle']));
 			$synonym['srctitle']=stripslashes($synonym['srctitle']);
 			$synonymlist[]=$synonym;
 		}
@@ -25,8 +25,14 @@ class synonymmodel {
 	}
 	
 	function get_synonym_by_src($title,$id=''){
-		if(!empty($title)){
-			return $this->db->fetch_first("SELECT * FROM ".DB_TABLEPRE."synonym WHERE srctitle='$title'");
+		if(!empty($title)){			
+			//判断有无词条名称和该同义词名称相同
+			$has_same_title = $this->db->fetch_first("SELECT * FROM ".DB_TABLEPRE."doc WHERE title='$title'");
+			if($has_same_title){
+				return false;
+			}else{
+				return $this->db->fetch_first("SELECT * FROM ".DB_TABLEPRE."synonym WHERE srctitle='$title'");
+			}
 		}elseif(is_numeric($id)){
 			return $this->db->fetch_first("SELECT * FROM ".DB_TABLEPRE."synonym WHERE id=$id");
 		}else{
@@ -51,6 +57,7 @@ class synonymmodel {
 	}
 	
 	function removesynonym($destdid){
+		$titles = '';
 		$dids = is_array($destdid) ? implode(',',$destdid) : $destdid;
 		$query = $this->db->query("SELECT srctitle FROM ".DB_TABLEPRE."synonym WHERE destdid IN ($dids)");
 		while($row=$this->db->fetch_array($query)){
@@ -150,7 +157,7 @@ class synonymmodel {
 		$sql=$sql." ORDER BY s.desttitle,s.id LIMIT $start,$limit ";
 		$query=$this->db->query($sql);
 		while($synonym=$this->db->fetch_array($query)){
-			$synonym['title']=htmlspecialchars($synonym['title']);
+			$synonym['title']=htmlspecial_chars($synonym['title']);
 			$synonym['time'] = $this->base->date($synonym['time']);
 			if($synonymlist[$i-1]['destdid']!==$synonym['destdid']){
 				$synonymlist[$i]=$synonym;

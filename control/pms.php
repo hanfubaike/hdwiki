@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('pms');
 		$this->load('user');
 		$this->load('usergroup');
@@ -23,9 +23,9 @@ class control extends base{
 		$groupid = $this->user['groupid'];
 		$this->showmessage();
 		if(isset($this->post['submit'])){
-			$sendto = htmlspecialchars($this->post['sendto']);
-			$subject = htmlspecialchars($this->post['subject']);
-			$content = htmlspecialchars($this->post['content']);
+			$sendto = htmlspecial_chars($this->post['sendto']);
+			$subject = htmlspecial_chars($this->post['subject']);
+			$content = htmlspecial_chars($this->post['content']);
 
 			if(($groupid != 4 && isset($this->post['usergroup'])) || (empty($this->post['usergroup']) && empty($sendto))){
 				$message = $this->view->lang['refuseAction'];
@@ -114,7 +114,7 @@ class control extends base{
 	
 	function doblacklist(){
 		if(isset($this->post['blacklist'])){
-			$blacklist = htmlspecialchars(string::stripscript($this->post['blacklist']));
+			$blacklist = htmlspecial_chars(string::stripscript($this->post['blacklist']));
 			if(empty($blacklist)){
 				$result = $_ENV['pms']->remove_blacklist($this->user['uid']);
 			}else{
@@ -130,6 +130,7 @@ class control extends base{
 	}
 	
 	function dobox(){
+		$this->get[3] = empty($this->get[3]) ? NULL : $this->get[3];
 		$page = max(1,isset($this->get[4]) ? $this->get[4] : $this->get[3]);
 		$num = isset($this->setting['list_prepage'])?$this->setting['list_prepage']:20;
 		$start_limit = ($page - 1) * $num;		
@@ -216,6 +217,10 @@ class control extends base{
 	}
 	
 	function showmessage(){
+		$this->get[3] = empty($this->get[3]) ? NULL : $this->get[3];
+		$subject = '';
+		$message = '';
+		$sendto = '';
 		if(is_numeric($this->get[3])){
 			$pms = $_ENV['pms']->get_pms($this->get[3]);
 			$message = $pms['message'];
@@ -235,10 +240,11 @@ class control extends base{
 				default: 
 					break;
 			}
+
+		}
 			$this->view->assign('subject',$subject);
 			$this->view->assign('message',$message);
-			$this->view->assign('sendto',$sendto);
-		}
+			$this->view->assign('sendto',$sendto);		
 	}
 }
 ?>

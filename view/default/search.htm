@@ -1,20 +1,14 @@
 {template header}
-<form id="form1" name="searchform" action="{url search-kw}" method="post">
-<div class="m-t10 adv_search">
-<span class="bold">{lang searchInfo}</span>
-<ul class="m-t10">
-<li><span>{lang searchKeyword}</span><input name="searchtext" type="text" value="{$keyword}"/></li>
+<form id="form1" class="wrap clearfix" name="searchform" action="{url search-kw}" method="post">
+<div class="columns adv_search">
+	<h2 class="col-h2">{lang searchInfo}</h2>
+<ul>
+<li><span>{lang searchKeyword}</span><input name="searchtext" type="text" value="<!--{if !empty($keyword)}-->{$keyword}<!--{/if}-->"/></li>
 <li><span>{lang commentUser}</span><input name="author" type="text" /></li>
-</ul>
-</div>
- 
-<div class="m-t10 adv_search">
-<span class="bold">{lang searchOption}</span>
-<ul class="m-t10">
 <li><span>{lang searchType}</span>
-	<label><input name="searchtype" type="radio" value="title" <!--{if searchtype=='title'||$searchtype==''}-->checked="checked"<!--{/if}--> />{lang saveTitle}</label>
-	<label><input name="searchtype" type="radio" value="content" <!--{if searchtype=='content'}-->checked="checked"<!--{/if}--> />{lang searchContent}</label>
-	<label><input name="searchtype" type="radio" value="tag" <!--{if searchtype=='tag'}-->checked="checked"<!--{/if}--> />{lang tag}</label>
+	<label><input name="searchtype" type="radio" value="title" <!--{if !empty($searchtype) && $searchtype=='title' }-->checked="checked"<!--{/if}--> />{lang saveTitle}</label>
+	<label><input name="searchtype" type="radio" value="content" <!--{if !empty($searchtype) && $searchtype=='content'}-->checked="checked"<!--{/if}--> />{lang searchContent}</label>
+	<label><input name="searchtype" type="radio" value="tag" <!--{if !empty($searchtype) && $searchtype=='tag'}-->checked="checked"<!--{/if}--> />{lang tag}</label>
 </li>
 <li><span>{lang searchTime}</span>
 				<select name="timelimited">
@@ -28,16 +22,16 @@
 					<option value="31536000">{lang searchTimeTrip8}</option>
 				</select>
 				
-				<label><input name="withinbefore" value="within" type="radio" <!--{if $withinbefore=='within'||$searchtype==''}-->checked="checked"<!--{/if}--> />{lang searchTimeTrip9}</label>
-				<label><input name="withinbefore" value="before" type="radio" <!--{if $withinbefore=='before'}-->checked="checked"<!--{/if}-->/>{lang searchTimeTrip10}</label>
+				<label><input name="withinbefore" value="within" type="radio" <!--{if (!empty($withinbefore) && $withinbefore=='within' )|| !empty($searchtype)}-->checked="checked"<!--{/if}--> />{lang searchTimeTrip9}</label>
+				<label><input name="withinbefore" value="before" type="radio" <!--{if !empty($withinbefore) && $withinbefore=='before'}-->checked="checked"<!--{/if}-->/>{lang searchTimeTrip10}</label>
 </li>
 <li><span>{lang searchSortord}</span><select name="ordertype">
 							<option value="time">{lang searchSortordByTime}</option>
 							<option value="comments">{lang commentTimes}</option>
 							<option value="views">{lang viewTimes}</option>
 						</select>
-						<label><input name="ascdesc" type="radio" value="asc" <!--{if $ascdesc=='asc'}-->checked="checked"<!--{/if}--> />{lang searchSortordAsc}</label>
-						<label><input name="ascdesc" type="radio" value="desc" <!--{if $ascdesc=='desc'||$ascdesc==''}-->checked="checked"<!--{/if}--> />{lang searchSortordDesc}</label>
+						<label><input name="ascdesc" type="radio" value="asc" <!--{if !empty($ascdesc) && $ascdesc=='asc'}-->checked="checked"<!--{/if}--> />{lang searchSortordAsc}</label>
+						<label><input name="ascdesc" type="radio" value="desc" <!--{if  !empty($ascdesc) && $ascdesc=='desc'}-->checked="checked"<!--{/if}--> />{lang searchSortordDesc}</label>
 </li>
 <li><span>{lang searchRange}</span>
 				<select name="categoryid[]" size="10"  multiple="multiple">
@@ -45,11 +39,8 @@
 					{$categorytree}
 				</select>
 </li>
-<li><input name="full" type="submit" value="{lang searchInfo}" class="btn_inp" /></li>
+<li><input name="full" type="submit" value="{lang searchInfo}" class="btn_inp blue" /></li>
 </ul>
 </div>
- 
 </form>
-
-<div class="c-b"></div>
 {template footer}

@@ -12,7 +12,7 @@ class doc{
 
 	function recentdocs($setting){
 		$this->base->load('doc');
-		$num=$setting['num']?$setting['num']:$this->base->setting['index_recentupdate'];
+		$num=!empty($setting['num'])?$setting['num']:$this->base->setting['index_recentupdate'];
 		$doclist=$_ENV['doc']->get_list_cache(1,'',0,$num);
 		return array('config'=>$setting , 'doclist'=>$doclist);
 	}
@@ -25,7 +25,7 @@ class doc{
 	
 	function commenddocs($setting){
 		$this->base->load('doc');
-		$num=$setting['num']?$setting['num']:$this->base->setting['index_commend'];
+		$num=!empty($setting['num'])?$setting['num']:$this->base->setting['index_commend'];
 		$type = 1;
 		$list = $_ENV["doc"]->get_focus_list(0,$num,$type);
 		return array('config'=>$setting, 'list'=>$list);
@@ -33,7 +33,7 @@ class doc{
 	
 	function wonderdocs($setting){
 		$this->base->load('doc');
-		$num=$setting['num']?$setting['num']:$this->base->setting['index_wonderdoc'];
+		$num=!empty($setting['num'])?$setting['num']:$this->base->setting['index_wonderdoc'];
 		$type = 3;
 		$list = $_ENV["doc"]->get_focus_list(0,$num,$type);
 		if(count($list)>0){
@@ -46,7 +46,7 @@ class doc{
 	
 	function hotdocs($setting){
 		$this->base->load('doc');
-		$num=$setting['num']?$setting['num']:$this->base->setting['index_hotdoc'];
+		$num=!empty($setting['num'])?$setting['num']:$this->base->setting['index_hotdoc'];
 		$type = 2;
 		$list = $_ENV["doc"]->get_focus_list(0,$num,$type);
 		return array('config'=>$setting, 'list'=>$list);

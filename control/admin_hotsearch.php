@@ -3,7 +3,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('setting');
 		$this->view->setlang($this->setting['lang_name'],'back');
 	}
@@ -19,8 +19,8 @@ class control extends base{
 			$hotnames = $this->post['hotname'];
 			foreach($hotnames as $key => $name){
 				if(trim($name['name'])){
-					$hotnamelist[$key]['name'] = htmlspecialchars(trim($name['name']));
-					$hotnamelist[$key]['url'] = htmlspecialchars(trim($name['url']));
+					$hotnamelist[$key]['name'] = htmlspecial_chars(trim($name['name']));
+					$hotnamelist[$key]['url'] = htmlspecial_chars(trim($name['url']));
 				}else{
 					unset($name['name']);	
 					unset($name['url']);	

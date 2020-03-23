@@ -40,7 +40,7 @@ class usermodel {
 	
 	function add_referer(){
 		if($_SERVER['HTTP_REFERER']){
-			$this->db->query("UPDATE ".DB_TABLEPRE."session SET referer ='".$_SERVER['HTTP_REFERER']."' WHERE sid='".base::hgetcookie('sid')."'");
+			$this->db->query("UPDATE ".DB_TABLEPRE."session SET referer ='".string::haddslashes($_SERVER['HTTP_REFERER'])."' WHERE sid='".base::hgetcookie('sid')."'");
 		}
 	}
 	function get_referer(){
@@ -58,7 +58,7 @@ class usermodel {
 		$sid=base::hgetcookie('sid');
 		$this->base->user=$this->db->fetch_first("SELECT * FROM ".DB_TABLEPRE."user u,".DB_TABLEPRE."usergroup g WHERE u.uid=$uid AND u.groupid=g.groupid");
 		$session=$this->db->fetch_first("SELECT referer FROM ".DB_TABLEPRE."session  WHERE sid='".$sid."'");
-		$this->db->query("REPLACE INTO ".DB_TABLEPRE."session (sid,uid,username,islogin,`time`,referer) VALUES ('$sid',$uid,'".$this->base->user['username']."',1,{$this->base->time},'".$session['referer']."')");
+		$this->db->query("REPLACE INTO ".DB_TABLEPRE."session (sid,uid,username,islogin,`time`,referer) VALUES ('$sid',$uid,'".$this->base->user['username']."',1,{$this->base->time},'".string::haddslashes($session['referer'])."')");
 		$password=$this->base->user['password'];
 		$auth = $this->base->authcode("$uid\t$password",'ENCODE');
 		$this->base->hsetcookie('auth',$auth,24*3600*365);
@@ -367,17 +367,19 @@ class usermodel {
 	
 	function space($uid,$type = 0,$start,$limit){
 		$sql=array(
-			"SELECT d.did, d.title, d.author, d.authorid, d.time, d.tag, d.summary, d.edits, d.views FROM  ".DB_TABLEPRE."doc d  WHERE authorid = $uid  ORDER BY did DESC LIMIT $start,$limit",
-			"SELECT d.did, d.title, d.author, d.authorid, d.time, d.tag, d.summary, d.edits, d.views FROM  ".DB_TABLEPRE."edition  e, ".DB_TABLEPRE."doc d  WHERE e.authorid = $uid AND d.authorid !=$uid AND e.did = d.did GROUP BY d.did ORDER BY eid DESC LIMIT  $start,$limit",
-			"SELECT d.did, d.title, d.author, d.authorid, d.time, d.tag, d.summary, d.edits, d.views, f.id as fid, f.uid as fuid FROM  ".DB_TABLEPRE."docfavorite AS f LEFT JOIN  ".DB_TABLEPRE."doc AS d USING (did)  WHERE f.uid = $uid AND f.did = d.did  ORDER BY f.id DESC LIMIT  $start,$limit"
+			"SELECT d.did, d.title, d.author, d.authorid, d.time, d.tag, d.summary, d.content, d.edits, d.views FROM  ".DB_TABLEPRE."doc d  WHERE authorid = $uid  ORDER BY did DESC LIMIT $start,$limit",
+			"SELECT d.did, d.title, d.author, d.authorid, d.time, d.tag, d.summary, d.content, d.edits, d.views FROM  ".DB_TABLEPRE."edition  e, ".DB_TABLEPRE."doc d  WHERE e.authorid = $uid AND e.did = d.did GROUP BY d.did ORDER BY eid DESC LIMIT  $start,$limit",
+			"SELECT d.did, d.title, d.author, d.authorid, d.time, d.tag, d.summary, d.content, d.edits, d.views, f.id as fid, f.uid as fuid FROM  ".DB_TABLEPRE."docfavorite AS f LEFT JOIN  ".DB_TABLEPRE."doc AS d USING (did)  WHERE f.uid = $uid AND f.did = d.did  ORDER BY f.id DESC LIMIT  $start,$limit"
 		);
 		$doclist = array();
 		$query = $this->db->query($sql[$type]);
+
 		while($doc = $this->db->fetch_array($query)){
 			$doc['tag'] = explode(";",$doc['tag']);
 			$doc['rawtitle'] = $doc['title'];
-			$doc['title'] = htmlspecialchars($doc['title']);
+			$doc['title'] = htmlspecial_chars($doc['title']);
 			$doc['time'] = $this->base->date($doc['time']);
+			$doc['img'] = util::getfirstimg($doc['content']);
 			$doclist[] = $doc;
 		}
 		return $doclist;
@@ -404,8 +406,11 @@ class usermodel {
 	
 	function get_popularity_user($start=0,$limit=10){
 		$userlist=array();
-		$query=$this->db->query("SELECT * FROM ".DB_TABLEPRE."user  WHERE checkup=1 ORDER BY views DESC LIMIT $start,$limit");		
+		$query=$this->db->query("SELECT * FROM ".DB_TABLEPRE."user WHERE checkup=1 ORDER BY views DESC LIMIT $start,$limit");
 		while($user=$this->db->fetch_array($query)){
+		    if ($user['signature']) {
+                $user['signature'] = trim((string::substring(strip_tags($user['signature']),0,15))) . '...';
+		    }
 			$userlist[]=$user;
 		}
 		return $userlist;
@@ -431,8 +436,11 @@ class usermodel {
 		$endtime = $t - $week * 24 * 60 * 60;
 		$starttime = $endtime - 7 * 24 * 60 * 60;
 		
-		$query=$this->db->query("SELECT u.uid, u.username, u.image, sum( c.credit2 ) credit, u.creates, u.views  FROM ".DB_TABLEPRE."user u,".DB_TABLEPRE."creditdetail c   WHERE u.uid=c.uid AND c.time>$starttime AND c.time <$endtime AND u.groupid!=1  GROUP BY u.uid ORDER BY credit  DESC LIMIT $start,$limit");
+		$query=$this->db->query("SELECT u.uid, u.username,u.signature, u.image, sum( c.credit2 ) credit, u.creates, u.views  FROM ".DB_TABLEPRE."user u,".DB_TABLEPRE."creditdetail c WHERE u.uid=c.uid AND c.time>$starttime AND c.time <$endtime AND u.groupid!=1  GROUP BY u.uid ORDER BY credit  DESC LIMIT $start,$limit");
 		while($user=$this->db->fetch_array($query)){
+		    if ($user['signature']) {
+                $user['signature'] = trim((string::substring(strip_tags($user['signature']),0,15))) . '...';
+		    }
 			$weekuserlist[]=$user;
 		}
 		return $weekuserlist;
@@ -440,8 +448,11 @@ class usermodel {
 	
 	function get_top_user($start=0,$limit=10){
 		$userlist=array();
-		$query=$this->db->query("SELECT u.uid, u.username,u.credit2 credit FROM ".DB_TABLEPRE."user u  ORDER BY u.credit2  DESC LIMIT $start,$limit");
+		$query=$this->db->query("SELECT u.uid, u.username,u.signature,u.image,u.credit2 credit FROM ".DB_TABLEPRE."user u  ORDER BY u.credit2  DESC LIMIT $start,$limit");
 		while($user=$this->db->fetch_array($query)){
+		    if ($user['signature']) {
+                $user['signature'] = trim((string::substring(strip_tags($user['signature']),0,15))) . '...';
+		    }
 			$userlist[]=$user;
 		}
 		return $userlist;

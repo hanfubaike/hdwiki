@@ -211,7 +211,7 @@ $(document).ready(function(){
 		<!--{loop $userlist $user}-->
 		<tr>
 			<td>
-				<input type="checkbox" <!--{if $user[disabled]}-->disabled="disabled"<!--{/if}--> name="uid[]" id="uid[]" value="{$user[uid]}" username="{$user[username]}" />
+				<input type="checkbox" <!--{if isset($user[disabled])}-->disabled="disabled"<!--{/if}--> name="uid[]" id="uid[]" value="{$user[uid]}" username="{$user[username]}" />
 			</td>
 			<td><a href="index.php?user-space-{$user[uid]}" target="_blank">{$user[username]}</a></td>
 			<td id="user{$user[uid]}">$user[credit1]</td>
@@ -226,7 +226,7 @@ $(document).ready(function(){
 				<!--{/if}-->
 			</td>
 			<td >{$user[grouptitle]}</td>
-			<td><!--{if $user[disabled]}-->X<!--{else}--><a href="index.php?admin_user-edit-{$user[uid]}">{lang commonEdit}</a><!--{/if}--> </td>
+			<td><!--{if isset($user[disabled])}-->X<!--{else}--><a href="index.php?admin_user-edit-{$user[uid]}">{lang commonEdit}</a><!--{/if}--> </td>
 		</tr>
 		<!--{/loop}-->
 		<!--{else} -->

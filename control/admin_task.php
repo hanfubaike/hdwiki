@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get,$post);
 		$this->load('task');
 		$this->view->setlang($this->setting['lang_name'],'back');
 	}
@@ -14,7 +14,7 @@ class control extends base{
 	function dodefault(){
 		if(isset($this->post['submit'])){
 			$ids = isset($this->post['task_id'])?$this->post['task_id']:'';
-			$taskname = string::haddslashes(htmlspecialchars($this->post['taskname']));
+			$taskname = string::haddslashes(htmlspecial_chars($this->post['taskname']));
 			if($ids){$_ENV['task']->del_task($ids);}
 			if($taskname){$_ENV['task']->add_task($taskname);}
 			$this->message($this->view->lang['taskSuccess'],'index.php?admin_task');
@@ -36,7 +36,7 @@ class control extends base{
 
 	function doedittask(){
 		if(isset($this->post['submit'])){
-			$name = string::haddslashes(htmlspecialchars($this->post['newname']));
+			$name = string::haddslashes(htmlspecial_chars($this->post['newname']));
 			$w = intval($this->post['weekday']);
 			$d = intval($this->post['day']);
 			$h = intval($this->post['hour']);

@@ -7,6 +7,8 @@ require HDWIKI_ROOT.'/lib/util.class.php';
 require HDWIKI_ROOT.'/lib/hddb.class.php';
 require HDWIKI_ROOT.'/lib/template.class.php';
 require HDWIKI_ROOT.'/lib/cache.class.php';
+require HDWIKI_ROOT.'/lib/functions.php';
+require HDWIKI_ROOT.'/lib/rate.class.php';
 
 class base {
 
@@ -27,6 +29,8 @@ class base {
 	var $post = array();
 
 	function base(& $get,& $post) {
+		session_start();
+
 		$this->time = time();
 		$this->ip =util::getip();
 		$this->get=& $get;
@@ -39,10 +43,13 @@ class base {
 		$this->init_global();
 		$this->init_mail();
 		$this->init_admin();
-		$this->init_count();
+		//$this->init_count();
 		if($this->setting['auto_baiduxml'] == '1') {
 			$this->check_baiduxml();
 		}
+
+		// 检测redis是否配置，如果REDIS_HOST, REDIS_PORT都已经配置, 就开启redis频率限制 
+		defined('REDIS_HOST') && defined('REDIS_HOST') && $this->init_rate_limit();
 	}
 	
 	function init_count() {
@@ -105,8 +112,23 @@ class base {
 					$fchannel[$channel['position']][] = $channel;
 				}
 			}
+
+            if (isset($fchannel[3]) && isset($fchannel[1])) {
+                $tempArr = array();
+                foreach ($fchannel[1] as $item) {
+                    $tempArr[] = $item['name'];
+                }
+
+                foreach ($fchannel[3] as $key => $item) {
+                    if (in_array($item['name'], $tempArr)) {
+                        unset($fchannel[3][$key]);
+                    }
+                }
+            }
 		}
+
 		$this->channel = $fchannel;
+		
 		$this->theme= $this->cache->load('theme',1);
 		$this->plugin= $this->load_plugincache();
 		//ucenter
@@ -207,7 +229,7 @@ class base {
 		list($uid,$password) = empty($auth) ? array(0,0) : string::haddslashes(explode("\t", $this->authcode($auth, 'DECODE')), 1);
 		if(!$sid){
 			$sid=util::random(6);
-			$this->hsetcookie('sid',$sid,24*3600*365);
+			$this->hsetcookie('sid',$sid,24*3600*365, true);
 		}
 		if($uid){
 			if($password==''){
@@ -235,6 +257,7 @@ class base {
 			$_ENV['global']->newpms($this->user['uid']);
 		}
 		$_ENV['global']->adv_filter($this->advertisement);
+		$this->get[2] = empty($this->get[2]) ? NULL : $this->get[2];
 		$_ENV['global']->writelog($this->get[0].'-'.$this->get[1],$this->get[2]);
 		$this->load('tag');
 		$this->load('datacall');
@@ -300,15 +323,15 @@ class base {
 		return in_array($url,$regulars);
 	}
 
-	function hsetcookie($var, $value, $life = 0) {
+	function hsetcookie($var, $value, $life = 0, $httponly=false) {
 		$domain=$this->setting['cookie_domain']?$this->setting['cookie_domain']:'';
 		$cookiepre=$this->setting['cookie_pre']?$this->setting['cookie_pre']:'hd_';
-		setcookie($cookiepre.$var, $value,$life ? $this->time + $life : 0, '/',$domain, $_SERVER['SERVER_PORT'] == 443 ? 1 : 0);
+		setcookie($cookiepre.$var, $value,$life ? $this->time + $life : 0, '/',$domain, $_SERVER['SERVER_PORT'] == 443 ? 1 : 0, $httponly);
 	}
 	
 	function hgetcookie($var) {
-		$cookiepre=$this->setting['cookie_pre']?$this->setting['cookie_pre']:'hd_';
-		return $_COOKIE[$cookiepre.$var];
+		$cookiepre=!empty($this->setting['cookie_pre'])?$this->setting['cookie_pre']:'hd_';
+		return isset($_COOKIE[$cookiepre.$var]) ? $_COOKIE[$cookiepre.$var] : NULL ;
  	}
 	
 	function authcode($string, $operation = 'DECODE', $key = '', $expiry = 0) {
@@ -355,6 +378,7 @@ class base {
 	function multi($num, $perpage, $curpage, $mpurl, $maxpages = 0, $page = 10, $autogoto = TRUE, $simple = FALSE) {
 		global $maxpage;
 		$multipage = '';
+		$ajaxtarget = NULL;
 		$seo_prefix=$this->setting['seo_prefix'];
 		$seo_suffix=$this->setting['seo_suffix'];
 		$mpurl = $seo_prefix.$mpurl.'-';
@@ -417,5 +441,97 @@ class base {
 		$this->load('sitemap');
 		$_ENV['sitemap']->autoupdate_baiduxml();
 	}
+	
+	/**
+	 * @breif 判断是移动端还是pc端
+	 * @return boolean
+	 */
+	function isMobile() {
+	    // 判断手机发送的客户端标志
+	    $agent = isset($_SERVER['HTTP_USER_AGENT']) ? strtolower($_SERVER['HTTP_USER_AGENT']) : '';
+	    if ($agent) {
+	        $clientKeyWords = array(
+	                'nokie', 'sony', 'ericsson', 'mot', 'samsung', 'htc','wap',
+	                'sgh', 'lg', 'sharp', 'sie-', 'philips', 'panasonic',
+	                'alcatel', 'lenovo', 'iphone', 'ipod', 'blackberry',
+	                'meizu', 'android', 'netfront', 'symbian', 'ucweb',
+	                'windowsce', 'palm', 'operamini', 'operamobi', 'midp',
+	                'opera mobi', 'openwave', 'nexusone', 'cldc', 'mobile'
+	        );
+
+	        if (preg_match("/(" . implode("|", $clientKeyWords) . ")/i", $agent) && strpos($agent, 'ipad') == false ) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
+	/**
+	 * @breif 验证 CSRF_TOKEN
+	 * 该函数需要在控制器方法中显式调用，才起作用
+	 * @return boolean
+	 */
+	function check_csrf_token() {
+		$method = strtoupper($_SERVER['REQUEST_METHOD']);
+		$bool = true;
+        
+		if (in_array($method, array('POST', 'PUT'))) {
+			$token = '';
+
+			if (isset($this->post['_token'])) {
+				$token = $this->post['_token'];
+			} else if (isset($_SERVER['HTTP_X_CSRF_TOKEN'])) {
+				$token = $_SERVER['HTTP_X_CSRF_TOKEN'];
+			}
+
+			$bool = ($token && csrf_token() === $token);
+		}
+		return $bool;
+	}
+	
+	/**
+	 * 频率限制
+	 * @param array $param
+	 *  'key'      (用户名/IP等)
+	 *  'requests' (请求次数，默认10次)
+	 *  'seconds'  (秒数, 默认60秒)
+	 *
+	 * @return boolean true(未超出限制)/false(已超出限制)
+	 *
+	 */
+	function rate_limit($param) {
+	    $key = isset($param['key']) ? $param['key'] : $this->ip;
+	    $requests = isset($param['requests']) ? intval($param['requests']) : 30;
+	    $seconds = isset($param['seconds']) ? intval($param['seconds']) : 60;
+	
+	    $adapter = new RateLimitAdapterRedis(REDIS_HOST, REDIS_PORT);
+	    $rateLimit = new RateLimit($key, $requests, $seconds, $adapter);
+	
+	    return $rateLimit->check($key) > 0 ? true : false;
+	}
+	
+	// 默认频率限制
+	function init_rate_limit() {
+	    $method = strtoupper($_SERVER['REQUEST_METHOD']);
+	
+	    if ('GET' === $method) {
+	        $param = array(
+	                'key' => "GET:{$this->ip}",
+	                'requests' => 600,
+	                'seconds' => 60,
+	        );
+	    } else {
+	        $param = array(
+	                'key' => "POST:{$this->ip}",
+	                'requests' => 200,
+	                'seconds' => 60,
+	        );
+	    }
+	
+	    if (!$this->rate_limit($param)) {
+	        exit('请求过快，请稍后再试！');
+	    }
+	}
+	
 }
 ?>

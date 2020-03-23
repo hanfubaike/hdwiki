@@ -3,7 +3,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('friendlink');
 		$this->view->setlang($this->setting['lang_name'],'back');
 	}
@@ -21,27 +21,15 @@ class control extends base{
 		if(!isset($this->post['linksubmit'])){
 			$this->view->display('admin_addlink');
 		}else{
-			$flink['name']=htmlspecialchars(trim($this->post['website']));
+			$flink['name']=htmlspecial_chars(trim($this->post['website']));
 			$flink['url']=trim($this->post['siteurl']);
 			if(trim($this->post['logourl'])!="http://")
 				$flink['logourl']=trim($this->post['logourl']);
-			$flink['description']=htmlspecialchars(trim($this->post['description']));
+			$flink['description']=htmlspecial_chars(trim($this->post['description']));
 			if(!empty($flink['name']) && preg_match("/^\w[\w\&\=\?\:\/\.\-]+$/i",$flink['url']) && !empty($flink['description'])){
-// 				if(substr($flink['url'],0,7)!="http://"){
-// 					$flink['url']="http://".$flink['url'];
-// 				}
-				if(substr($flink['url'],0,4)!="http"){
-					if(substr($flink['url'],0,5) =="https"){
-						$flink['url']="https://".$flink['url'];
-					}else{
-						$flink['url']="http://".$flink['url'];
-					}
+				if(substr($flink['url'],0,7)!="http://"){
+					$flink['url']="http://".$flink['url'];
 				}
-				
-				
-				
-				
-				
 				$_ENV['friendlink']->addlink($flink);
 				$this->cache->removecache('data_'.$GLOBALS['theme'].'_index');
 				$this->message($this->view->lang['friendLinkAddSuccess'],'index.php?admin_friendlink');
@@ -57,23 +45,16 @@ class control extends base{
 			$this->view->assign('link',$link);
 			$this->view->display('admin_addlink');
 		}else{
-			$flink['name']=htmlspecialchars(trim($this->post['website']));
+			$flink['name']=htmlspecial_chars(trim($this->post['website']));
 			$flink['url']=trim($this->post['siteurl']);
 			if(trim($this->post['logourl'])!="http://"){
 				$flink['logourl']=trim($this->post['logourl']);
 			}
 			$flink['id']=$this->post['id'];
-			$flink['description']=htmlspecialchars(trim($this->post['description']));
+			$flink['description']=htmlspecial_chars(trim($this->post['description']));
 			if(!empty($flink['name']) && preg_match("/^\w[\w\&\=\?\:\/\.\-]+?$/i",$flink['url']) && is_numeric($flink['id']) && !empty($flink['description'])){
-// 				if(substr($flink['url'],0,7)!="http://"){
-// 					$flink['url']="http://".$flink['url'];
-// 				}
-				if(substr($flink['url'],0,4)!="http"){
-					if(substr($flink['url'],0,5) =="https"){
-						$flink['url']="https://".$flink['url'];
-					}else{
-						$flink['url']="http://".$flink['url'];
-					}
+				if(substr($flink['url'],0,7)!="http://"){
+					$flink['url']="http://".$flink['url'];
 				}
 				$_ENV['friendlink']->editlink($flink);
 				$this->cache->removecache('data_'.$GLOBALS['theme'].'_index');

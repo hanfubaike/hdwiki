@@ -344,7 +344,6 @@ var docReference = {
 	
 	add: function(value){
 		var name = value.name, url = value.url, code=value.code, self=this;
-		
 		$("#save_1").hide();
 		$("#save_0").show();
 		$.ajax({
@@ -355,9 +354,13 @@ var docReference = {
 				id = $.trim(id);
 				if (/[1-9]+/.test(id)){
 					var dl = $('div#reference dl:first').clone(true);
-					dl.attr('id', id).show();
-					dl.find('span').html(name);
-					dl.find('dd[name=url]').html(url);
+//					dl.attr('id', id).show();
+//					dl.find('span').html(name);
+//					dl.find('dd[name=url]').html(url);
+						if(state=='success'){
+							alert('添加成功，词条保存后查看');
+								//location.reload(true);
+						}
 					
 					$('div#reference dl:last').before(dl);
 					self.resort();
@@ -437,7 +440,7 @@ var docReference = {
 	//固定右侧模块
 	fixedRightMod : function(){
 		var editorRight = $('#editor_right'),
-			parms = self.fixedParms ? self.fixedParms : {topheight:$('#nav-top').height(),top:65},
+			parms = self.fixedParms ? self.fixedParms : {topheight:$('#nav-top').height(),top:155},
 			top = parms.top,
 			topheight = parms.topheight,
 			scrollTop = $(document).scrollTop();
@@ -476,18 +479,21 @@ $(document).ready(function(){
 		id: 'hdwiki_editor',
 		contentId: 'content',
 		toolbar: [
-			'Source','Undo','Redo','H1','H2','Bold','ForeColor','BackColor',
-			'RemoveFormat','PasteText','PasteWord',
-			'JustifyLeft','FontSize','FontName',
-			'InsertOrderedList','InsertUnorderedList',
-			'HdImage','BaikeLink','Link',
-			'SpecialChar','InsertTable',
-			'Video','Code','GoogleMap',
+			'Source','Undo','Redo','PasteText','PasteWord',
+			'Bold','FontSize','FontName','ForeColor','BackColor','RemoveFormat',			
+			'H1','H2',
+			'JustifyLeft','InsertOrderedList','InsertUnorderedList',
+			'BaikeLink','Link',
+			'InsertTable','HdImage','SpecialChar','Video','Code','GoogleMap',
 			'Abort','Submit'
 		],
 		plugin : pluginSetting,
 		
-		disabled: ['filter.paragraph']
+		disabled: ['filter.paragraph'],
+		titleMonitor: function(titles) {
+			//console.log('titleMonitor', titles);
+			reloadCatagory(titles);
+		}
 	});
 	//固定右侧模块位置
 	docReference.fixedParms = {top:$('#editor_right').offset().top,topheight:$('#nav-top').height()};
@@ -504,12 +510,7 @@ var Consts = E.consts;
 
 E.plugin("Submit", {
 	icon: {
-		width: 50,
 		text: '发 布',
-		
-		'default': {
-			'Submit': {XY:"none" }
-		}
 	},
 	click: function( ){
 		//$("form[name=edit_doc]").submit();
@@ -519,15 +520,49 @@ E.plugin("Submit", {
 
 E.plugin("Abort", {
 	icon: {
-		width: 40,
-		text: '退 出',
-		
-		'default': {
-			'Abort': {XY:"none" }
-		}
+		text: '放 弃',
 	},
 	click: function( ){
 		abort();
 	}
 });
 })(jQEditor);
+
+//正文目录结构变动后 刷新右侧DIV浮层的目录结构
+/*{"name":"获奖记录","level":1,"element":{}},{"name":"比赛","level":2,"element":{}},{"name":"人物评价","level":1,"element":{}},{"name":"简历","level":1,"element":{}},{"name":"政治生涯","level":1,"element":{}},{"name":"从政轶事","level":1,"element":{}},{"name":"从政理念","level":1,"element":{}},{"name":"参演电影","level":2,"element":{}},{"name":"参演电视剧","level":2,"element":{}},{"name":"音乐作品","level":2,"element":{}},{"name":"MV作品","level":2,"element":{}},{"name":"演唱会","level":2,"element":{}},{"name":"导演作品","level":2,"element":{}},{"name":"广告代言","level":2,"element":{}},{"name":"感情生活","level":1,"element":{}},{"name":"星闻轶事","level":1,"element":{}}*/
+var globalTitles = "";
+function reloadCatagory(titles){
+	 globalTitles = titles;
+	 var catagoryHtml = "";
+	 var obj = titles;
+	 $.each(obj,function(){
+		var curObj = $(this);
+		var _level = curObj[0].level;
+		var _class = "";
+		if('2' == _level){//一级目录
+			_class = ' class="dot" ';
+		}
+		var catagoryName = curObj[0].name;
+		catagoryHtml += '<li '+_class+' onclick="focusToCatagoryElement(\''+curObj[0].name+'\')"><a href="javascript:void(0)" catalogkey=""  title="'+catagoryName+'" alt="'+catagoryName+'">'+catagoryName+'</a></li>';
+	 });
+	 
+	 $("#catagoryList").html(catagoryHtml);
+}
+
+//跳转到某个页面元素
+function focusToCatagoryElement(catagoryName){
+	var _obj = "";
+	$.each(globalTitles,function(){
+		var curObj = $(this);
+		var curCatagoryName = curObj[0].name;
+		if(curCatagoryName == catagoryName){
+			_obj = curObj[0].element;
+			return true;
+		}
+	});
+	//var topHeigh = $(obj).offset().top;
+	//$(document).scrollTop(height);
+	if(_obj == undefined || _obj == "")
+		return false;
+	jQEditor.focus(_obj)
+}

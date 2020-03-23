@@ -7,7 +7,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load("reference");
 		$this->load("user");
 	}
@@ -31,9 +31,10 @@ class control extends base{
 		}
 		
 		$data=$this->post['data'];
-		
+		$data['name'] = htmlspecial_chars(string::stripscript($data['name']));
+		$data['url'] = htmlspecial_chars(string::stripscript($data['url']));
 		//检查验证码
-		if($this->setting['checkcode']!=3 && $this->setting['doc_verification_reference_code'] && strtolower($data['code']) != $_ENV['user']->get_code() ){
+		if($this->setting['checkcode']!=3 && $this->setting['doc_verification_reference_code'] && strtolower($data['code']) != $_ENV['user']->get_code()){
 			exit('code.error');
 		}
 		
@@ -44,7 +45,6 @@ class control extends base{
 		if (empty($data['name'])){
 			exit('0');
 		}
-		
 		$insert_id = $_ENV['reference']->add($data);
 		if (is_int($insert_id)){
 			echo $insert_id;

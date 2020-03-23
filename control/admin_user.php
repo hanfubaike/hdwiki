@@ -6,13 +6,13 @@ class control extends base{
 	var $WIKI_FOUNDER;
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('user');
 		$this->load('usergroup');
 		$this->view->setlang($this->setting['lang_name'],'back');
 		$WIKI_FOUNDER = defined('WIKI_FOUNDER')?WIKI_FOUNDER:1;
 		$WIKI_FOUNDER = is_numeric($WIKI_FOUNDER)?intval($WIKI_FOUNDER):1;
-		$this->WIKI_FOUNDER = is_int($WIKI_FOUNDER)?$WIKI_FOUNDER:1;
+		$this->WIKI_FOUNDER = is_numeric($WIKI_FOUNDER)?$WIKI_FOUNDER:1;
 	}
 
 	function dodefault(){
@@ -21,7 +21,8 @@ class control extends base{
 
 	/*user list*/
 	function dolist($checkup = 1){
-		$page = max(1, intval($this->get[2]));
+		$page = isset($this->get[2]) ? $this->get[2] : '';
+		$page = max(1, intval($page));
 		$num = isset($this->setting['list_prepage'])?$this->setting['list_prepage']:20;
 		$start_limit = ($page - 1) * $num;
 		
@@ -43,7 +44,8 @@ class control extends base{
 				}
 			}
 		}
-		$departstr=$this->multi($usercount, $num, $page,'admin_user-list');
+		$pagename =	$checkup>0 ? 'admin_user-list' : 'admin_user-uncheckeduser';
+		$departstr=$this->multi($usercount, $num, $page, $pagename);
 		$usergrouplist=$_ENV['usergroup']->get_all_list();
 		$usergrouplist = array_slice($usergrouplist, 1);
 		$username = stripslashes(trim($username));

@@ -21,7 +21,7 @@ class dbmodel {
 		return $tablelist;
 	}
 	
-	function get_sqlfile_list($filedir){
+	function get_sqlfile_list($filedir) {
 		$filelist=array();
 		$handle=opendir($filedir);
 		while($filename=readdir($handle)){
@@ -114,6 +114,7 @@ class dbmodel {
 	
 	
 	function write_to_sql(&$sqldump,$dumpfile,$volume){
+		$type = isset($type)?$type:null;
 		$sqldump =	"# <?php exit();?>\n".
 					"# HDWiki Multi-Volume Data Dump Vol.$volume\n".
 					"# Version: hdwiki ".HDWIKI_VERSION."\n".
@@ -161,7 +162,7 @@ class dbmodel {
 		$tablefields = array();
 		$sqlcharset=DB_CHARSET;
 		$dumpcharset=WIKI_CHARSET;
-		
+		$usehex = false;
 		if($table==DB_TABLEPRE."session"){
 			$result['tabledump']="\n";
 			$result['startfrom']=$startfrom;

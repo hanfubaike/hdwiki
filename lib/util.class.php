@@ -141,7 +141,7 @@ class util{
      *
      * @return string
      */
-    static function getip(){
+    function getip(){
         if (getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')){
             $ip = getenv('HTTP_CLIENT_IP');
         }else if (getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')){
@@ -251,7 +251,7 @@ class util{
 					if($firstline && (false===strstr($header,'200')) ){
 						return '';
 					}
-					$firstline=$false;
+					$firstline=false;
 					if( $header  && ($header == "\r\n" ||  $header == "\n") ) {
 						break;
 					}
@@ -325,8 +325,8 @@ class util{
 		}
 		
 		$i = explode('.', $ip);
-		if ($i[0] == 127) return true;
-		if ($i[0] == 10) return true;
+	//	if ($i[0] == 127) return true;
+	//	if ($i[0] == 10) return true;
 		if ($i[0] == 172 && $i[1] > 15 && $i[1] < 32) return true;
 		if ($i[0] == 192 && $i[1] == 168) return true;
 		return false;

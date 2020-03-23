@@ -5,14 +5,14 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->view->setlang($this->setting['lang_name'],'back');
 		$this->load("language");
 	}
 	
 	function dodefault(){
 		//$langtag 页面隐藏的语言文件标记
-		$langtype = $this->get[2]?$this->get[2]:$this->post['langtype'];
+		$langtype = isset($this->get[2])?$this->get[2]:isset($this->post['langtype'])?$this->post['langtype']:'';
 		$langtag = $langtype;
 		if(!$langtype){
 			$langtag = '0';
@@ -21,7 +21,7 @@ class control extends base{
 		//timeoffset内容为数组，所以释放
 		unset($this->view->lang['timeoffset']);
 		
-		$keyword = trim($this->post['keyword']);
+		$keyword = !empty($this->post['keyword']) ? trim($this->post['keyword']) : '';
 		if($keyword){
 			$matches = array();
 			$pattern='/(.*?)'.$keyword.'(.*?)/i';

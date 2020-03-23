@@ -3,7 +3,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base( $get, $post);
 		$this->load('db');
 		$this->load('setting');
 		$this->view->setlang($this->setting['lang_name'],'back');
@@ -28,9 +28,9 @@ class control extends base{
 			$type=isset($this->post['type'])?$this->post['type']:$this->get[2];
 			$sqlfilename=isset($this->post['sqlfilename'])?$this->post['sqlfilename']:rawurldecode($this->get[3]);
 			$sizelimit=isset($this->post['sizelimit'])?$this->post['sizelimit']:intval($this->get[4]);
-			$tableid = intval($this->get[5]);
-			$startfrom = intval($this->get[6]);
-			$volume = intval($this->get[7]) + 1;
+			$tableid = isset($this->get[5]) ? intval($this->get[5]) : 0;
+			$startfrom = isset($this->get[6]) ? intval($this->get[6]) : 0;
+			$volume = isset($this->get[7]) ? intval($this->get[7]) + 1 : 0;
 			$compression=isset($this->post['compression'])?$this->post['compression']:intval($this->get[8]);
 			$backupfilename=$filedir.$sqlfilename;
 			$backupsubmit=1;
@@ -118,13 +118,13 @@ class control extends base{
 			@ini_set('memory_limit','32M');
 		}
 		$filename=str_replace('*','.',$this->get[2]);
-		$filenum=$this->get[3]?$this->get[3]:1;
+		$filenum=$this->get[3]?$this->get[3]:0;
 		$filedir="./data/db_backup/";
 		$filetype=$this->get[4]?$this->get[4]:substr($filename,-3);
 		if($filetype!='zip'&&$filetype!='sql'){
 			$this->message($this->view->lang['dbBackupFormatError'],'BACK');
 		}else{
-			if($filenum==1){
+			if($filenum==0){
 				if($filetype=='zip'){
 					require_once HDWIKI_ROOT.'/lib/zip.class.php';
 					$zip=new zip();
@@ -132,10 +132,10 @@ class control extends base{
 						$this->message($this->view->lang['chkziperror'],'');
 					}
 					$zip->Extract($filedir.$filename,$filedir);
-					$filename=substr($filename,0,-4)."_1.sql";
+					$filename=substr($filename,0,-4)."_0.sql";
 				}else{
 					$num=strrpos($filename,"_");
-					$filename=substr($filename,0,$num)."_1.sql";
+					$filename=substr($filename,0,$num)."_0.sql";
 				}
 			}
 			if(file_exists($filedir.$filename)){
@@ -247,12 +247,15 @@ class control extends base{
 		if(isset($this->post['sqlsubmit'])){
 			echo '<meta http-equiv="Content-Type" content="text/html;charset='.WIKI_CHARSET.'">';
 			$sql = trim(stripslashes($this->post['sqlwindow']));
+			$sqltype = empty($this->post['sqltype']) ? 0 : 1;
 			$this->view->assign('sql',$sql);
 			if($sql==''){
 				echo $this->view->lang['sqlNotice9'];
 			}elseif(eregi("drop(.*)table",$sql) || eregi("drop(.*)database",$sql)){
 				echo $this->view->lang['sqlNotice1'];
-			}elseif(eregi("^select ",$sql)){
+			}elseif(eregi("delete(.*)",$sql) || eregi("update(.*)",$sql) || eregi("insert into(.*)",$sql)){
+				echo $this->view->lang['sqlNotice10'];
+			}elseif(eregi("^select ",$sql) && $sqltype !== 1){
 				$query=$this->db->query($sql);
 				if(!$query){
 					echo $this->view->lang['sqlNotice10'];
@@ -307,6 +310,7 @@ class control extends base{
 	function dodownloadfile(){
 		$filename=$this->get[2];
 		$filename=str_replace('*','.',$filename);
+		$filename = basename($filename);
 		$filedir=HDWIKI_ROOT."/data/db_backup/".$filename;
 		file::downloadfile($filedir);
 	}
@@ -327,10 +331,12 @@ class control extends base{
 	}
 	
 	function doconvert(){
+		$this->get['3'] = isset($this->get['3']) ? $this->get['3'] : 0;
+		$this->get['4'] = isset($this->get['4']) ? $this->get['4'] : '';
 		if(!isset($this->post['dbconvertsubmit']) && $this->get['4']!='conversubmit'){
 			$this->view->display("admin_dbconvert");
 		}else{
-			$type=($this->post['db_convert'])?$this->post['db_convert']:$this->get[2];
+			$type=isset($this->post['db_convert'])?$this->post['db_convert']:$this->get[2];
 			$number=$this->get[3]?$this->get[3]:100;
 			if(($type=='txt' || $type=='mysql') && $number%100==0){
 				$complete=$_ENV['db']->editionconvert($type,$number);

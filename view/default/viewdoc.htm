@@ -1,70 +1,82 @@
 {template header}
-<div class="w-950 hd_map"> <a href="{WIKI_URL}">{$setting[site_name]}</a> &gt;&gt;{lang belongToCate} &gt;&gt;<span id="catenavi">
+<div class="wrap hd_map"> <a href="{WIKI_URL}">{$setting[site_name]}</a> &nbsp;&gt;&nbsp;{lang belongToCate} &nbsp;&gt;&nbsp;<span id="catenavi">
   <!--{loop $navigation $key $category}-->
-  <a href="{url category-view-$category['cid']}">{eval echo htmlspecialchars($category[name])} </a>&nbsp;&nbsp;
+  <a href="{url category-view-$category['cid']}">{$category[name]} </a>&nbsp;&nbsp;
   <!--{/loop}-->
   </span> </div>
-<div class="l w-710 o-v">
-  <h1 class="title_thema"> <span id='doctitle'>{$doc['doctitle']}</span>
-    <label id='auditmsg'>
-      <!--{if $doc['visible']=='0'}-->
-      --{lang viewDocTip4}
-      <!--{/if}-->
-    </label>
-    <label id='lockimage'>
-      <!--{if $doc['locked']}-->
-      <image src="style/default/lock.gif"/>
-      <!--{/if}-->
-    </label>
-  </h1>
+<section class="wrap clearfix">
+<div class="doc-show group1">
+<article class="bor-ccc">
   <div class="subordinate">
-    <p class="cate_open"> <span class="bold">{lang tag}:</span>
-      <!--{if count($doc['tag'] )>0}-->
-      <!--{loop $doc['tag'] $key $tag}-->
-      <a href="{url search-tag-$tag}" name="tag">{$tag}</a>
-      <!--{/loop}-->
-      <!--{else}-->
-      <span name="nonetag">{lang noneTag}</span>
-      <!--{/if}-->
-      <!--{if $doc_edit}-->
-      <span class="w-110" onclick="Tag.box($doc['did'],this)"><a href="javascript:void(0);">{lang editDddTag}</a></span>
-      <!--{/if}-->
-      <!--{if $doc_editletter}-->
-      <span class="w-110" onclick="Letter.box($doc['did'],this)"><a href="javascript:void(0);">{lang setdocFirstLetter}</a>
-      <input type='hidden' id='fletter' value='$docletter'>
-      </span>
-      <!--{/if}-->
-    </p>
-    <span class="editteam"> <a href="javascript:void(0)" id="ding" onclick="vote(this)">{lang ding}[<span>{$doc['votes']}</span>]</a> <a class="share_link" id="share_link">{lang share}</a> <a href="{url comment-view-$doc['did']}">{lang publishComment}({$doc[comments]})</a> <a id="editImage" href="{url doc-edit-$doc['did']}"  class="edit_ct" onclick="return doc_is_locked()">{lang editDoc}</a>
+    <span class="editteam"> <a href="javascript:void(0)" id="ding" class="digg" data-num="{$doc['votes']}" onclick="vote(this)">{lang ding}<span class="cblue">&#91;{$doc['votes']}&#93;</span></a> <a class="share_link" id="share_link">{lang share}</a> <!--{if !empty($userid)}--><a class="favorite"  id="doc_favorite" did="{$doc['did']}" title="{lang keepToSpace}">收藏</a> <!--{/if}--><a class="comment" href="{url comment-view-$doc['did']}">{lang publishComment}<span class="cblue">&#91;{$doc[comments]}&#93;</span></a> <a id="editImage" href="{url doc-edit-$doc['did']}" class="edit_ct" onclick="return doc_is_locked()">{lang editDoc}</a>
     <label class="share_btn" id="share_btn" style="display:none">
       <input id="sitename" name="sitename" value="{$setting['site_name']}" type="hidden">
-      <input id="firstimg" name="firstimg" value="{$firstimg}" type="hidden">
-      
- <a href="javascript:void(0)" onclick="postToWb();return false;" style="background:url(http://v.t.qq.com/share/images/s/weiboicon16.png) no-repeat left 0px;">腾讯微博</a><script type="text/javascript">
-	function postToWb(){
-		var _t = encodeURI("{$doc['qq_title']}");
-		var _url = encodeURIComponent(document.location);
-		var _appkey = encodeURI("aa6cb794b12c41c29d6490f4624b77a9");//你从腾讯获得的appkey
-		var _pic = encodeURI("{$doc['pic_str']}");//（例如：var _pic='图片url1|图片url2|图片url3....）
-		var _site = '';//你的网站地址
-		var _u = 'http://v.t.qq.com/share/share.php?url='+_url+'&appkey='+_appkey+'&site='+_site+'&pic='+_pic+'&title='+_t;
-		window.open( _u,'', 'width=700, height=680, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, location=yes, resizable=no, status=no' );
-	}
-</script>
+      <input id="firstimg" name="firstimg" value="{$firstimg}" type="hidden">      
+	<!--<a href="javascript:void(0)" onclick="postToWb();return false;" style="background:url(http://v.t.qq.com/share/images/s/weiboicon16.png) no-repeat 2px 3px;">腾讯微博</a>
+	 <script type="text/javascript">
+		function postToWb(){
+			var _t = encodeURI("{$doc['qq_title']}");
+			var _url = encodeURIComponent(document.location);
+			var _appkey = encodeURI("aa6cb794b12c41c29d6490f4624b77a9");//你从腾讯获得的appkey
+			var _pic = encodeURI("{$doc['pic_str']}");//（例如：var _pic='图片url1|图片url2|图片url3....）
+			var _site = '';//你的网站地址
+			var _u = 'http://v.t.qq.com/share/share.php?url='+_url+'&appkey='+_appkey+'&site='+_site+'&pic='+_pic+'&title='+_t;
+			window.open( _u,'', 'width=700, height=680, top=0, left=0, toolbar=no, menubar=no, scrollbars=no, location=yes, resizable=no, status=no' );
+		}
+		var oPar = {
+		   'title' : '{lang docCategory}',
+		   'seoprefix' : '{$setting['seo_prefix']}', // 后台返回的路径
+		   'categoryid' : '{$category[cid]}',
+		   'categoryname' : '{eval htmlspecialchars(string::haddslashes($category[name]),1)}',
+		   'did' : "{$doc['did']}"
+		};
 
-      
-      
-      
-      <a href="#" class="kaixin001">{lang kaixin001}</a> <a href="#" class="renren">{lang renren}</a> <a href="#" class="sina_blog">{lang sina_blog}</a> </label>
+	</script>
+      <a href="#" class="kaixin001">{lang kaixin001}</a> <a href="#" class="renren">{lang renren}</a><a href="#" class="sina_blog">{lang sina_blog}</a>-->
+		<div class="bdsharebuttonbox" data-tag="share_1">
+      <strong>分享到</strong>
+			<a class="bds_tqq" data-cmd="tqq">腾讯微博</a>
+			<a class="bds_kaixin001" data-cmd="kaixin001">开心001</a>
+			<a class="bds_renren" data-cmd="renren">人人网</a>
+			<a class="bds_tsina" data-cmd="tsina">新浪微博</a>
+			<a class="bds_qzone" data-cmd="qzone" >QQ空间</a>
+			<a class="bds_weixin" data-cmd="weixin">微信</a>
+			<a class="bds_evernotecn" data-cmd="evernotecn">印象笔记</a>
+		</div>
+	</label>
+		<script>
+			window._bd_share_config = {
+				common : {
+					bdText : "{$doc['share_summary']}",
+					bdDesc :  "{$doc['share_summary']}",
+					bdUrl : location.href,
+					bdPic : "{$doc['img']}"
+				},
+				share : [{
+					"bdSize" : 16,
+					"bdCustomStyle":''
+				}],
+
+			}
+			with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+		</script>
     <script language="javascript"src='js/share.js'></script>
     </span> </div>
-<div class="nav_model">
+  <div class="title_thema"> <h1 id='doctitle'>{$doc['doctitle']}</h1>
+      <!--{if $doc['visible']=='0'}-->
+    <label id='auditmsg'>--{lang viewDocTip4}</label>
+      <!--{/if}-->
+      <!--{if $doc['locked']}-->
+    <label id='lockimage'><image src="style/default/lock.gif"/></label>
+      <!--{/if}-->
+  </div>
   <!--{if count($nav[1] )>0}-->
+	<div class="nav_model">
   <!--{loop $nav[1] $key $val}-->
   {$val['code']}
   <!--{/loop}-->
+	</div>
   <!--{/if}-->
-</div>
   <!--{if $editlock['locked']}-->
   <p id="lock" class="red bor-ccc lock_word">{lang viewDocTip5}<a href="{url user-space-$editlock['user']['uid']}">$editlock['user']['username']</a>{lang viewDocTip6}</p>
   <!--{/if}-->
@@ -76,7 +88,7 @@
   <!--{elseif isset($advlist[3][1]) && (!isset($setting['advmode']) || !$setting['advmode'])}-->
   <div class="ad" id="advlist_3_1"> </div>
   <!--{/if}-->
-  <div class="content_1 wordcut">
+  <div id="content-body" class="content_1 clearfix"><link rel="stylesheet" href="style/{$theme}/content.css">
     <!--{loop $doc['sectionlist'] $key $section}-->
     <!--{if $section['flag'] == 1}-->
     <!--{if ($key==1)&&!empty($sectionlist)}-->
@@ -86,93 +98,33 @@
     <div class="ad" > <span class="r" id="advlist_3_2"></span> </div>
     <!--{/if}-->
     <fieldset id="catalog">
-      <legend><a name='section'>{lang catalog}</a></legend>
-      <ul id="hidesection">
+      <legend name='section'>{lang catalog}</legend>
+	  <div id="full-all">
+      <ul class="lie3">
         <!--{loop $sectionlist $k $sec}-->
-        <li 
-        <!--{if $k>=4}-->
-        style="display:none"
-        <!--{/if}-->
-        >&#8226; <a href="{url doc-view-$doc['did']}#{$sec['key']}">{$sec['value']}</a>
+        <li><em>{eval echo $k+1}</em><a href="{url doc-view-$doc['did']}#{$sec['key']}">{$sec['value']}</a>
         </li>
         <!--{/loop}-->
       </ul>
-      <!--{if count($sectionlist) > 4}-->
-      <p><a href="javascript:void(0);" onclick="partsection();"  id="partsection" style="display:none">[{lang showPart}]</a><a href="javascript:void(0);" onclick="fullsection();" id="fullsection">[{lang showAll}]</a></p>
-      <!--{/if}-->
+      <ul class="lie3"></ul>
+      <ul class="lie3"></ul>
+	  </div>
     </fieldset>
     <!--{/if}-->
-    <h3><span class="texts">{$section['value']}</span><a name="{$key}" href="{url doc-editsection-{$doc['did']}-{$key}}" >{lang editSection}</a><a href="{url doc-view-$doc['did']}#section">{lang backCatalog}</a></h3>
+    <h2 name="{$key}" id="{$key}"><span class="texts">{$section['value']}</span><a class="edit_ct" href="{url doc-editsection-{$doc['did']}-{$key}}" >{lang editSection}</a></h2>
     <!--{else}-->
     <div class="content_topp"> {$section['value']} </div>
     <!--{/if}-->
     <!--{/loop}-->
   </div>
-  <div class="nav_model">
   <!--{if count($nav[2] )>0}-->
+  <div class="nav_model">
   <!--{loop $nav[2] $key $val}-->
   {$val['code']}
   <!--{/loop}-->
+  </div>
   <!--{/if}-->
-  </div>
-  <!--{if count($referencelist)>0}-->
-  <div>
-    <dl class="reference" id="reference_view">
-      <dt><!--{if $reference_add}--><a class="r h3"  href="javascript:reference_edit();">[{lang edit}]</a><!--{/if}-->{lang references}</dt>
-      <!--{loop $referencelist $i $ref}-->
-      <dd> <span>[{eval echo ($i+1)}].</span>&nbsp;&nbsp;{$ref['name']} &nbsp;&nbsp;<span style="color:#666666">{$ref['url']}</span> </dd>
-      <!--{/loop}-->
-    </dl>
-    
-
-    <div id="reference" class="hd-box editor_left" style="display:none;" >
-     <dl class="reference">
-     <dt><!--<a class="r h3"  href="javascript:reference_view();">[完成]</a>{lang references}--></dt>
-     </dl>
-	<dl class="f8 reference" id="0" style="display:none;">
-    <dd><span name="order">[0]</span>&nbsp;&nbsp;<span name='refrencename'></span> <span name="url" style="color:#666666"></span> <span name="edit" > <a href="javascript:;" onclick="docReference.edit(this);return false;">{lang edit}</a> 
-			| <a name="remove" href="javascript:;" onclick="docReference.remove(this);return false;">{lang remove}</a></span> </dd>
-	</dl>
-	<!--{loop $referencelist $i $ref}-->
-	<dl class="f8 reference" id="{$ref[id]}">
-		<dd><span name="order">[{eval echo ($i+1)}]</span>&nbsp;&nbsp;<span name='refrencename'>{$ref[name]}</span> <span name="url" style="color:#666666">{$ref['url']}</span> <span name="edit" > <a href="javascript:;" onclick="docReference.edit(this);return false;">{lang edit}</a> 
-			| <a name="remove" href="javascript:;" onclick="docReference.remove(this);return false;">{lang remove}</a></span> </dd>
-	</dl>
-	<!--{/loop}-->
-	
-	<ul id="edit_reference" class="ul_l_s add_reference" style="display:none;">
-		<li class="mar-bottom-10"><strong>{lang name}:</strong>
-			<input id="editrefrencename" type="text" class="inp_txt" size="60"/>
-			<label class="red" id="refrencenamespan"></label>
-		</li>
-		<li class="size black mar-bottom-10"><strong>{lang url}:</strong>
-			<input id="editrefrenceurl" type="text" class="inp_txt" size="60"/>
-			<label class="red" id="refrenceurlspan"></label>
-		</li>
-		
-		<li name="verifycode" class="size black mar-bottom-10" style="display:none"><strong>{lang verifyCode}:</strong>
-			<input name="code" id="editrefrencecode" type="text" class="inp_txt" size="10" maxlength="4"/>
-			<label name="img" style="display:none"><img id="verifycode2" src="./js/hdeditor/skins/spacer.gif"/> <a href="javascript:docReference.updateVerifyCode();">{lang codeNotClear}</a></label>
-			<label name="tip"></label>
-			<label class="red" id="refrencecodespan"></label>
-		</li>
-		<li>
-			<div id="edit_reference1" class="ul_l_s" style="display:none;">
-				
-					<input type="button" class="btn_inp" onclick="docReference.save();return false;" value="{lang save}" id="save_1"  name="save_1"  />
-				<!--<input type="button"  class="btn_inp" value="{lang save}" name="save_0" id="save_0"  style="display:none" />
-					<a id="save_1" href="javascript:void(0);" onclick="docReference.save();return false;" style="border:1px red solid;">{lang save}</a>
-					<span id="save_0" style="display:none">{lang save}</span>
-					<a href="javascript:;" onclick="docReference.reset();return false;">{lang reset}</a>-->
-					<input type="button" class="btn_inp" onclick="docReference.reset();return false;" name="reset" value="{lang reset}" />
-			
-			</div>
-		</li>
-	</ul>
-  </div>
-</div>
-<!--{/if}-->
-<div class="fj_list m-t10"> <h3 
+<div class="fj_list m-t10"> <h3
   <!--{if count($attachment)==0}-->
   style="display:none"
   <!--{/if}-->
@@ -232,46 +184,31 @@
   <!--{/if}-->
   <input type="hidden" name="coin_hidden" id="coin_hidden" value="{$coin}"  />
 </div>
-<div class="bor_b-ccc m-t10 notes">
-  <p class="l">→{lang viewDocTip7} <a class="font14" href="{url doc-edit-$doc['did']}">{lang editDoc}</a></p>
-  <p class="r">
-    <!--{if $neighbor['predoc']}-->
-    {lang predoc}<a href="{url doc-view-$neighbor['predoc']['did']}"  class="m-lr8">{$neighbor['predoc']['title']}</a>
-    <!--{/if}-->
-    <!--{if $neighbor['nextdoc']}-->
-    {lang nextdoc}<a href="{url doc-view-$neighbor['nextdoc']['did']}"  class="m-lr8">{$neighbor['nextdoc']['title']}</a>
-    <!--{/if}-->
-  </p>
+
+<p class="useful_for_me">
+  <a href="javascript:void(0)" class="btn_sys digg" onclick="vote(this)" data-num="{$doc['votes']}" title="{lang viewDocTip10}">{$doc['votes']}</a>
+  <!--{if !empty($userid)}--><a href="javascript:void(0)" class="btn_sys favorite" id="doc_favorite2" did="{$doc['did']}" title="{lang keepToSpace}">收藏</a> <!--{/if}--></p>
+  <p class="a-c gray9">{lang viewDocTip9}</p>
+<div class="clearfix gray">
+	<p class="l">{lang viewDocTip7} <a class="clink" href="{url doc-edit-$doc['did']}">{lang editDoc}</a></p>
+	<p class="r">
+	<!--{if $neighbor['predoc']}-->
+	{lang predoc} <a href="{url doc-view-$neighbor['predoc']['did']}"  class="clink">{$neighbor['predoc']['title']}</a>
+	<!--{/if}-->&nbsp;&nbsp;
+	<!--{if $neighbor['nextdoc']}-->
+	{lang nextdoc} <a href="{url doc-view-$neighbor['nextdoc']['did']}"  class="clink">{$neighbor['nextdoc']['title']}</a>
+	<!--{/if}-->
+	</p>
 </div>
-<p class="useful_for_me"> <span>{lang viewDocTip9}</span> <a href="javascript:void(0)" onclick="vote(this)">
-  <label id="votemsg">{lang viewDocTip10}</label>
-  <b>{$doc['votes']}</b></a> </p>
-<div class="bor-ccc m-t10 bg-gray notes add">
-  <p class="add_synonym">
-    <label class="l w-550"><b>{lang synonym}</b>：
-      <!--{if !empty($synonyms)}-->
-      <span id="str">
-      <!--{loop $synonyms $key $synonym}-->
-      <a href="{url doc-innerlink-{eval echo urlencode($synonym['srctitle'])}}" name='synonym'>{$synonym['srctitle']}</a>
-      <!--{/loop}-->
-      </span>
-      <!--{else}-->
-      <span name="nonesynonym">{lang noneSynonym}</span>
-      <!--{/if}-->
-    </label>
-    <!--{if $synonym_audit}-->
-    <span class="r w-110 cursor" onclick="Synonym.box($doc['did'],this)"><img src="style/default/add_synonym.gif"/><a href="javascript:void(0)" >{lang editDddSyn}</a></span>
-    <!--{/if}-->
-  </p>
-</div>
-<div class="bor-ccc m-t10 notes bg-gray bookmark">
-  <p><span class="bold">{lang favourite}: </span> <a title="Favorites" onclick="addfav();"><img src='style/default/bookmark/ie.gif' border='0' style="cursor:pointer;"></a> &nbsp;
+</article>
+
+<!--<div class="columns bookmark">
+  <span class="f20">{lang favourite}</span>&nbsp;&nbsp;<a title="Favorites" onclick="addfav();"><img src='style/default/bookmark/ie.gif' border='0' style="cursor:pointer;"></a> &nbsp;
     <script language="javascript"src='js/bookmark.js'></script>
-    <!--{if !empty($userid)}-->
+    &lt;!&ndash;{if !empty($userid)}&ndash;&gt;
     <img id="doc_favorite" did="{$doc['did']}" title="{lang keepToSpace}" alt="{lang keepToSpace}" src="style/default/bookmark/hudong.gif" style="cursor:pointer;">
-    <!--{/if}-->
-  </p>
-  <!--{if isset($doclink)}-->
+    &lt;!&ndash;{/if}&ndash;&gt;
+  &lt;!&ndash;{if isset($doclink)}&ndash;&gt;
   <label class="m-t10 l" id="uniontitle">{$uniontitle}</label>
   <script type="text/javascript">
 		$('#uniontitle').hide();
@@ -291,7 +228,103 @@
 			});
 		});
 		</script>
-  <!--{/if}-->
+  &lt;!&ndash;{/if}&ndash;&gt;
+</div>-->
+
+<div class="columns cate_open">
+	<h2 class="col-h2">{lang tag}</h2>
+	<div class="more">
+		<!--{if $doc_edit}-->
+		<a href="javascript:void(0);" class="clink" onclick="Tag.box($doc['did'],this)">{lang editDddTag}</a>
+		<!--{/if}-->
+		<!--{if $doc_editletter}-->
+		<a href="javascript:void(0);" class="clink" onclick="Letter.box($doc['did'],this)">{lang setdocFirstLetter}</a>
+		<input type='hidden' id='fletter' value='$docletter'>
+		<!--{/if}-->
+	</div>
+	<!--{if count($doc['tag'] )>0}-->
+	<ul class="doc-list">
+		<!--{loop $doc['tag'] $key $tag}-->
+		<li><a href="{url search-tag-$tag}" name="tag">{$tag}</a></li>
+		<!--{/loop}-->
+	</ul>
+	<!--{else}-->
+	<span class="nonedata gray9" name="nonetag">{lang noneTag}</span>
+	<!--{/if}-->
+</div>
+
+<!--{if count($referencelist)>0}-->
+  <div class="columns add">
+  <h2 class="col-h2">{lang references}</h2>
+  <!--{if $reference_add}--><a class="more clink" href="javascript:reference_edit();">{lang edit}</a><!--{/if}-->
+    <dl class="reference" id="reference_view">
+      <!--{loop $referencelist $i $ref}-->
+      <dd> <span>[{eval echo ($i+1)}].</span>&nbsp;&nbsp;{$ref[name]} &nbsp;&nbsp;<span class="gray9 f12">{$ref['url']}</span> </dd>
+      <!--{/loop}-->
+    </dl>
+
+    <div id="reference" class="hd-box editor_left" style="display:none;" >
+     <dl class="reference">
+     <dt><!--<a class="r h3"  href="javascript:reference_view();">[完成]</a>{lang references}--></dt>
+     </dl>
+	<dl class="reference" id="0" style="display:none;">
+    <dd><span name="order">[0].</span>&nbsp;&nbsp;<span name='refrencename'></span> &nbsp;&nbsp;<span name="url" class="gray9 f12"></span> <span name="edit" > <a href="javascript:;" onclick="docReference.edit(this);return false;">{lang edit}</a> 
+			| <a name="remove" href="javascript:;" onclick="docReference.remove(this);return false;">{lang remove}</a></span> </dd>
+	</dl>
+	<!--{loop $referencelist $i $ref}-->
+	<dl class="reference" id="{$ref[id]}">
+		<dd><span name="order">[{eval echo ($i+1)}].</span>&nbsp;&nbsp;<span name='refrencename'>{$ref[name]}</span> &nbsp;&nbsp;<span name="url" class="gray9 f12">{$ref['url']}</span> <span class="grayc" name="edit" > <a href="javascript:;" class="clink" onclick="docReference.edit(this);return false;">{lang edit}</a>
+			| <a name="remove" href="javascript:;" class="clink" onclick="docReference.remove(this);return false;">{lang remove}</a></span> </dd>
+	</dl>
+	<!--{/loop}-->
+	
+	<ul id="edit_reference" class="ul_l_s add_reference" style="display:none;">
+		<li><strong>{lang name}：</strong>
+			<input id="editrefrencename" type="text" class="inp_txt" size="60"/>
+			<label class="red" id="refrencenamespan"></label>
+		</li>
+		<li><strong>{lang url}：</strong>
+			<input id="editrefrenceurl" type="text" class="inp_txt" size="60"/>
+			<label class="red" id="refrenceurlspan"></label>
+		</li>
+		
+		<li name="verifycode" style="display:none"><strong>{lang verifyCode}:</strong>
+			<input name="code" id="editrefrencecode" type="text" class="inp_txt" size="10" maxlength="4"/>
+			<label name="img" style="display:none"><img id="verifycode2" src="./js/hdeditor/skins/spacer.gif"/> <a href="javascript:docReference.updateVerifyCode();">{lang codeNotClear}</a></label>
+			<label name="tip"></label>
+			<label class="red" id="refrencecodespan"></label>
+		</li>
+		<li>
+			<div id="edit_reference1" style="display:none;">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="button" class="btn_inp blue" onclick="docReference.save();return false;" value="{lang save}" id="save_1"  name="save_1"  />
+				<!--<input type="button"  class="btn_inp" value="{lang save}" name="save_0" id="save_0"  style="display:none" />
+					<a id="save_1" href="javascript:void(0);" onclick="docReference.save();return false;" style="border:1px red solid;">{lang save}</a>
+					<span id="save_0" style="display:none">{lang save}</span>
+					<a href="javascript:;" onclick="docReference.reset();return false;">{lang reset}</a>-->
+					<input type="button" class="btn_inp" onclick="docReference.reset();return false;" name="reset" value="{lang reset}" />
+			
+			</div>
+		</li>
+	</ul>
+  </div>
+</div>
+<!--{/if}-->
+
+<div class="columns add_synonym">
+	<h2 class="col-h2">{lang synonym}</h2>
+	<!--{if $synonym_audit}-->
+    <a href="javascript:void(0)" class="more clink" onclick="Synonym.box($doc['did'],this)">{lang editDddSyn}</a>
+    <!--{/if}-->
+      <!--{if !empty($synonyms)}-->
+	<ul class="doc-list" id="str">
+      <!--{loop $synonyms $key $synonym}-->
+      <li><a href="{url doc-innerlink-{eval echo urlencode($synonym['srctitle'])}}" name='synonym'>{$synonym['srctitle']}</a></li>
+      <!--{/loop}-->
+	  </ul>
+      <!--{else}-->
+      <span class="nonedata gray9" name="nonesynonym">{lang noneSynonym}</span>
+      <!--{/if}-->
 </div>
 <!--{if $comment_add}-->
 <!--{if isset($advlist[3][3]) && isset($setting['advmode']) && '1'==$setting['advmode']}-->
@@ -302,41 +335,43 @@
 <!--{/if}-->
 <div class="columns comment">
   <h2 class="col-h2">{lang commentRelation}</h2>
-  <a href="{url comment-view-$doc['did']}" target="_blank" class="more">{lang viewMore}&gt;&gt;</a>
+  <a href="{url comment-view-$doc['did']}" target="_blank" class="more gray9">{lang viewMore}&gt;</a>
   <form method="post" action="{url comment-add-$doc['did']}">
     <ul class="col-ul">
       <li>
-        <textarea id="comment" name="comment" cols="95" rows="10" class="area"></textarea>
-        <input id='anonymity' name="anonymity" type="checkbox" />
+        <textarea id="comment" name="comment" cols="95" rows="10" class="inp_txt"></textarea>
+      </li>
+	  <li>
+		  <span class="r gray9">{lang shouldNotice}:{lang commentLongSize}</span>
+        <input id='anonymity' name="anonymity" type="checkbox" /><i class="checkbox"></i>
         {lang commentAnonymity}</li>
-      <li class="yzm">
         <!--{if $setting['checkcode'] != "3"}-->
+      <li class="yzm">
         <span>{lang verifyCode}: </span>
-        <input name="code2" type="text" />
+        <input name="code2" class="inp_txt" type="text" />
         <label class="m-lr8"><img id="verifycode" src="{url user-code}" onclick="updateverifycode();" /></label>
         <a href="javascript:updateverifycode();">{lang changeAnother}</a>
-        <!--{/if}-->
-        &nbsp;&nbsp;&nbsp;&nbsp;{lang shouldNotice}:{lang commentLongSize}</li>
+        </li><!--{/if}-->
       <li>
-        <input name="submit" type="submit" value="{lang publishComment}" class="btn_inp"/>
+        <input name="submit" type="submit" value="{lang publishComment}" class="btn_inp blue"/>
       </li>
     </ul>
   </form>
 </div>
 <!--{/if}-->
 </div>
-<div class="r w-230">
-<div class="nav_model">
+<aside class="doc-aside group2" id="doc-aside">
   <!--{if count($nav[3] )>0}-->
+<div class="nav_model">
   <!--{loop $nav[3] $key $val}-->
   {$val['code']}
   <!--{/loop}-->
-  <!--{/if}-->
 </div>
+  <!--{/if}-->
   <!--{if isset($advlist[4][1]) && isset($setting['advmode']) && '1'==$setting['advmode']}-->
-  <div class="ad" id="advlist_4_1"> {$advlist[4][1][code]} </div>
+  <div class="ad nomar" id="advlist_4_1"> {$advlist[4][1][code]} </div>
   <!--{elseif isset($advlist[4][1]) && (!isset($setting['advmode']) || !$setting['advmode'])}-->
-  <div class="ad" id="advlist_4_1"> </div>
+  <div class="ad nomar" id="advlist_4_1"> </div>
   <!--{/if}-->
   <!--{if $audit}-->
   <div class="columns ctgl">
@@ -344,22 +379,18 @@
     <form method="post">
       <dl>
         <dt>{lang operate}</dt>
-        <dd class="a-c">
-          <input name="Button2" type="button" value="{lang rename}" class="m-lr8 btn_inp" onclick="doc_rename();" />
-          <input id="editcategory" name="Button3" type="button" value="{lang editCate}" class="m-lr8 btn_inp" onClick="javascript:catevalue.ajax(0,this);"/>
+        <dd>
+          <input name="Button2" type="button" value="{lang rename}" class="btn_sys" onclick="doc_rename();" />
+          <input id="editcategory" name="Button3" type="button" value="{lang editCate}" class="btn_sys" onClick="javascript:catevalue.ajax(0,this);"/>
         </dd>
         <dt>{lang state}</dt>
         <dd>
-          <label class="l" ><a href='javascript:void(0);' onclick="lock('lock');">{lang lock}</a></label>
-          <label class="r" ><a href='javascript:void(0);' onclick="lock('unlock');">{lang unlock}</a></label>
-        </dd>
-        <dd>
-          <label class="l" ><a href='javascript:void(0);' onclick="recommend();">{lang recommend}</a></label>
-          <label class="r" ><a href='javascript:void(0);' onclick="updatastatus(0);"> {lang CancelRecommend}</a></label>
-        </dd>
-        <dd>
-          <label class="l" ><a href='javascript:void(0);' onclick="audit();">{lang audit}</a></label>
-          <label class="r" ><a href='index.php?doc-remove-{$doc['did']}' onclick="return remove()">{lang remove}</a></label>
+          <a href='javascript:void(0);' class="btn_inp bai" onclick="lock('lock');">{lang lock}</a>
+          <a href='javascript:void(0);' class="btn_inp bai" onclick="lock('unlock');">{lang unlock}</a>
+          <a href='javascript:void(0);' class="btn_inp bai" onclick="recommend();">{lang recommend}</a>
+          <a href='javascript:void(0);' class="btn_inp bai" onclick="updatastatus(0);"> {lang CancelRecommend}</a>
+          <a href='javascript:void(0);' class="btn_inp bai" onclick="audit();">{lang audit}</a>
+          <a href='index.php?doc-remove-{$doc['did']}' class="btn_inp bai" onclick="return remove()">{lang remove}</a>
         </dd>
       </dl>
     </form>
@@ -370,67 +401,55 @@
     <!--{if $author}-->
     <!--{if !isset($lasteditor) || (isset($lasteditor) && $lasteditor['uid']!=$author['uid'])}-->
     <dl class="col-dl twhp2">
-      <dd><a href="{url user-space-$author['uid']}" target="_blank"  class="a-img1"> <img alt="{$author['username']}" title="{$author['username']}" src="<!--{if $author[image]}-->$author[image]<!--{else}-->style/default/user_l.jpg<!--{/if}-->" width="38px" height="38px" /> </a></dd>
-      <dt><a href="{url user-space-$author['uid']}" target="_blank">{$author['username']}</a></dt>
-      <dd><span style="color:{$author['color']}" class="l m-r8">{$author['grouptitle']}</span> <span title="{lang userstars} {$author['stars']}" class="l">
-        <!--{for $i=0; $i<$author['userstars'][3]; $i++}-->
-        <img src="style/default/star_level3.gif"/>
-        <!--{/for}-->
-        <!--{for $i=0; $i<$author['userstars'][2]; $i++}-->
-        <img src="style/default/star_level2.gif"/>
-        <!--{/for}-->
-        <!--{for $i=0; $i<$author['userstars'][1]; $i++}-->
-        <img src="style/default/star_level1.gif"/>
-        <!--{/for}-->
-        </span> </dd>
-      <dd>{lang creator} <a onclick="javascript:Message.box('{$author[username]}')"   href="javascript:void(0)">{lang sendmessage}</a> &nbsp;&nbsp;<img src="style/default/jb.gif" title="{$author['credit1']}{lang gold}"></dd>
+      <dd><a href="{url user-space-$author['uid']}" target="_blank"  class="a-img1"> <img alt="{$author['username']}" title="{$author['username']}" src="<!--{if $author[image]}-->$author[image]<!--{else}-->style/default/user_l.jpg<!--{/if}-->" width="50" height="50" /> </a></dd>
+      <dt><a href="{url user-space-$author['uid']}" target="_blank">{$author['username']}</a> <em class="f12"><img src="style/default/jb.gif" title="{lang gold}"> {$author['credit1']}</em></dt>
+      <dd><span class="gray9" style="color:{$author['color']}">{$author['grouptitle']}</span> <span title="{lang userstars} {$author['stars']}" class="u-stars">
+        <!--{for $i=0; $i<$author['userstars'][3]; $i++}--><img src="style/default/star_level3.gif"/>       <!--{/for}-->
+        <!--{for $i=0; $i<$author['userstars'][2]; $i++}--><img src="style/default/star_level2.gif"/><!--{/for}-->
+        <!--{for $i=0; $i<$author['userstars'][1]; $i++}--><img src="style/default/star_level1.gif"/><!--{/for}-->
+        </span></dd>
+      <dd><span class="gray9">{lang creator}</span> <a class="s-msg clink" onclick="javascript:Message.box('{$author[username]}')"   href="javascript:void(0)">{lang sendmessage}</a></dd>
     </dl>
     <!--{/if}-->
     <!--{/if}-->
     <!--{if $author_removed}-->
     <dl class="col-dl twhp2">
-      <dd><a class="a-img1"> <img alt="{lang haveDel}" src="style/default/user_l.jpg" width="38px" height="38px" /></a></dd>
-      <dt>{lang userHaveDel}</dt>
-      <dd>{lang creator}</dd>
+      <dd><a class="a-img1"> <img alt="{lang haveDel}" src="style/default/user_l.jpg" width="50" height="50" /></a></dd>
+      <dt class="gray9">{lang userHaveDel}</dt>
+      <dd class="gray9">{lang creator}</dd>
     </dl>
     <!--{/if}-->
     <!--{if isset($lasteditor) }-->
     <dl class="col-dl twhp2">
-      <dd><a href="{url user-space-$lasteditor['uid']}" target="_blank"  class="a-img1"> <img alt="{$lasteditor['username']}" title="{$lasteditor['username']}" src="<!--{if $lasteditor[image]}-->$lasteditor[image]<!--{else}-->style/default/user_l.jpg<!--{/if}-->" width="38px" height="38px" /> </a></dd>
-      <dt><a href="{url user-space-$lasteditor['uid']}" target="_blank">{$lasteditor['username']}</a></dt>
-      <dd><span class="l m-r8" style="color:{$lasteditor['color']}" >{$lasteditor['grouptitle']}</span> <span title="{lang userstars} {$lasteditor['stars']}" class="l">
-        <!--{for $i=0; $i<$lasteditor['userstars'][3]; $i++}-->
-        <img src="style/default/star_level3.gif"/>
-        <!--{/for}-->
-        <!--{for $i=0; $i<$lasteditor['userstars'][2]; $i++}-->
-        <img src="style/default/star_level2.gif"/>
-        <!--{/for}-->
-        <!--{for $i=0; $i<$lasteditor['userstars'][1]; $i++}-->
-        <img src="style/default/star_level1.gif"/>
-        <!--{/for}-->
-        </span> </dd>
-      <dd>{lang recentEditor} <a onclick="javascript:Message.box('{$lasteditor[username]}')"   href="javascript:void(0)">{lang sendmessage}</a> &nbsp;&nbsp;<img src="style/default/jb.gif" title="{$lasteditor['credit1']}{lang gold}"></dd>
+      <dd><a href="{url user-space-$lasteditor['uid']}" target="_blank"  class="a-img1"> <img alt="{$lasteditor['username']}" title="{$lasteditor['username']}" src="<!--{if $lasteditor[image]}-->$lasteditor[image]<!--{else}-->style/default/user_l.jpg<!--{/if}-->" width="50" height="50" /> </a></dd>
+      <dt><a href="{url user-space-$lasteditor['uid']}" target="_blank">{$lasteditor['username']}</a> <em class="f12"><img src="style/default/jb.gif" title="{lang gold}"> {$lasteditor['credit1']}</em></dt>
+      <dd><span class="gray9" style="color:{$lasteditor['color']}" >{$lasteditor['grouptitle']}</span> <span title="{lang userstars} {$lasteditor['stars']}" class="u-stars">
+        <!--{for $i=0; $i<$lasteditor['userstars'][3]; $i++}--><img src="style/default/star_level3.gif"/><!--{/for}-->
+        <!--{for $i=0; $i<$lasteditor['userstars'][2]; $i++}--><img src="style/default/star_level2.gif"/><!--{/for}-->
+        <!--{for $i=0; $i<$lasteditor['userstars'][1]; $i++}--><img src="style/default/star_level1.gif"/><!--{/for}-->
+        </span></dd>
+      <dd><span class="gray9">{lang recentEditor}</span> <a class="s-msg clink" onclick="javascript:Message.box('{$lasteditor[username]}')"   href="javascript:void(0)">{lang sendmessage}</a></dd>
     </dl>
     <!--{/if}-->
     <!--{if $lasteditor_removed}-->
     <dl class="col-dl twhp2">
-      <dd><a class="a-img1"> <img alt="{lang haveDel}" src="style/default/user_l.jpg" width="38px" height="38px" /></a></dd>
-      <dt>{lang userHaveDel}</dt>
-      <dd>{lang recentEditor}</dd>
+      <dd><a class="a-img1"> <img alt="{lang haveDel}" src="style/default/user_l.jpg" width="50" height="50" /></a></dd>
+      <dt class="gray9">{lang userHaveDel}</dt>
+      <dd class="gray9">{lang recentEditor}</dd>
     </dl>
     <!--{/if}-->
-    <ul class="col-ul bor-ccc">
-      <li>{lang viewTimes}: {$doc['views']} {lang times}</li>
+    <ul class="col-ul">
+      <li><span class="gray">{lang viewTimes}：</span>{$doc['views']} {lang times}</li>
       <!--{if $doc['editions'] }-->
-      <li>{lang editTimes}: {$doc['editions']}{lang times} <a href="{url edition-list-$doc[did]}" target="_blank" class="m-l8">{lang edition}</a></li>
+      <li><span class="gray">{lang editTimes}：</span>{$doc['editions']}{lang times} <a href="{url edition-list-$doc[did]}" target="_blank" class="clink">{lang edition}</a></li>
       <!--{/if}-->
-      <li>{lang updateTime}: {$doc['lastedit']}</li>
+      <li><span class="gray">{lang updateTime}：</span>{$doc['lastedit']}</li>
     </ul>
   </div>
   <div class="columns">
     <h2 class="col-h2">{lang docRelation}</h2>
     <!--{if $relate}-->
-    <a href="javascript:void(0)" onclick="relateddoc('block')" class="more">{lang add}</a>
+    <a href="javascript:void(0)" onclick="relateddoc('block')" class="more clink">{lang add}</a>
     <!--{/if}-->
     <ul class="col-ul" id='related_doc' 
     <!--{if empty($relatelist)}-->
@@ -438,7 +457,7 @@
     <!--{/if}-->
     >
     <!--{loop $relatelist $key $relate}-->
-    <li><a href="index.php?doc-innerlink-{eval echo urlencode($relate)}" target="_blank" title="{$relate}">{$relate}</a></li>
+    <li class="disc"><a href="index.php?doc-innerlink-{eval echo urlencode($relate)}" target="_blank" title="{$relate}">{$relate}</a></li>
     <!--{/loop}-->
     </ul>
   </div>
@@ -448,14 +467,26 @@
   <!--{elseif isset($advlist[4][2]) && (!isset($setting['advmode']) || !$setting['advmode'])}-->
   <div class="ad" id="advlist_4_2"> </div>
   <!--{/if}-->
-</div>
-<div class="nav_model">
+</aside>
+</section>
 <!--{if count($nav[4] )>0}-->
+<aside class="wrap"><div class="nav_model columns">
 <!--{loop $nav[4] $key $val}-->
 {$val['code']}
 <!--{/loop}-->
+</div></aside>
 <!--{/if}-->
+
+<div id="tool" style="z-index: 2000;  position: fixed; bottom:20px; right: 60px;display:none;">
+    <div class="catalog">
+        <div class="full-list" style="overflow-y:auto;">
+            <ul>
+            </ul>
+        </div>
+        <i class="dot-dot"></i>
+    </div>
 </div>
+
 <!--{if $setting['checkcode'] != "3"}-->
 <script type="text/javascript">
 function updateverifycode() {
@@ -479,10 +510,13 @@ function updatereferenceverifycode() {
 var timeout_pop=0;
 function doc_rename(){
 	var title=$.trim($('#doctitle').html()).replace(/\s/g,'&nbsp;');
-	var html="词条名称 :  <form action='' onsubmit='update_docname();return false;'><input id='newname' type='text' value='"+title+"' maxlength='80' height='40'><br><br>"+
-	"<input name='renamesbumit' type='button' onclick='update_docname()' value='{lang submit}'>"+
-	"<input name='cancel' type='button' onclick='closepop(\"rename\")' value='{lang cancel}'><br><br><label id='updatetitlenotice' style='height:20px;color:red'>&nbsp;</label></form>";
-	$.dialog.box('rename', '重命名', html);
+	var html="词条名称 :  <input id='newname' type='text' class='inp_txt' value='"+title+"' maxlength='80' height='40' style='width:300px'><br>"+
+	"<label id='updatetitlenotice' style='height:20px;color:red'>&nbsp;</label>";
+	//$.dialog.box('rename', '重命名', html);
+    
+    $.dialog.alert(html,function(){
+        update_docname()
+    }, '重命名', {width: 500, align:'center'});
 }
 function update_docname(){
 	clearTimeout(timeout_pop);
@@ -496,7 +530,7 @@ function update_docname(){
 			var message=xml.lastChild.firstChild.nodeValue;
 			if(message=='1'){
 				$('#doctitle').html($('#newname').val());
-				$.dialog.close('rename');
+				$.dialog.close();
 				return;
 			}else if(message=='-2'){
 				$("#updatetitlenotice").html('{lang viewDocTip2}');
@@ -533,10 +567,12 @@ function lock(type){
 }
 
 function recommend(){
-	var html="词条状态 :  <select id='recommend_type' ><option value='1'>推荐词条</option><option value='2'>热门词条</option><option value='3'>精彩词条</option></select><br><br>"+
-	"<input name='renamesbumit' type='button' onclick='updatastatus($(\"#recommend_type\").val())' value='{lang submit}'>"+
-	"<input name='cancel' type='button' onclick='closepop(\"recommend\")' value='{lang cancel}'>";
-	$.dialog.box('recommend', '推荐词条', html);
+	var html="词条状态 :  <select id='recommend_type' ><option value='1'>推荐词条</option><option value='2'>热门词条</option><option value='3'>精彩词条</option></select><br>";
+	//$.dialog.box('recommend', '推荐词条', html);
+    
+    $.dialog.alert(html,function(){
+        updatastatus($("#recommend_type").val())
+    }, '推荐词条', {width: 500, align:'center', height:100});
 }
 
 function updatastatus(type){
@@ -623,8 +659,7 @@ function closepop(name){
 							callback:function(){
 								catevalue.selectCategory();
 							},
-							styleContent:{'text-align':'left', 'overflow-y':'scroll', 'padding-right':'0', height:'380px'},
-							styleOk:{'font-size':'14px','line-height':'20px', 'padding':'2px 6px 1px','margin-right':'3px'}
+							styleContent:{'text-align':'left', 'overflow-y':'scroll', 'padding-right':'0', height:'380px'}
 						});
 					}
 				}
@@ -748,18 +783,24 @@ function closepop(name){
 		srctitles: '',
 		tags:null,
 		box : function(did, E){
-			this.E = $(E).parent();
+			this.E = $(E).closest('.columns');
 			this.did = did;
-			var html = '<form onsubmit="Synonym.send(this);return false;"><table border="0" width="300" class="send_massage" style="margin-left:18px">'
-			+'<tr><td height="25"><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td><td align=left><input  name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td></tr>'
-			+'<tr><td height="25"><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td><td align=left><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td></tr>'
-			+'<tr><td height="25"><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td><td align=left><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td></tr>'
-			+'<tr><td height="25"><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td><td align=left><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td></tr>'
-			+'<tr><td height="25"><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td><td align=left><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td></tr>'
-			+'<tr><td height="25" colspan=2><span id="synonymTip"></span><br /><input type="hidden" name="desttitle" value="{$doc[title]}" /><input type="hidden" name="destdid" value="{$doc[did]}" />'
+			var html = '<form style="padding:20px;" onsubmit="Synonym.send(this);return false;" id="_send_sysonym"><table border="0" width="100%" class="send_massage">'
+			+'<tr><td height="40"><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td><td align=left><input  name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td></tr>'
+			+'<tr><td height="40"><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td><td align=left><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td></tr>'
+			+'<tr><td height="40"><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td><td align=left><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td></tr>'
+			+'<tr><td height="40"><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td><td align=left><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td></tr>'
+			+'<tr><td height="40"><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td><td align=left><input name="srctitles[]" type="text" class="inp_txt" maxlength="100" size="20"/></td></tr>'
+			+'<tr style="display:none"><td height="40" colspan=2><span id="synonymTip"></span><br /><input type="hidden" name="desttitle" value="{$doc[title]}" /><input type="hidden" name="destdid" value="{$doc[did]}" />'
 			+'<input id="synonymSubmit" type="submit" value="'+Lang.Submit+'" /></td></tr></table></form>';
-			$.dialog.box('synonym','编辑同义词', html);
-			var srctitles='',srctitless='',a = $(E).parent().find("a[name=synonym]");
+			//$.dialog.box('synonym','编辑同义词', html);
+            
+            
+			$.dialog.alert(html,function(){
+                Synonym.send($('#_send_sysonym').get(0))
+            }, '编辑同义词', {width: 500});
+            
+			var srctitles='',srctitless='',a = this.E.find("a[name=synonym]");
 			this.tags = a;
 			a.each(function(i){
 				srctitles += $(this).text();
@@ -775,7 +816,8 @@ function closepop(name){
 		
 		send: function(form){
 			var title=$("#doctitle").text();
-			var formData = $(form).serialize();
+			var _form = form || $('#_send_sysonym');
+			var formData = $(_form).serialize();
 			formData += "&submit=ajax";
 			var synonymInputs = $("input[name='srctitles[]']");
 			var inputsrc='';
@@ -786,7 +828,7 @@ function closepop(name){
 			this.inputsrc = $.trim(inputsrc);
 			//检查是否已修改
 			if (this.srctitles == this.inputsrc){
-				$.dialog.close('synonym');
+				$.dialog.close();
 				return;
 			}
 
@@ -811,34 +853,24 @@ function closepop(name){
 						$("#synonymTip").html('已经被别的同义词指向。');
 					}else if(data=='empty'){ //如果返回 empty,表示已清空所有同义词
 						Synonym.change('');
-						$.dialog.close('synonym');
+						$.dialog.close();
 					} else { //否则，按返回的数据更新页面上显示的同义词
 						Synonym.change(data);
 						$("#synonymTip").html('');
-						$.dialog.close('synonym');
+						$.dialog.close();
 						return;
 					}
 				}
 			});
 		},
 		
-		change: function(newData){
-			var html='';
-			html = newData+html;
-			if(html){
-				if (this.tags.size() > 0){
-					$(this.tags[0]).before(html);
-					this.tags.remove();
-				}else{
-					this.E.find("span[name=nonesynonym]").before(html);
-					this.E.find("span[name=nonesynonym]").remove();
-				}
-			}else{
-				html='<span name="nonesynonym">暂无同义词</span>';
-				this.E.find("a[name=synonym]:first").before(html);
-				this.E.find("a[name=synonym]").remove();
+		change: function(html){
+      this.E.find('.doc-list').remove();
+			if(!html){
+				html='<span class="nonedata gray9"  name="nonesynonym">暂无同义词</span>';
 			}
-			$.dialog.close('synonym');
+      this.E.append(html);
+			$.dialog.close();
 		}
 	}
 </script>
@@ -851,22 +883,27 @@ var Tag = {
 	tagtext: '',
 	tags:null,
 	box : function(did, E){
-		this.E = $(E).parent();
+		this.E = $(E).closest('.columns');
 		this.did = did;
-		var html = '<form onsubmit="Tag.send();return false;"><table border="0" width="400" class="send_massage">'
-		+'<tr><td height="40"><input id="tagSubject" type="text" class="inp_txt" maxlength="200" size="50"/></td></tr>'
+		var html = '<form onsubmit="Tag.send();return false;"><table border="0" width="100%" class="send_massage">'
+		+'<tr><td height="60"><input id="tagSubject" type="text" class="inp_txt" maxlength="200" size="50"/></td></tr>'
 		+'<tr><td height="40">'+Lang.EditTagTip+'</td></tr>'
-		+'<tr><td height="40"><input id="tagSubmit" type="submit" value="'+Lang.Submit+'" />'
+		//+'<tr><td height="40"><input id="tagSubmit" type="submit" value="'+Lang.Submit+'" />'
 		+'<span id="tagTip"></span></td></tr></table></form>';
 		
-		$.dialog.box('tag', Lang.EditTag, html);
-		
-		var tagtext='',a = $(E).parent().find("a[name=tag]");
+		//$.dialog.box('tag', Lang.EditTag, html);
+		$.dialog.alert(html, function(){
+            Tag.send()
+        }, Lang.EditTag, {width: 500});
+
+    
+		var tagtext='',a = this.E.find("a[name=tag]");
 		this.tags = a;
 		a.each(function(i){
 			tagtext += $(this).text() + '; ';
 		});
 		this.tagtext = $.trim(tagtext);
+    
 		$("#tagSubject").val(tagtext);
 		$("#tagSubject").focus();
 		$("#tagSubmit").attr('disabled', false).val(Lang.Submit);
@@ -878,7 +915,7 @@ var Tag = {
 		var params = {'submit':'ajax', 'tagtext':'', 'did':this.did};
 		params.tagtext = $.trim($("#tagSubject").val());
 		if (this.tagtext == params.tagtext){
-			$.dialog.close('tag');
+			$.dialog.close();
 			return;
 		}
 		params.tagtext = params.tagtext.replace(new RegExp(Lang.Fenhao+'|,|'+Lang.Douhao, "g"), ";").replace(/ /g,';').replace(/;;+/g,';');
@@ -898,7 +935,7 @@ var Tag = {
 				if (data == 'OK'){
 					Tag.change();
 					$("#tagTip").html('');
-					$.dialog.close('tag');
+					$.dialog.close();
 				} else {
 					alert(Lang.EditTagError);
 				}
@@ -909,25 +946,22 @@ var Tag = {
 	},
 	
 	change: function(){
-		var html='', taglist = this.tagtext.split(';');
+		var html='<ul class="doc-list">', taglist = this.tagtext.split(';');
 		taglist=hdunique(taglist);
-		for (var i=taglist.length-1; i>=0; i--){
-			if ('' === taglist[i]) continue;
-			html = '<a href="index.php?search-tag-'+encodeURI(taglist[i])+'" name="tag">'+taglist[i]+'</a> '+html;
+
+    var isempty = true;
+    for (var i=0; i<taglist.length; i++){
+      if ('' === taglist[i]) continue;
+        isempty = false;
+        html += '<li><a href="index.php?search-tag-'+encodeURI(taglist[i])+'" name="tag">'+taglist[i]+'</a></li>';
+    }
+    html += '</ul>';
+    this.E.find(".doc-list").remove();
+
+		if(isempty){
+				html='<span class="nonedata gray9" name="nonetag">{lang noneTag}</span>';
 		}
-		if(html){
-			if (this.tags.size() > 0){
-				$(this.tags[0]).before(html);
-				this.tags.remove();
-			}else{
-				this.E.find("span[name=nonetag]").before(html);
-				this.E.find("span[name=nonetag]").remove();
-			}
-		}else{
-				html='<span name="nonetag">暂无标签</span>';
-				this.E.find("a[name=tag]:first").before(html);
-				this.E.find("a[name=tag]").remove();
-		}
+    this.E.append(html);
 	}
 }
 </script>
@@ -938,16 +972,21 @@ var Tag = {
 		for(i=0;i<10;i++){
 			$("#related_"+(i+1)).val('');
 		}
-		var html ='<form onsubmit="addrelatedoc();return false;"><ul class="p-ul" style="line-height:25px">'
+		var html ='<form name="relatedoc" onsubmit="addrelatedoc();return false;"><ul class="p-ul" style="line-height:25px;">'
 		+'<li><input name="Text2" type="text" class="inp_txt" id="related_1"/>&nbsp;&nbsp;<input name="Text2" type="text"  class="inp_txt" id="related_2"/></li>'
 		+'<li><input name="Text2" type="text" class="inp_txt" id="related_3"/>&nbsp;&nbsp;<input name="Text2" type="text"  class="inp_txt" id="related_4"/></li>'
 		+'<li><input name="Text2" type="text" class="inp_txt" id="related_5"/>&nbsp;&nbsp;<input name="Text2" type="text"  class="inp_txt" id="related_6"/></li>'
 		+'<li><input name="Text2" type="text" class="inp_txt" id="related_7"/>&nbsp;&nbsp;<input name="Text2" type="text"  class="inp_txt" id="related_8"/></li>'
 		+'<li><input name="Text2" type="text" class="inp_txt" id="related_9"/>&nbsp;&nbsp;<input name="Text2" type="text"  class="inp_txt" id="related_10"/></li>'
-		+'<li onclick="addrelatedoc();"><input name="Button1" type="submit" value="保存"  class="btn_inp" /></li></ul></form>';
-		$.dialog.box('relatedoc','编辑相关词条', html);
-		var dialog=$.dialog.get('relatedoc');
-		dialog.find(':text').attr('maxlength', 80);
+		+'</ul></form>';
+		//$.dialog.box('relatedoc','编辑相关词条', html);
+        
+		$.dialog.alert(html, function(){
+            addrelatedoc()
+        }, '编辑相关词条', {width: 500});
+        
+        
+		$('form[name=relatedoc]').find(':text').attr('maxlength', 80);
 		$("#related_doc a").each(function(i){
 			$("#related_"+(i+1)).val($(this).text());
 		});
@@ -978,7 +1017,7 @@ var Tag = {
 				if(message=='1'){
 					$('#related_doc').html(relatedhtml);
 					$('#related_doc').css("display",'block');
-					$.dialog.close('relatedoc');return;
+					$.dialog.close();return;
 				}else if(message=='2'){
 					alert('{lang viewDocTip12}');
 				}else{
@@ -1153,10 +1192,13 @@ var Attachment = {
 			success: function(xml){
 				var	message=xml.lastChild.firstChild.nodeValue;
 				if(message=='1'){
-					var votes=parseInt($("#votemsg + b").html())+1;
-					$("#votemsg + b").html(votes);
-					$('#votemsg').html('{lang viewDocTip10}');
-					$("#ding span").html(votes);
+					var votes = parseInt($(el).data('num')) + 1;
+					$('#ding span').eq(0).html('[' + votes + ']');
+					$('.useful_for_me a').eq(0).html(votes);
+					//var votes=parseInt($("#ding span").html())+1;
+					//$("#votemsg + b").html(votes);
+					//$('#votemsg').html('{lang viewDocTip10}');
+					//$("#ding span").html(votes);
 					
 					$.get("index.php?hdapi-hdautosns-ding-{$doc['did']}");
 				}else{
@@ -1194,12 +1236,12 @@ var Attachment = {
 			move:false,
 			effects:'',
 			fixed:1,
-			height:100,
+			height:50,
 			width:50,
 			closeImg:0,
 			minScrollTop:100,
 			overlay:0,
-			content:'<img title="回顶部" style="cursor:pointer" src="{WIKI_URL}/style/default/up.png" style="width:23px; height:66px" onclick="scrollToTop()"/>'
+			content:'<a href="javascript:void(0);" onclick="scrollToTop()" class="gotop" title="回顶部"></a>'
 		});
 	});
 
@@ -1231,7 +1273,7 @@ var Attachment = {
 	});
 	
 	$(document).ready(function(){
-		$("#doc_favorite").click(function(){
+		$("#doc_favorite,#doc_favorite2").click(function(){
 			var did = $(this).attr('did');
 			var result = '';
 			$.post("{url user-addfavorite}",  {did:did},function(data){
@@ -1295,11 +1337,16 @@ var Attachment = {
 		box : function(did, E){
 			this.E = $(E).parent();
 			this.did = did;
-			var html = '<form onsubmit="Letter.send();return false;"><table border="0" width="400" class="send_massage">'
-			+'<tr><td height="40">词条首字母：<input id="first_letter" type="text" class="inp_txt" maxlength="1" size="10"/></td></tr>'
-			+'<tr><td height="40"><input id="letterSubmit" type="submit" value="'+Lang.Submit+'" />'
+			var html = '<form onsubmit="Letter.send();return false;"><table border="0" width="100%" class="send_massage">'
+			+'<tr><td height="100">词条首字母：<input id="first_letter" type="text" class="inp_txt" maxlength="1" size="10"/></td></tr>'
+			//+'<tr><td height="40"><input id="letterSubmit" type="submit" value="'+Lang.Submit+'" />'
 			+'<span id="tagTip"></span></td></tr></table></form>';
-			$.dialog.box('firstletter', '设置词条首字母', html);
+			//$.dialog.box('firstletter', '设置词条首字母', html);
+            
+            $.dialog.alert(html,function(){
+                Letter.send()
+            }, '词条首字母', {width: 500});
+
 			$("#letterSubmit").attr('disabled', false).val(Lang.Submit);
 			letters=$("#fletter").val();
 			document.getElementById("first_letter").value=letters;//document.getElementById("fletter").value;
@@ -1311,10 +1358,10 @@ var Attachment = {
 				function(xml){
 					var message=xml.lastChild.firstChild.nodeValue;
 					if(message=='1'){
-						alert('设置成功');
+						//alert('设置成功');
 						newletter=$('#first_letter').val();
 						document.getElementById("fletter").value = newletter;
-						$.dialog.close('firstletter');
+						$.dialog.close();
 					}
 					if(message=='-1'){
 						alert('您必须输入a-z的英文字母,不区分大小写');
@@ -1445,6 +1492,7 @@ var docReference = {
 				data:{'data[id]':self.editid, 'data[name]':name, 'data[url]':url, 'data[code]':code},
 				type:'POST',
 				success:function(text, state){
+					//alert(1);return;
 					if ($.trim(text) == '1'){
 						var dl = $('div#reference dl[id='+self.editid+']');
 						dl.find('span[name=refrencename]').html(name);
@@ -1483,10 +1531,13 @@ var docReference = {
 				id = $.trim(id);
 				if (/[1-9]+/.test(id)){
 					var dl = $('div#reference dl[id=0]').clone(true);
-					dl.attr('id', id).show();
-					dl.find('span[name=refrencename]').html(name);
-					dl.find('span[name=url]').html(url);
-					
+					//dl.attr('id', id).show();
+					//dl.find('span[name=refrencename]').html(name);
+					//dl.find('span[name=url]').html(url);
+					if(state=='success'){
+						alert('添加成功!');
+						location.reload(true);
+					}
 					$('div#reference ul').before(dl);
 					self.resort();
 					self.reset();
@@ -1576,5 +1627,19 @@ function reference_view(){
 </script>
 <!--参考资料设置 结束-->
 <script type="text/javascript" src="js/openremoveimage.js"></script>
-
+<script type="text/javascript" src="js/viewdoc_fixed_category.js"></script>
+<script type="text/javascript" src="js/viewdoc_category.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//文字内容中有代码模块则加载相关js和css
+	if($('pre.prettyprint').length) {
+		$.getScript("js/prettify.js",function(){
+			if(typeof prettyPrint == 'function') {
+				$('head').append('<link href="style/default/prettify.css" type="text/css" rel="stylesheet" media="all"/>');
+				prettyPrint();
+			}
+		});
+	}
+});
+</script>
 {template footer}

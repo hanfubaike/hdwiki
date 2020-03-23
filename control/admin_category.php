@@ -5,7 +5,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base( $get, $post);
 		$this->load('setting');
 		$this->load("category");
 		$this->view->setlang($this->setting['lang_name'],'back');
@@ -34,20 +34,24 @@ class control extends base{
 			$catnames = $this->post['catname'];
 			$ico='';
 			$discrib='';
-			foreach($catnames as $catname){
-				$catname = trim(string::stripscript($catname));
-				if($catname){
-					if(!$_ENV['category']->add_category($pid,$catname,$ico,$discrib)){
-					//	$this->message($this->view->lang['CateExsit'],'index.php?admin_category-list-'.$pid);
+			if($catnames){
+				foreach($catnames as $catname){
+					$catname = trim(string::stripscript($catname));
+					if($catname){
+						if(!$_ENV['category']->add_category($pid,$catname,$ico,$discrib)){
+						//	$this->message($this->view->lang['CateExsit'],'index.php?admin_category-list-'.$pid);
+						}
 					}
 				}
+				$this->cache->removecache('category');
 			}
-			$this->cache->removecache('category');
 			$this->message($this->view->lang['addCateSuccess'],'index.php?admin_category-list-'.$pid);
 		}else{
 			$cid =isset($this->get[2]) ? intval($this->get[2]) : 0;
 			$cats = $_ENV['category']->get_all_category();
-			$cats = $_ENV['category']->get_categrory_tree($cats);
+			if($cats){
+				$cats = $_ENV['category']->get_categrory_tree($cats);
+			}
 			$this->view->assign('tcat',$_ENV['category']->get_category($cid));
 			$this->view->assign('cats',$cats);
 			$this->view->display('admin_catadd');
@@ -67,15 +71,19 @@ class control extends base{
 		$orders = array();
 		$orders = $this->post['order'];
 		$catnames = $this->post['catname'];
-		foreach($catnames as $catname){
-			$catname = trim(string::stripscript($catname));
-			if($catname){
-				$_ENV['category']->add_category($hiddencid,$catname,'','');
-				$orders[] = $_ENV['category']->get_cate_info($hiddencid,$catname);
+		if($catnames){
+			foreach($catnames as $catname){
+				$catname = trim(string::stripscript($catname));
+				if($catname){
+					$_ENV['category']->add_category($hiddencid,$catname,'','');
+					$orders[] = $_ENV['category']->get_cate_info($hiddencid,$catname);
+				}
 			}
 		}
-		foreach($orders as $order => $cid){
-			$_ENV['category']->order_category(intval($cid),$order);
+		if($orders){
+			foreach($orders as $order => $cid){
+				$_ENV['category']->order_category(intval($cid),$order);
+			}
 		}
 		$this->cache->removecache('category');
 		$this->message($this->view->lang['editCateSuccess'],'index.php?admin_category-list-'.$hiddencid);

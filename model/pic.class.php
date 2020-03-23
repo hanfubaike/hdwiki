@@ -60,13 +60,13 @@ class picmodel {
 			$pathinfo=pathinfo($pic['attachment']);
 			$pic['attachment']=$pathinfo['dirname'].'/'.$pathinfo['filename'].'_140'.'.'.$pathinfo['extension'];
 		}*/
-		
+		$pic['attachment_normal']=$pic['attachment'];
 		$pic_140=$this->get_140($pic['attachment']);
 		if(is_file($pic_140)){
 			$pic['attachment']=$pic_140;
 		}
-		
-		$pic['summary']=htmlspecialchars($pic['summary']);
+		$pic['summary'] = empty($pic['summary']) ? NULL : $pic['summary'];
+		$pic['summary']=htmlspecial_chars($pic['summary']);
 		return $pic;
 	}
 	
@@ -78,7 +78,7 @@ class picmodel {
 		$pic['fileborder']=$picinfo[0].'*'.$picinfo[1].' px';
 		$pic['filesize']=round($pic['filesize']/1024).' k';
 		$pic['description']=empty($pic['description'])?$pic['title']:$pic['description'];
-		$pic['summary']=htmlspecialchars($pic['summary']);
+		$pic['summary']=htmlspecial_chars($pic['summary']);
 		return 	$pic;
 	}
 	
@@ -89,6 +89,7 @@ class picmodel {
 		while($pic=$this->db->fetch_array($query)){
 			$pic_140=$this->get_140($pic['attachment']);
 			if(is_file($pic_140)){
+			    $pic['attachment2']=$pic['attachment'];
 				$pic['attachment']=$pic_140;
 			}
 			$piclist[]=$pic;

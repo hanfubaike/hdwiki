@@ -4,13 +4,13 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('user');
 		$this->load('usergroup');
 	}
 
  	function doregister(){
-		if ($this->user['islogin']){
+		if (!empty($this->user['islogin'])){
 			$this->header('');
 		}
 		$inviter = !empty($this->get[2]) ? $this->authcode($this->get[2], 'DECODE') : false;
@@ -23,7 +23,7 @@ class control extends base{
 		if('2' === $this->setting['reg_status'] && false == $inviter){
 			$this->message($this->view->lang['onlyInvite'],'',0);
 		}
-		
+
 		if(!isset($this->post['submit'])){
 			if(isset($this->setting['register_least_minute']) && !$_ENV['user']->check_ip($this->ip)){
 				$msg = $this->view->lang['registerTip9'];
@@ -95,7 +95,7 @@ class control extends base{
 				$this->view->assign('code',$code);
 			}
 		}
- 		
+
 		if($inviter) {
 			$this->view->assign('formAction', $this->view->url('user-register-'.$this->get[2]));
 		} else {
@@ -106,6 +106,7 @@ class control extends base{
 	}
 
 	function dologin(){
+		
 		$_ENV['user']->passport_server('login','1');
 		if(!isset($this->post['submit'])){
 			$this->view->assign('checkcode',isset($this->setting['checkcode'])?$this->setting['checkcode']:0);
@@ -123,25 +124,28 @@ class control extends base{
 			//$this->view->display('login');
 			$_ENV['block']->view('login');
 		}else{
+            if (!$this->check_csrf_token()){
+                $this->message('ç¼ºå°‘TOKENå‚æ•°', 'BACK',$this->post['indexlogin']?2:0);
+            }
 			$username=string::hiconv(trim($this->post['username']));
 			$password=md5($this->post['password']);
 			$error=$this->setting['checkcode']!=3?$this->docheckcode($this->post['code'],1):'OK';
 			if($error=='OK'){
-				// LDAP µÇÂ¼¼ì²â
+				// LDAP ç™»å½•æ£€æµ‹
 				$ldap_login = $_ENV['user']->ldap_login($username,$this->post['password']);
 				if(!empty($ldap_login) && is_array($ldap_login)) {
 				    if(1 !== $ldap_login['status']) {
 					$this->message($ldap_login['message'], 'BACK',$this->post['indexlogin']?2:0);
 				    }
 				}
-				// LDAP µÇÂ¼¼ì²â ½áÊø
+				// LDAP ç™»å½•æ£€æµ‹ ç»“æŸ
 
 				$user=$this->db->fetch_by_field('user','username',$username);
 				if ($this->setting['close_website'] === '1' && $user['groupid'] != 4){
 					@header('Content-type: text/html; charset='.WIKI_CHARSET);
 					exit($this->setting['close_website_reason']);
 				}
-				//eval($this->plugin["ucenter"]["hooks"]["login"]);//UC·µ»ØµÇÂ¼js´úÂë£¬ÍË³öÁË¡£
+				//eval($this->plugin["ucenter"]["hooks"]["login"]);//UCè¿”å›žç™»å½•jsä»£ç ï¼Œé€€å‡ºäº†ã€‚
 				UC_OPEN && $_ENV['ucenter']->login($username);
 				if(is_array($user)&&($password==$user['password'])){
 					if($this->time>($user['lasttime']+24*3600)){
@@ -159,7 +163,7 @@ class control extends base{
 						$user['grouptitle'] = $usergroup['grouptitle'];
 						$user['image'] = ($user['image'])?$user['image']:'style/default/user_l.jpg';
 						$user['news'] = $newpms[0];
-						//¹«¹²¶ÌÏûÏ¢¸öÊý
+						//å…¬å…±çŸ­æ¶ˆæ¯ä¸ªæ•°
 						$user['pubpms'] = $newpms[3];
 						$user['adminlogin'] = $adminlogin;
 						unset($user['signature']);
@@ -212,15 +216,15 @@ class control extends base{
 				$msg=$this->view->lang['registerTip8'];
 			}else{
 				//eval($this->plugin["ucenter"]["hooks"]["checkname"]);
-				UC_OPEN && $_ENV['ucenter']->checkname($msg,$username,$type);//UC·µ»ØÑéÖ¤½á¹û¡£
+				UC_OPEN && $_ENV['ucenter']->checkname($msg,$username,$type);//UCè¿”å›žéªŒè¯ç»“æžœã€‚
 				if(!isset($uid)){
 					$user=$this->db->fetch_by_field('user','username',$username);
-					if(!empty($user)){//ÓÐ´ËÓÃ»§
-						if($type>0){//Ö»ÓÐµ±type>0Ê±·µ»Ø´íÎó£¬´ËÊ±±íÃ÷ÊÇ×¢²áÑéÖ¤¡£
+					if(!empty($user)){//æœ‰æ­¤ç”¨æˆ·
+						if($type>0){//åªæœ‰å½“type>0æ—¶è¿”å›žé”™è¯¯ï¼Œæ­¤æ—¶è¡¨æ˜Žæ˜¯æ³¨å†ŒéªŒè¯ã€‚
 							$msg=$this->view->lang['registerTip6'];
 						}
 					}else{
-						if($type==0){//Ö»ÓÐµ±type==0Ê±·µ»Ø´íÎó£¬´ËÊ±±íÃ÷ÊÇµÇÂ¼ÑéÖ¤¡£
+						if($type==0){//åªæœ‰å½“type==0æ—¶è¿”å›žé”™è¯¯ï¼Œæ­¤æ—¶è¡¨æ˜Žæ˜¯ç™»å½•éªŒè¯ã€‚
 							$msg=$this->view->lang['userNotExist'];
 						}
 					}
@@ -307,8 +311,8 @@ class control extends base{
 				$location = string::hiconv($location);
 				$signature = string::hiconv($signature);
 			}
-			$location = htmlspecialchars($location);
-			$signature = htmlspecialchars(str_replace(array('\n','\r'),'',$signature));
+			$location = htmlspecial_chars($location);
+			$signature = htmlspecial_chars(str_replace(array('\n','\r'),'',$signature));
 
 			$_ENV['user']->set_profile($gender,$birthday,$location,$signature,$this->user['uid']);
 		}else{
@@ -327,9 +331,9 @@ class control extends base{
 
 	function doeditpass(){
 		if(isset($this->post['submit'])){
-			$oldpass = $this->post['oldpass'];
-			$newpass = $this->post['newpass'];
-			$renewpass = $this->post['renewpass'];
+			$oldpass = trim($this->post['oldpass']);
+			$newpass = trim($this->post['newpass']);
+			$renewpass = trim($this->post['renewpass']);
 			$oldpass=md5($oldpass);
 			if(strlen($newpass)<1){
 				$this->message($this->view->lang['editPassTip1'],"BACK",0);
@@ -380,7 +384,7 @@ class control extends base{
 				return false;
 			}
 			if( util::isimage($extname) ){
-				$destfile = 'uploads/userface/'.($this->user['uid']%10).'/'.$this->user['uid'].'_src.'.$extname;	//´óÍ¼
+				$destfile = 'uploads/userface/'.($this->user['uid']%10).'/'.$this->user['uid'].'_src.'.$extname;	//å¤§å›¾
 				$result = file::uploadfile($image,$destfile);
 				if($result['result']){
 					$destfilerand = $destfile.'?'.rand(0000,9999);
@@ -396,7 +400,7 @@ class control extends base{
 	}
 
 	function doeditimage(){
-		//Í·ÏñÏÔÊ¾
+		//å¤´åƒæ˜¾ç¤º
 		if(empty($this->user['image'])){
 			$imageview= 'style/default/user.jpg';
 		} else{
@@ -429,7 +433,7 @@ class control extends base{
 		}
 		//eval($this->plugin['ucenter']['hooks']['edit_user_image']);
 		UC_OPEN && $_ENV['ucenter']->edit_user_image();
-		
+
 		$this->view->assign("imageview", $imageview);
 		$this->view->assign("imagesize", getimagesize($imageview));
 		//$this->view->display('editimage');
@@ -441,7 +445,7 @@ class control extends base{
 			$this->header('user-profile');
 			exit();
 		}else{
-			$imagesrc = $this->post['bigimage'];		//´«ËÍ¹ýÀ´Í¼Æ¬Ãû³Æ
+			$imagesrc = $this->post['bigimage'];		//ä¼ é€è¿‡æ¥å›¾ç‰‡åç§°
 			if(!empty($imagesrc)){
 				$imagepath = pathinfo($imagesrc);
 				$tagimage = $imagepath['dirname'].'/'.trim($imagepath['filename'], '_src').'.'.strtolower($imagepath['extension']);
@@ -456,7 +460,7 @@ class control extends base{
 
 	function dogetpass(){
 		if(isset($this->get[2])){
-			$uid=$this->get[2];
+			$uid = is_numeric($this->get[2]) ? $this->get[2] : 0;
 			$encryptstring=$this->get[3];
 			$idstring=$_ENV['user']->get_idstring_by_uid($uid,$this->time);
 			if(!empty($encryptstring) && !empty($idstring) && ($idstring==$encryptstring)){
@@ -468,10 +472,10 @@ class control extends base{
 				$this->message($this->view->lang['resetPassMessage'], WIKI_URL ,0);
 			}
 		}elseif(isset($this->post['verifystring'])){
-			$uid=$this->post['uid'];
+			$uid = is_numeric($this->post['uid']) ? $this->post['uid'] : 0;
 			$encryptstring=$this->post['verifystring'];
 			$idstring=$_ENV['user']->get_idstring_by_uid($uid,$this->time);
-			if($idstring==$encryptstring){
+			if(!empty($idstring) && !empty($encryptstring) && ($idstring==$encryptstring)){
 				$newpass = $this->post['password'];
 				$renewpass = $this->post['repassword'];
 				$error=$_ENV['user']->checkpassword($newpass,$renewpass);
@@ -547,9 +551,12 @@ class control extends base{
 	}
 
 	function dospace(){
-		$uid = $this->get[2];
+
+		$uid = empty($this->get[2]) ? 0 : intval($this->get[2]);
 		$type=(isset($this->get[3]))?intval($this->get[3]):0;
+		$this->get[4] = empty($this->get[4]) ? NULL : $this->get[4];
 		$page = max(1, intval($this->get[4]));
+
 		$num = isset($this->setting['list_prepage'])?$this->setting['list_prepage']:20;
 		$start_limit = ($page - 1) * $num;
 
@@ -564,6 +571,10 @@ class control extends base{
 			$spaceuser = $_ENV['usergroup']->get_groupinfo($uid,'u.username');
 			$uid=$spaceuser['uid'];
 		}
+		if ($page > 1 && $this->isMobile()) {
+		    $this->dowapspace(array('uid'=>$uid, 'type'=>$type, 'start_limit'=>$start_limit, 'num'=>$num));
+		    exit;
+		}
 		if(!(bool)$spaceuser){
 			$this->message($this->view->lang['loginTip3'],'BACK',0);
 		}
@@ -572,7 +583,7 @@ class control extends base{
 		$spaceuser['regtime'] = $this->date($spaceuser['regtime']);
 		switch ($type) {
 			case 0:
-			case 1:	
+			case 1:
 				$doccount=($type)? $spaceuser['edits'] : $spaceuser['creates'];
 				break;
 			case 2:
@@ -585,7 +596,13 @@ class control extends base{
 		$this->view->assign('type',$type);
 		$this->view->assign('doclist',$doclist);
 		$this->view->assign('spaceuser',$spaceuser);
-		$_ENV['block']->view('space');
+
+		$this->isMobile() ? $_ENV['block']->view('wap-space') :$_ENV['block']->view('space');
+	}
+	
+	// wap è¾“å‡ºjsonæ•°æ®çš„æŽ¥å£
+	function dowapspace($param) {
+        exit(json_encode($_ENV['user']->space($param['uid'], $param['type'], $param['start_limit'], $param['num'])));
 	}
 
 	function doclearcookies(){
@@ -634,7 +651,7 @@ class control extends base{
 			$_ENV['user']->remove_favorite($favorite, $uid);
 			$message = $this->view->lang['removeSuc'];
 		}
-		
+
 		$this->message($message,"index.php?user-space-$uid-2",0);
 	}
 
@@ -643,8 +660,10 @@ class control extends base{
 			$this->view->assign('user',$this->user);
 			$outextcredits=unserialize($this->setting["outextcredits"]);
 			$option=array();
-			foreach($outextcredits as $key=>$change){
-			    $option[$change[creditsrc]][$key]=$change;
+			if(!empty($outextcredits)) {
+				foreach($outextcredits as $key=>$change){
+					$option[$change[creditsrc]][$key]=$change;
+				}
 			}
 			$this->view->assign('outextcredits',$outextcredits);
 			$this->view->assign('option',$option);
@@ -671,7 +690,7 @@ class control extends base{
 
 
 			if($amount <= 0 || $amount >$this->user[$credits]) {
-				$this->message('»ý·ÖÌá½»ÎÞÐ§£¡','BACK',0);
+				$this->message('ç§¯åˆ†æäº¤æ— æ•ˆï¼','BACK',0);
 			}
 
 			require_once(HDWIKI_ROOT."/api/ucconfig.inc.php");
@@ -680,17 +699,17 @@ class control extends base{
 			$ucresult = uc_user_login($this->user['username'], $this->post['password']);
 			list($tmp['uid']) = $ucresult;
 			if($tmp['uid'] <= 0) {
-				$this->message('ÊäÈëµÄÃÜÂë´íÎó£¡','BACK',0);
+				$this->message('è¾“å…¥çš„å¯†ç é”™è¯¯ï¼','BACK',0);
 			}
 			$netamount = floor($amount * 1/$outexange['ratio']);
 
 			$ucresult = uc_credit_exchange_request($this->user['uid'], $outexange['creditsrc'], $outexange['creditdesc'], $outexange['appiddesc'], $netamount);
 			if(!$ucresult) {
-				$this->message('»ý·Ö×ª»»Ê§°Ü£¡','BACK',0);
+				$this->message('ç§¯åˆ†è½¬æ¢å¤±è´¥ï¼','BACK',0);
 			}
 
 			$_ENV['user']->add_credit($this->user['uid'],'syn_credit',$credit2,$credit1);
-			$this->message('»ý·Ö¶Ò»»³É¹¦!',$this->setting['seo_prefix']."user-profile".$this->setting['seo_suffix'],0);
+			$this->message('ç§¯åˆ†å…‘æ¢æˆåŠŸ!',$this->setting['seo_prefix']."user-profile".$this->setting['seo_suffix'],0);
 		}
 	}
 
@@ -710,8 +729,8 @@ class control extends base{
 			$mail_count = 0;
 			$mails = array();
 			foreach($this->post['toemails'] as $key=>$mail) {
-				if($mail_count > 50) { 
-					break; 
+				if($mail_count > 50) {
+					break;
 				}
 				$mail = trim($mail);
 				if(strlen($mail) > 6 && preg_match("/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/", $mail)) {
@@ -731,7 +750,7 @@ class control extends base{
 				$subject = str_replace('_USERNAME_', $this->user['username'], $this->setting['invite_subject']);
 				$mails = array_unique($mails);
 				$this->load('mail');
-				$content = str_replace('_PS_', nl2br($this->post['ps']), addslashes($mailtpl)); 
+				$content = str_replace('_PS_', nl2br($this->post['ps']), addslashes($mailtpl));
 				$_ENV['mail']->add(array(), $mails, $subject, $content);
 				$this->message($this->view->lang['emailSent'],'BACK', 0);
 			} else {

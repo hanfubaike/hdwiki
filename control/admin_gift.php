@@ -1,9 +1,10 @@
 <?php
-!defined('IN_HDWIKI') && exit('Access Denied');
+!defined('IN_HDWIKI') && exit('Access Denied');
+
 class control extends base{
 	
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load('gift');
 		$this->load('setting');
 		$this->view->setlang($this->setting['lang_name'],'back');
@@ -58,9 +59,9 @@ class control extends base{
 		if(!isset($this->post['submit'])){
 			$this->view->display('admin_addgift');
 		}else{
-			$title = htmlspecialchars(string::haddslashes(string::hiconv(trim($this->post['title']))));
+			$title = htmlspecial_chars(string::haddslashes(string::hiconv(trim($this->post['title']))));
 			$credit = trim($this->post['credit']);
-			$description = htmlspecialchars(string::haddslashes(string::hiconv(trim($this->post['description']))));
+			$description = htmlspecial_chars(string::haddslashes(string::hiconv(trim($this->post['description']))));
 			$imgname=$_FILES['giftfile']['name'];
 			$extname=file::extname($imgname);
 			$destfile = 'uploads/gift/'.util::random(8).'.'.$extname;
@@ -89,9 +90,9 @@ class control extends base{
 		}else{
 			$id=trim($this->post['id']);
 			$gift=$_ENV['gift']->get($id);
-			$title = htmlspecialchars(trim($this->post['title']));
+			$title = htmlspecial_chars(trim($this->post['title']));
 			$credit = trim($this->post['credit']);
-			$description = htmlspecialchars(trim($this->post['description']));
+			$description = htmlspecial_chars(trim($this->post['description']));
 			$imgname=$_FILES['giftfile']['name'];
 			
 			/*

@@ -59,31 +59,31 @@ function doSubmit(){
 	</tr>
 	<tr>
 		<td><span>{lang secForbidEditTime}</span>{lang secForbidEditTimeTrip}</td>
-		<td><input class="inp_txt" id="forbidden_edit_time" name="forbidden_edit_time"  type="text" style="width:200px;"  maxlength="3" value="{$basecfginfo['forbidden_edit_time']}" /> {lang commonMinute}</td>
+		<td><input class="inp_txt" id="forbidden_edit_time" name="forbidden_edit_time"  type="text" style="width:200px;"  maxlength="3" value="<!--{if !empty($basecfginfo['forbidden_edit_time'])}-->{$basecfginfo['forbidden_edit_time']}<!--{/if}-->" /> {lang commonMinute}</td>
 	</tr>
 	<tr>
 		<td width="300px"><span>{lang eng_max_pcnt_err}</span>{lang eng_max_pcnt_tip}</td>
 		<td>
-		<input class="inp_txt" id="eng_max_pcnt" name="eng_max_pcnt"  type="text" style="width:200px;"  maxlength="3" value="{$basecfginfo['eng_max_pcnt']}" /> %</td>
+		<input class="inp_txt" id="eng_max_pcnt" name="eng_max_pcnt"  type="text" style="width:200px;"  maxlength="3" value="<!--{if !empty($basecfginfo['eng_max_pcnt'])}-->{$basecfginfo['eng_max_pcnt']}<!--{/if}-->" /> %</td>
 	</tr>
 	<tr>
 		<td width="300px"><span>{lang extlink_max_pcnt}</span>{lang extlink_max_pcnt_tip}</td>
 		<td>
-		<input class="inp_txt" id="extlink_max_pcnt" name="extlink_max_pcnt"  type="text" style="width:200px;"  maxlength="3" value="{$basecfginfo['extlink_max_pcnt']}" /> %</td>
+		<input class="inp_txt" id="extlink_max_pcnt" name="extlink_max_pcnt"  type="text" style="width:200px;"  maxlength="3" value="<!--{if !empty($basecfginfo['extlink_max_pcnt'])}-->{$basecfginfo['extlink_max_pcnt']}<!--{/if}-->" /> %</td>
 	</tr>
 	<tr>
 		<td><span>{lang submit_min_interval}</span>{lang submit_min_interval_tip}</td>
-		<td >		<input class="inp_txt" id="submit_min_interval" name="submit_min_interval"  type="text" style="width:200px;"  maxlength="5" value="{$basecfginfo['submit_min_interval']}" /> 秒</td>
+		<td >		<input class="inp_txt" id="submit_min_interval" name="submit_min_interval"  type="text" style="width:200px;"  maxlength="5" value="<!--{if !empty($basecfginfo['submit_min_interval'])}-->{$basecfginfo['submit_min_interval']}<!--{/if}-->" /> 秒</td>
 	</tr>
 	
 	<tr>
 		<td><span>{lang deal_with_spam}</span></td>
 		<td >
 		<label><input type="radio"  name="save_spam" value="1" 
-		{if $basecfginfo['save_spam']=='1'}checked="checked"{/if}/> {spam_audit}</label>
+		{if !empty($basecfginfo['save_spam']) && $basecfginfo['save_spam']=='1'}checked="checked"{/if}/> {lang spam_audit}</label>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<label><input type="radio"  name="save_spam" value="0"
-		{if $basecfginfo['save_spam']=='0'}checked="checked"{/if}/> {spam_die}</label>
+		{if !empty($basecfginfo['save_spam']) && $basecfginfo['save_spam']=='0'}checked="checked"{/if}/> {lang spam_die}</label>
 		</td>
 	</tr>
 	

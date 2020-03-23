@@ -142,7 +142,7 @@ function timer(){
 						<td><!--{loop $regularlist $regular}-->
 							<span id="tr{$regular[id]}" class="grouplist" name="group{$regular[regulargroupid]}">
 							<label><input type="checkbox" name="regular[]" id="regular{$regular[id]}" onclick="Regular.click(this)"
-		  value="{$regular[regular]}" 
+		  value="<!--{if $regular[regular] == 'list-default|list-recentupdate'}-->list-default|list-recentchange<!--{else}-->{$regular[regular]}<!--{/if}-->"
 								<!--{if $regular[checked]}-->
 								checked="true"
 								<!--{/if}-->

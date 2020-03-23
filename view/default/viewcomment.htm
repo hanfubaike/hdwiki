@@ -1,15 +1,5 @@
 {template header}
-<style type="text/css">
-<!--
-.li_pading li {
-	margin:5px 0;
-	text-align:left;
-}
--->
-</style>
 <script type="text/javascript">
-	$._dialog.defaults.height=180;
-	$._dialog.defaults.width=250;
 	function colorTip(tip){
 			return '<font color=red>'+tip+'</font>';
 		}
@@ -95,13 +85,16 @@
 	}
 	
 	function reply_comment(id){
-		var msg="<ul class='li_pading'><li><textarea id='replycomment' name='replycomment' cols='50' rows='6' ></textarea></li><!--{if $setting[checkcode] != "3"}--><li class='yzm'>验证码：<input name='code' id='code2' type='text' size='4' /><label class='m-lr8'><img id='verifycode2' src='' onclick='updateverifycode(2);' /></label><a href='javascript:updateverifycode(2);'>换一个</a></li><!--{/if}-->"+"<li><!--{if $anonymity}--><input id='replyanonymity' name='replyanonymity' type='checkbox'/>&nbsp;{lang commentAnonymity}<!--{/if}-->&nbsp;&nbsp;&nbsp;&nbsp;{lang commentLongSize}</li>"+"<li><input name='replysubmit' class='btn_inp' type='button' onclick='submitcomment("+id+")' value='{lang submit}'>"+"&nbsp;<input name='cancel' class='btn_inp' type='button' onclick='closepop()' value='{lang cancel}'></li></ul>";
+		var msg="<ul class='li_pading'>\
+		           <li><textarea id='replycomment' name='replycomment' cols='50' rows='4' ></textarea></li>\
+				   <!--{if $setting[checkcode] != "3"}--><li class='yzm'>验证码：<input name='code' id='code2' type='text' size='4' /><label class='m-lr8'><img id='verifycode2' src='' onclick='updateverifycode(2);' /></label><a href='javascript:updateverifycode(2);'>换一个</a></li><!--{/if}-->"+"<li>\
+				   <!--{if $anonymity}--><label><input id='replyanonymity' name='replyanonymity' type='checkbox' checked='checked' style='filter:Alpha(opacity=100);opacity:1;position:relative;'/>&nbsp;{lang commentAnonymity}</label><!--{/if}-->&nbsp;&nbsp;&nbsp;&nbsp;{lang commentLongSize}</li>"+"<li><input name='replysubmit' class='btn_inp' type='button' onclick='submitcomment("+id+")' value='{lang submit}'>"+"&nbsp;<input name='cancel' class='btn_inp' type='button' onclick='closepop()' value='{lang cancel}'></li></ul>";
 		$.dialog.box('tips', '评论回复', msg);
 		setTimeout("updateverifycode(2)",100);
 	}
 	
 	function report_comment(id){
-		var msg="<div>{lang commentReportReason}</div><textarea id='reportcomment' name='reportcomment' cols='50' rows='4' ></textarea><br/>				<input name='reportcomment' class='btn_inp' type='button' onclick='save_report("+id+")' value='{lang submit}'>&nbsp;&nbsp;&nbsp;<input name='cancel' type='button' class='btn_inp' onclick='closepop()' value='{lang cancel}'>";
+		var msg="<ul class='li_pading'><li>{lang commentReportReason}</li><li><textarea id='reportcomment' name='reportcomment' cols='50' rows='4' ></textarea></li><li><input name='reportcomment' class='btn_inp' type='button' onclick='save_report("+id+")' value='{lang submit}'>&nbsp;&nbsp;&nbsp;<input name='cancel' type='button' class='btn_inp' onclick='closepop()' value='{lang cancel}'></li></ul>";
 		$.dialog.box('tips', '评论举报', msg);
 	}
 	
@@ -158,11 +151,11 @@
 		if(re_id==0){
 			var com_obj=$('#comment');
 			var code=$('#code').val();
-			anonymity =$('#anonymity').attr('checked')?1:0;
+			anonymity =$('#anonymity').is(':checked')?1:0;
 		}else{
 			var com_obj=$('#replycomment');
 			var code=$('#code2').val();
-			anonymity =$('#replyanonymity').attr('checked')?1:0;
+			anonymity = $('#replyanonymity').is(':checked')?1:0;
 		}
 		comment=$.trim(com_obj.val());
 		if(comment==""){
@@ -220,48 +213,44 @@
 	}
 </script>
 
-<div id="map" class="hd_map"><a href="{WIKI_URL}">{$setting[site_name]}</a> &gt;&gt;{lang belongToCate} &gt;&gt;<label id='catenavi'><!--{loop $navigation $category}--> <a href="{url category-view-$category['cid']}" target=""> {$category['name']} </a>&nbsp;&nbsp;<!--{/loop}--></label></div>
+<div id="map" class="wrap hd_map"><a href="{WIKI_URL}">{$setting[site_name]}</a> &gt;&gt;{lang belongToCate} &gt;&gt;<label id='catenavi'><!--{loop $navigation $category}--> <a href="{url category-view-$category['cid']}" target=""> {$category['name']} </a>&nbsp;&nbsp;<!--{/loop}--></label></div>
 
-
-<div class="l w-710 o-v comment">
-
-<h1 class="title_thema bor_b-ccc" id="comment_tit"><strong class="l comment_thema" id="changename">{lang commentAbout}{$doc[title]}{lang commentTo}<span id="c_num">{$doc[comments]}</span>{lang commentUnit}</strong><a href="{url doc-view-$doc['did']}" class="r">{lang backDoc}</a></h1>
-		<!--
-		<cite><cite><span><label class="l">白色市<a href="#" target="_blank">momo</a>发表于40分钟前</label> 1楼</span>不错，去瞧瞧！！！赞！！！！</cite>
-		<span><label class="l">白色市<a href="#" target="_blank">momo</a>发表于40分钟前</label> 1楼</span>不错，去瞧瞧！！！赞！！！！</cite>
-		-->
+<section class="wrap clearfix">
+<div class="group1 l bor-ccc comment">
+<h2 class="col-h2" id="comment_tit">{lang commentAbout}{$doc[title]}{lang commentTo}<span id="c_num" class="cblue">{$doc[comments]}</span>{lang commentUnit}</h2>
+<a href="{url doc-view-$doc['did']}" class="more f20">{lang backDoc}</a>
 <div id="c_content">
 	<span id="page" style="display:none">{$page}</span>
 	<!--{loop $comments $key $comment}-->
 	<!--{if $comment!==''}-->
-	<div class="columns" id="li_{$key}">
-		<span class="col-h2" id="u_{$comment['id']}">
-		<!--{if $comment['authorid']==0 }-->{$comment['author']}<!--{else}--><a href="{url user-space-$comment['authorid']}" >{$comment['author']}</a><!--{/if}-->
+	<div class="comment-item" id="li_{$key}">
+		<span class="f16" id="u_{$comment['id']}">
+		<!--{if $comment['authorid']==0 }-->{$comment['author']}<!--{else}--><a class="clink ico-face" href="{url user-space-$comment['authorid']}" >{$comment['author']}</a><!--{/if}-->
 		</span>
-		<span class="more gray">{lang commentTime}<span class="gray">{$comment['time']}</span></span>
+		<span class="m-lr8 gray9">{$comment['time']}</span>
 		<div class="com_content">
 
 		{$comment[reply]}
-		<p class="m-t10" id="c_{$comment['id']}">{$comment[comment]}</p>
-		<p class="a-r">
-			<span><img src="style/default/down.gif"/><span id="op_{$comment['id']}"><a href="javascript:void(0)"  onclick="oppose_comment({$comment['id']});">{lang commentOppose}</a></span>(<span id="o_{$comment['id']}">{$comment['oppose']}</span>)</span>
+		<p id="c_{$comment['id']}">{$comment[comment]}</p>
+		<p class="a-r grayc">
+			<a id="ae_{$comment['id']}" class="clink ico-digg" href="javascript:void(0)"  onclick="aegis_comment({$comment['id']});" title="{lang commentAegis}">(<i id="a_{$comment['id']}">{$comment['aegis']}</i>)</a>
 			
-			<span><img src="style/default/up.gif"/><span id="ae_{$comment['id']}"><a href="javascript:void(0)"  onclick="aegis_comment({$comment['id']});" >{lang commentAegis}</a></span>(<span id="a_{$comment['id']}">{$comment['aegis']}</span>)</span>
+			<a id="op_{$comment['id']}" class="clink ico-sink m-lr8" href="javascript:void(0)"  onclick="oppose_comment({$comment['id']});" title="{lang commentOppose}" >(<i id="o_{$comment['id']}">{$comment['oppose']}</i>)</a>
 			
 			<!--{if $audit_add}-->	
-			<span><img src="style/default/reply.gif"/><a href="javascript:void(0)"  onclick="reply_comment({$comment['id']});">{lang commentReply}</a></span>
+			<a href="javascript:void(0)" class="clink" onclick="reply_comment({$comment['id']});">{lang commentReply}</a>
 			<!--{/if}-->
 			
-			<span><img src="style/default/jubao.gif"/><a href="javascript:void(0)"  onclick="report_comment({$comment['id']});">{lang commentReport}</a></span>
-			
 			<!--{if $audit_edit}-->
-			<span><img src="style/default/ament.gif"/><a href="javascript:void(0)"  onclick="edit_comment({$comment['id']});">{lang commentEdit}</a></span>
+			| <a href="javascript:void(0)" class="clink" onclick="edit_comment({$comment['id']});">{lang commentEdit}</a> |
 			<!--{/if}-->
 			
 			<!--{if $audit_delete}-->
-			<span><img src="style/default/delete.gif"/><a href="javascript:void(0)"  onclick="del_comment({$comment['id']});">{lang commentDel}</a></span>
+			<a href="javascript:void(0)" class="clink ico-del" onclick="del_comment({$comment['id']});">{lang commentDel}</a>
 			<!--{/if}-->
-		  
+			
+			<a href="javascript:void(0)" class="gray ico-warn" onclick="report_comment({$comment['id']});">{lang commentReport}</a>
+
 		</p>
 		</div>
 	</div>
@@ -285,21 +274,21 @@
 	<form id="formcomment" name="formcomment"  method="POST" onsubmit="javascript:return false;">
 	<ul class="col-ul">
 		<li>
-		<textarea id="comment" name="comment" rows="10" cols="95"  class="area"></textarea> 
+		<textarea id="comment" class="inp_txt" name="comment" rows="10" cols="95"  class="area"></textarea> 
+		</li>
+		<li>
 		<!--{if $anonymity}-->
-		<input id='anonymity' name="anonymity" type="checkbox"  />&nbsp;{lang commentAnonymity}
+		<input id='anonymity' name="anonymity" type="checkbox"  /><i class="checkbox"></i>&nbsp;{lang commentAnonymity}
 		<!--{/if}-->
+		&nbsp;<span class="r gray9">{lang shouldNotice}: {lang commentLongSize}</span>
 		</li>
-		
-		<li class="yzm">
 		<!--{if $setting['checkcode'] != "3"}-->
-		<span>{lang verifyCode}: </span><input name="code" id="code" type="text" /><label class="m-lr8"><img id="verifycode1" src="{url user-code}" onclick="updateverifycode(1);" /></label><a href="javascript:updateverifycode(1);">{lang changeAnother}</a>
-		<!--{/if}-->&nbsp;&nbsp;&nbsp;&nbsp;
-		<span>{lang shouldNotice}: {lang commentLongSize}</span>
-		</li>
+		<li class="yzm">
+		<span>{lang verifyCode}: </span><input name="code" class="inp_txt" id="code" type="text" /><label class="m-lr8"><img id="verifycode1" src="{url user-code}" onclick="updateverifycode(1);" /></label><a href="javascript:updateverifycode(1);">{lang changeAnother}</a>
+		</li><!--{/if}-->
 		
 		<li>
-		<input name="button" type="button" value="{lang publishComment}" onclick="submitcomment(0)" class="btn_inp"/>
+		<input name="button" type="button" value="{lang publishComment}" onclick="submitcomment(0)" class="btn_inp blue"/>
 		</li>
 		
 	</ul>
@@ -310,7 +299,7 @@
 </div>
 
 
-<div class="r w-230">
+<aside class="r group2">
     <div id="block_right">{block:right/}</div>
     
 	<div class="columns">
@@ -322,6 +311,6 @@
 	</ul>
 	
 	</div>
-</div>
-
+</aside>
+</section>
 {template footer}

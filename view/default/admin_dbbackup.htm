@@ -14,7 +14,7 @@ function removefile(filename){
 		window.location='index.php?admin_db-remove-'+filename.replace(/\./g,'*');
 	}
 }
-function download(filename){
+function downloadfile(filename){
 	window.location='index.php?admin_db-downloadfile-'+filename.replace(/\./g,'*');
 }
 function selectAll(tipid,chkid,childname){
@@ -147,7 +147,7 @@ function docheck(){
 		<td>{$value['filesize']}</td>
 		<td>{$value['filectime']}</td>
 		<td><a href="#" onclick="cofirmimport('{$value['filename']}')" >{lang baseConfigImportFile}</a></td>
-		<td><a href="#" onclick="download('{$value['filename']}')">{lang baseConfigDownloadFile}</a></td>
+		<td><a href="#" onclick="downloadfile('{$value['filename']}')">{lang baseConfigDownloadFile}</a></td>
 		<td><a href="#" onclick="removefile('{$value['filename']}')">{lang baseConfigDeletFile}</a></td>
 	</tr>
 	<!--{else}-->

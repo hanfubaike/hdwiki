@@ -1,7 +1,7 @@
 /*!
  * jQuery.dialog  0.71
  *
- * Copyright 2010, Hudong.com
+ * Copyright 2010, Baike.com
  * Dual licensed under the MIT and GPL licenses.
  * author: panxuepeng
  * blog: http://dushii.blog.163.com

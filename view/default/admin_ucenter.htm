@@ -43,7 +43,7 @@
     <tbody>
     <tr height="26">
       <td width="180"><strong>UCenter URL：</strong></td>
-      <td width="250"><input maxlength="120" style="width: 200px;" class="inp_txt" name="ucapi" value="{$uc_api}" type="text"></td>
+      <td width="250"><input maxlength="120" style="width: 200px;" class="inp_txt" name="ucapi" value="<!--{if !empty($uc_api)}-->{$uc_api}<!--{/if}-->" type="text"></td>
       <td>填写UCenter的路径,例如: http://www.site.com/uc_server (最后不要加'/')。</td>
     </tr>
     <tr height="26">
@@ -76,9 +76,9 @@
     <tr>
         <td>
         <strong>
-        <!--{if isset($iscon)}--><font color="#FF0000">您还没有配置UCenter！</font><br/>
-        <!--{elseif isset($isopen)}--><font color="#FF0000">您还没有开通UCenter！</font><br/>
-        <!--{elseif isset($islock)}--><font color="#FF0000">您已经导入过用户!</font><br/><!--{/if}-->
+        <!--{if !empty($iscon)}--><font color="#FF0000">您还没有配置UCenter！</font><br/>
+        <!--{elseif !empty($isopen)}--><font color="#FF0000">您还没有开通UCenter！</font><br/>
+        <!--{elseif !empty($islock)}--><font color="#FF0000">您已经导入过用户!</font><br/><!--{/if}-->
         </strong>
         <input class="inp_btn2" name="import" type="submit" value="将hdwiki用户导入ucenter" /><br />说明:只有当您的HDwiki用户在UCenter服务端没有注册导致不能登录时，可以执行此操作。操作前务必备份好HDwiki数据库!
         </td>

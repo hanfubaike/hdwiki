@@ -29,7 +29,7 @@ class wordmodel {
 	}
 	
 	function add_word($alluploadwords,$replacement,$username){
-		$username = addslashes(htmlspecialchars($username));
+		$username = addslashes(htmlspecial_chars($username));
 		$num = count($alluploadwords);
 		$start = 0;
 		$step = $end = 100;
@@ -64,10 +64,10 @@ class wordmodel {
 	
 	function edit_words($words,$username){
 		if(is_array($words)){
-			$username = addslashes(htmlspecialchars($username));
+			$username = addslashes(htmlspecial_chars($username));
 			foreach($words as $word){
-				$word['find'] = addslashes(htmlspecialchars($word['find']));
-				$word['replacement'] = addslashes(htmlspecialchars($word['replacement']));
+				$word['find'] = addslashes(htmlspecial_chars($word['find']));
+				$word['replacement'] = addslashes(htmlspecial_chars($word['replacement']));
 				$sql = "SELECT * FROM `".DB_TABLEPRE."word` WHERE find = '$word[find]' AND replacement = '$word[replacement]'";
 				if(!is_array($this->db->fetch_first($sql))){
 					$sql = "UPDATE `".DB_TABLEPRE."word` SET find = '$word[find]',replacement = '$word[replacement]',admin = '$username' WHERE id = '$word[id]'";

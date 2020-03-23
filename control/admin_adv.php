@@ -4,7 +4,7 @@
 class control extends base{
 
 	function control(& $get,& $post){
-		$this->base($get,$post);
+		$this->base(  $get, $post);
 		$this->load("adv");
 		$this->load('setting');
 		$this->load("category");
@@ -71,17 +71,19 @@ class control extends base{
 			$type=$this->post[type];
 			$advnew=$_ENV['adv']->advnew_filter($this->post[advnew],$type);
 			$advid = $_ENV['adv']->add_adv($type);
-			$_ENV['adv']->update_adv($advid,$advnew);
-			$this->cache->removecache('advertisement');
-			$this->cache->removecache('setting');
-			$this->cache->removecache('data_'.$GLOBALS['theme'].'_index');
+			if($advid && $advnew){
+				$_ENV['adv']->update_adv($advid,$advnew);
+				$this->cache->removecache('advertisement');
+				$this->cache->removecache('setting');
+				$this->cache->removecache('data_'.$GLOBALS['theme'].'_index');
+			}
 			$this->message($this->view->lang['adv_add_sucess'],'index.php?admin_adv');
 		}else{
 			$position=isset($this->get[2])?$this->get[2]:0;
 			$view_type=$_ENV['adv']->view_filter($position);
-			if(isset($view_type[adv_range])){$this->view->assign('adv_range',$view_type[adv_range]);}
-			if(isset($view_type[dis_pos])){$this->view->assign('dis_pos',$view_type[dis_pos]);}
-			if(isset($view_type[isfloat])){$this->view->assign('isfloat',$view_type[isfloat]);}
+			if(isset($view_type['adv_range'])){$this->view->assign('adv_range',$view_type['adv_range']);}
+			if(isset($view_type['dis_pos'])){$this->view->assign('dis_pos',$view_type['dis_pos']);}
+			if(isset($view_type['isfloat'])){$this->view->assign('isfloat',$view_type['isfloat']);}
 			$this->view->assign('position',$position);
 			$this->view->assign('adv_position',$this->view->lang['adv_position_'.$position]);
 			$this->view->assign('adv_note',$this->view->lang['adv_note_'.$position]);
@@ -94,10 +96,12 @@ class control extends base{
 			$type=$this->post[type];
 			$advnew=$_ENV['adv']->advnew_filter($this->post[advnew],$type);
 			$advid =isset($this->post['advid'])?$this->post['advid']:$_ENV['adv']->add_adv($type);
-			$_ENV['adv']->update_adv($advid,$advnew);
-			$this->cache->removecache('advertisement');
-			$this->cache->removecache('setting');
-			$this->cache->removecache('data_'.$GLOBALS['theme'].'_index');
+			if($advid && $advnew){
+				$_ENV['adv']->update_adv($advid,$advnew);
+				$this->cache->removecache('advertisement');
+				$this->cache->removecache('setting');
+				$this->cache->removecache('data_'.$GLOBALS['theme'].'_index');
+			}
 			$this->message($this->view->lang['adv_edit_sucess'],'index.php?admin_adv');
 		}elseif(isset($this->get[2])){
 			$adv=$_ENV['adv']->adv_admin_filter($this->db->fetch_by_field('advertisement','advid',$this->get[2]));
@@ -123,7 +127,7 @@ class control extends base{
 
 	function doremove(){
 		@$advids=$this->post['advid'];
-		if(is_array($advids)){
+		if(is_array($advids) && !empty($advids)){
 			if($_ENV['adv']->removeadv($advids)){
 				file::cleardir(HDWIKI_ROOT.'/data/cache');
 				file::cleardir(HDWIKI_ROOT.'/data/view');

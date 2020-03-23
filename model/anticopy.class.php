@@ -102,7 +102,7 @@ class anticopymodel {
 			} else {
 				return true;
 			}
-			$ua = isset($_SERVER['HTTP_USER_AGENT']) ? string::haddslashes(substr($_SERVER['HTTP_USER_AGENT'], 0, 255)) : '';		
+			$ua = isset($_SERVER['HTTP_USER_AGENT']) ? string::haddslashes(substr($_SERVER['HTTP_USER_AGENT'], 0, 255), 1) : '';
 			$time_start = $this->base->time - $vr_setting['duration'];
 			$this->db->query("DELETE FROM ".DB_TABLEPRE."visitlist WHERE `time` <= {$time_start}");
 			$count = $this->db->fetch_total("visitlist", "`time` > {$time_start} AND `ip` = '{$this->base->ip}' AND `useragent` = '{$ua}'");

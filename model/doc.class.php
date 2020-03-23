@@ -34,7 +34,7 @@ class docmodel {
 		$query=$this->db->query("SELECT * FROM ".DB_TABLEPRE."doc  WHERE did IN ($ids)");
 		while($doc=$this->db->fetch_array($query)){
 			$doc['rawtitle']=$doc['title'];
-			$doc['title']=htmlspecialchars($doc['title']);
+			$doc['title']=htmlspecial_chars($doc['title']);
 			$doc['time']=$this->base->date($doc['time']);
 			$doc['tag']=$this->spilttags($doc['tag']);
 			$doclist[]=$doc;
@@ -101,7 +101,7 @@ class docmodel {
 		$query=$this->db->query("SELECT MAX(`time`) time,e.authorid,e.author FROM ".DB_TABLEPRE."edition e WHERE e.authorid<>$unuid AND did='$docid' GROUP BY authorid ORDER BY time DESC LIMIT $limit");
 		while($edition=$this->db->fetch_array($query)){
 			$edition['time']=$this->base->date($edition['time']);
-			$edition['title']=htmlspecialchars($edition['title']);
+			$edition['title']=htmlspecial_chars($edition['title']);
 			$editionlist[]=$edition;
 		}
 		return $editionlist;
@@ -121,7 +121,7 @@ class docmodel {
 		$doclist=array();
 		$query=$this->db->query("SELECT title,did FROM ".DB_TABLEPRE."doc WHERE cid='$cid' ORDER BY lastedit DESC LIMIT $limit");
 		while($doc=$this->db->fetch_array($query)){
-			$doc['title']=htmlspecialchars($doc['title']);
+			$doc['title']=htmlspecial_chars($doc['title']);
 			$doclist[]=$doc;
 		}
 		return $doclist;
@@ -141,7 +141,7 @@ class docmodel {
 			$doc['tag']=$this->spilttags($doc['tag']);
 			$doc['time']=$this->base->date($doc['time']);
 			$doc['rawtitle']=$doc['title'];
-			$doc['title']=htmlspecialchars($doc['title']);
+			$doc['title']=htmlspecial_chars($doc['title']);
 			$doclist[]=$doc;
 		}
 		return $doclist;
@@ -263,7 +263,7 @@ class docmodel {
 		
 		$words=string::hstrlen($edition['content']);
 		$images=util::getimagesnum($edition['content']);
-		if($this->base->setting['db_storage']=='txt'){
+		if(!empty($this->base->setting['db_storage']) && $this->base->setting['db_storage']=='txt'){
 			$content=stripslashes($edition['content']);
 			$edition['content']='';
 		}
@@ -291,7 +291,7 @@ class docmodel {
 				$eid = 0;
 			}
 		}
-		if($this->base->setting['db_storage']=='txt'){
+		if(!empty($this->base->setting['db_storage']) && $this->base->setting['db_storage']=='txt'){
 			file::forcemkdir($this->get_edition_fileinfo($eid,'path'));
 			file::writetofile($this->get_edition_fileinfo($eid,'file'),$content);
 		}
@@ -303,20 +303,23 @@ class docmodel {
 		lasteditor='".$this->base->user['username']."',lasteditorid='".$this->base->user['uid']."' WHERE did=".$doc['did']);
 	}
 
-	function splithtml($html,$preg='/(<div\s+class=\"?hdwiki_tmml\"?\s*>.+?<\/div>)/i'){
+	//function splithtml($html,$preg='/(<div\s+class=\"?hdwiki_tmml\"?\s*>.+?<\/div>)/i'){
+	function splithtml($html,$preg='/(<h2>.+?<\/h2>)/i'){
 		$arrhtml=preg_split($preg,$html,-1,PREG_SPLIT_DELIM_CAPTURE);
 		$count=count($arrhtml);
 		for($i=0;$i<$count;$i++){
 			if(preg_match($preg,$arrhtml[$i])){
-				preg_match('/hdwiki_tmm(l+)/i',$arrhtml[$i],$l_num);
+				//preg_match('/hdwiki_tmm(l+)/i',$arrhtml[$i],$l_num);
 				$resarr[$i]['value']=strip_tags($arrhtml[$i]);
-				$resarr[$i]['flag']=strlen($l_num[1]);
+				//$resarr[$i]['flag']=strlen($l_num[1]);
+				$resarr[$i]['flag']=1;
 				continue;
 			}
 			$resarr[$i]['value']=$arrhtml[$i];
 			$resarr[$i]['flag']=0;
 		}
 		unset($arrhtml);
+        //print_r($resarr);
 		return $resarr;
 	}
 
@@ -325,7 +328,7 @@ class docmodel {
 		$count=count($arrhtml);
 		for($i=0;$i<$count;$i++){
 			if($arrhtml[$i]['flag']==1){
-				$html.="<div class=\"hdwiki_tmml\">".$arrhtml[$i]['value']."</div>";
+				$html.="<h2>".$arrhtml[$i]['value']."</h2>";
 			}else {
 				$html.=$arrhtml[$i]['value'];
 			}
@@ -458,7 +461,7 @@ class docmodel {
 		while($category=$this->db->fetch_array($query)){
 			$categorylist[$category['cid']]=$category['name'];
 		}
-		$sql=" SELECT d.did, d.cid,d.letter,d.title,d.tag,d.summary,d.author,d.authorid,d.time,d.lastedit,d.lasteditor,d.lasteditorid,d.views,d.edits,d.editions,d.visible,d.locked  FROM ".DB_TABLEPRE."doc d WHERE 1=1 ";
+		$sql=" SELECT d.did, d.cid,d.letter,d.title,d.tag,d.summary,d.content,d.author,d.authorid,d.time,d.lastedit,d.lasteditor,d.lasteditorid,d.views,d.edits,d.editions,d.visible,d.locked  FROM ".DB_TABLEPRE."doc d WHERE 1=1 ";
 		if(1==$type){
 			$sql .="  ORDER BY d.`lastedit` DESC LIMIT $start,$limit";
 		}else{
@@ -471,11 +474,13 @@ class docmodel {
 			$doc['lastedit']=$this->base->date($doc['lastedit']);
 			$doc['time']=$this->base->date($doc['time']);
 			$doc['rawtitle']=$doc['title'];
-			$doc['title']=htmlspecialchars($doc['title']);
+			$doc['title']=htmlspecial_chars($doc['title']);
 			$doc['shorttitle']=(string::hstrlen($doc['title'])>16)?string::substring($doc['title'],0,16)."...":$doc['title'];
-			$doc['category']=$categorylist[$doc['cid']];
+			$doc['category']=empty($doc['cid']) ? NULL : $categorylist[$doc['cid']];
+			$doc['img'] = util::getfirstimg($doc['content']);
 			$doclist[]=$doc;
 		}
+
 		return $doclist;
 	}
 	
@@ -490,26 +495,30 @@ class docmodel {
 		$query = $this->db->query($sql);
 		while($doc=$this->db->fetch_array($query)){
 			$doc['time']=$this->base->date($doc['time']);
-			$doc['title']=htmlspecialchars($doc['title']);
+			$doc['title']=htmlspecial_chars($doc['title']);
 			$doclist[]=$doc;
 		}
 		return $doclist;
 	}
 	
 	function get_list_cache($type=1,$letter='',$start=0,$limit=10){
+		$return = array();
+		$i = 0;
 		$cache=$this->base->cache->getcache("list_{$letter}_{$type}",$this->base->setting['list_cache_time']);
 		if(!(bool)$cache){
 			$list=$this->get_list($type,$letter,0,200);
-			foreach($list as $doc){
-				if($doc['visible']==1){
-					$cache[]=$doc;
-					if($i>=$start&&$i<$start+$limit){
-						$return[]=$doc;
+			if(!empty($list)) {
+				foreach($list as $doc){
+					if($doc['visible']==1){
+						$cache[]=$doc;
+						if($i>=$start&&$i<$start+$limit){
+							$return[]=$doc;
+						}
+						$i++;
 					}
-					$i++;
-				}
-				if($i>=100){
-					break;
+					if($i>=100){
+						break;
+					}
 				}
 			}
 			$this->base->cache->writecache("list_{$letter}_{$type}",$cache);
@@ -646,7 +655,7 @@ class docmodel {
 		while($edition=$this->db->fetch_array($query)){
 			$edition['time']=$this->base->date($edition['time']);
 			$edition['rawtitle']=$edition['title'];
-			$edition['title']=htmlspecialchars($edition['title']);
+			$edition['title']=htmlspecial_chars($edition['title']);
 			if(!$edition['content']){
 				$edition['content']=file::readfromfile($this->get_edition_fileinfo($edition['eid'],'file'));
 			}
@@ -844,11 +853,11 @@ class docmodel {
 			$sql .= " group by d.did";
 		}
 		$sql=$sql." order by d.lastedit desc limit $start,$limit ";
-		$doclist=array();
+		$doclist = $didtocat =array();
 		$query=$this->db->query($sql);
 		while($doc=$this->db->fetch_array($query)){
 			$doc['time'] = $this->base->date($doc['time']);
-			$doc['title'] = htmlspecialchars($doc['title']);
+			$doc['title'] = htmlspecial_chars($doc['title']);
 			$dids[]= $doc['did'];
 			$doclist[]=$doc;
 		}
@@ -862,7 +871,7 @@ class docmodel {
 					$temp = $category['did'];
 				}
 				if($category['did'] == $temp){
-					if($didtocat[$category['did']]){
+					if(isset($didtocat[$category['did']])){
 						$didtocat[$category['did']] .= ','.$category['cname'];
 					}else{
 						$didtocat[$category['did']] = $category['cname'];
@@ -874,7 +883,9 @@ class docmodel {
 				$first = 0;
 			}
 			for($i=0; $i<count($doclist); $i++){
-				$doclist[$i]['category'] = $didtocat[$doclist[$i]['did']];
+				if(isset($didtocat[$doclist[$i]['did']])) { 
+					$doclist[$i]['category'] = $didtocat[$doclist[$i]['did']];
+				}
 			}
 		}
 		return $doclist;
@@ -972,7 +983,7 @@ class docmodel {
 				$edition['comtime']=$edition['time'];
 				$edition['time']=$this->base->date($edition['time']);
 				$edition['rawtitle']=$edition['title'];
-				$edition['title']=htmlspecialchars($edition['title']);
+				$edition['title']=htmlspecial_chars($edition['title']);
 				if(!$edition['content']){
 					$edition['content']=file::readfromfile($this->get_edition_fileinfo($edition['eid'],'file'));
 				}
@@ -984,7 +995,7 @@ class docmodel {
 			while($edition=$this->db->fetch_array($query)){
 				$edition['time']=$this->base->date($edition['time']);
 				$edition['rawtitle']=$edition['title'];
-				$edition['title']=htmlspecialchars($edition['title']);
+				$edition['title']=htmlspecial_chars($edition['title']);
 				if(!$edition['content']){
 					$edition['content']=file::readfromfile($this->get_edition_fileinfo($edition['eid'],'file'));
 				}
@@ -1230,7 +1241,7 @@ class docmodel {
 		$list = array_unique($relatelist);
 		$this->db->query("delete from ".DB_TABLEPRE."relation where did='$did'");
 		foreach($list as $relate){
-			$relate=htmlspecialchars(trim($relate));
+			$relate=htmlspecial_chars(trim($relate));
 			if($relate)$this->db->query("insert into ".DB_TABLEPRE."relation set did='$did',relatedtitle='$relate',title='$title' ");
 		}
 		return true;
@@ -1253,7 +1264,7 @@ class docmodel {
 		}
 		$query=$this->db->query("SELECT * from ".DB_TABLEPRE."edition order by eid desc limit 10");
 		while($editionlist=$this->db->fetch_array($query)){
-			$newslist[$editionlist['time']]="<a href='".$this->base->setting['seo_prefix']."user-space-".$editionlist['authorid'].$this->base->setting['seo_suffix']."' class='red'>".$editionlist['author'].'</a>'.$this->base->view->lang['news_edition_tip1'].'<a href="'.$this->base->setting['seo_prefix'].'doc-view-'.$editionlist['did'].$this->base->setting['seo_suffix'].'" target="_blank">'.$editionlist['title'].'</a>'.$this->base->view->lang['news_edition_tip2'];
+			$newslist[$editionlist['time']]="<a href='".$this->base->setting['seo_prefix']."user-space-".$editionlist['authorid'].$this->base->setting['seo_suffix']."' class='red'>".$editionlist['author'].'</a>'.$this->base->view->lang['news_edition_tip1'].'<a href="'.$this->base->setting['seo_prefix'].'doc-view-'.$editionlist['did'].$this->base->setting['seo_suffix'].'" target="_blank">'.htmlspecial_chars(stripslashes($editionlist['title'])).'</a>'.$this->base->view->lang['news_edition_tip2'];
 		}
 		$query=$this->db->query("SELECT l.id,g.title,g.image,u.uid,u.username,u.truename,u.location,u.postcode,u.telephone,u.qq,u.email,l.extra,l.time,l.status FROM ".DB_TABLEPRE."gift g,".DB_TABLEPRE."giftlog l,".DB_TABLEPRE."user u  WHERE g.id=l.gid AND u.uid=l.uid  limit 10");
 		while($giftlog=$this->db->fetch_array($query)){
@@ -1301,7 +1312,7 @@ class docmodel {
 		$query=$this->db->query($sql);
 		while($doc=$this->db->fetch_array($query)){
 			$doc['time'] = $this->base->date($doc['time']);
-			$doc['title'] = htmlspecialchars($doc['title']);
+			$doc['title'] = htmlspecial_chars($doc['title']);
 			$doclist[]=$doc;
 		}
 		$this->join_categories($doclist);
@@ -1396,7 +1407,7 @@ class docmodel {
 			$counts = $num;
 		}
 		for($i=0;$i<$counts;$i++){
-			if($cooperatedocs[$i]==''){
+			if(empty($cooperatedocs[$i])){
 				unset($cooperatedocs[$i]);
 			}else{
 				$coopdoc[$i]['shorttitle'] = (string::hstrlen($cooperatedocs[$i])>10)?string::substring($cooperatedocs[$i],0,5)."...":$cooperatedocs[$i];
@@ -1588,7 +1599,7 @@ class docmodel {
 		$doclist = array();
 		while($doc=$this->db->fetch_array($query)){
 			$doc['lastedit'] = $this->base->date($doc['lastedit']);
-			$doc['title'] = htmlspecialchars($doc['title']);
+			$doc['title'] = htmlspecial_chars($doc['title']);
 			$edition = $this->db->fetch_first("SELECT MAX( eid ) AS eid, reason
 				FROM  ".DB_TABLEPRE."edition
 				WHERE did = ".$doc['did']."

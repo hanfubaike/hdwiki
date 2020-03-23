@@ -29,55 +29,56 @@
 </script>
 <!--{/if}-->
  
-<div class="w-950 hd_map">
+<div class="wrap hd_map">
 <a href="index.php" target="_blank">{$setting['site_name']}</a> &gt;&gt; <a href="{url doc-view-$edition['did']}">{$edition['title']}</a> &gt;&gt; {lang edition}
 </div>
-<div class="l w-710 o-v">
-<h1 class="title_thema bor_b-ccc">
-	<strong class="l">
-	<!--{if $doc['version']== 0 || $doc['version']== $doc['editions']}-->
+<div class="wrap">
+<table class="table bor-ccc" id="cklsbb">
+	<thead><tr><td>{lang editTime}</td><td>{lang edition}</td><td>{lang docLength}</td><td>{lang editionImages}</td><td>{lang editionCatNum}</td><td>{lang reason}</td></tr></thead>
+	<tr>
+		<td>{$edition['time']}</td>
+		<td><!--{if $doc['version']== 0 || $doc['version']== $doc['editions']}-->
 	{lang latest}{lang edition}
 	<!--{else}-->
 	{lang edition}{$doc['version']}
+	<!--{/if}--></td>
+		<td>{$edition['words']}</td>
+		<td>{$edition['images']}</td>
+		<td>{eval echo count($sectionlist)}</td>
+		<td class="orange"><!--{if $edition['reason']!=''}-->{$edition['reason']}<!--{else}--> <!--{/if}--></td>
+	</tr>
+</table>
+</div>
+<section class="wrap m-t20 clearfix">
+<div class="doc-show group1"><article class="bor-ccc">
+	<span class="r grayc"><!--{if  $doc['version']== 0 || $doc['version']>1}-->
+	<a href="{url edition-view-$edition['previous']-{eval echo $doc['version']-1}}">{lang previous}{lang edition}</a> | 
 	<!--{/if}-->
-	:{$edition['title']}
-	</strong><a href="{url doc-view-$edition['did']}" target="_self" class="r">{lang backDoc}</a></h1>
-<ul id="cklsbb">
-	<li>
-	{lang editTime}:<label>{$edition['time']}</label>
-	<label class="baike-a">{lang edition}:
 	<!--{if $doc['version']!= 0 && $doc['version']!= $doc['editions']}-->
-	<a href="{url edition-view-$edition['latest']-0}">{lang latest}{lang edition}</a>
-	<!--{/if}-->
-	<!--{if  $doc['version']== 0 || $doc['version']>1}-->
-	<a href="{url edition-view-$edition['previous']-{eval echo $doc['version']-1}}">{lang previous}{lang edition}</a>
-	<!--{/if}-->
+	<a href="{url edition-view-$edition['latest']-0}">{lang latest}{lang edition}</a> | 
+	<!--{/if}-->&nbsp;
 	<!--{if  $doc['version']!= 0 && $doc['version']<$doc['editions']}-->
-	<a href="{url edition-view-{$edition['next']}-{eval echo $doc['version']+1}}">{lang next}{lang edition}</a>
+	<a href="{url edition-view-{$edition['next']}-{eval echo $doc['version']+1}}">{lang next}{lang edition}</a> | 
 	<!--{/if}-->
-	</label>
-	</li>
-	<li>{lang docLength}:<label>{$edition['words']} </label>{lang editionImages}:<label>{$edition['images']}</label>{lang editionCatNum}:<label>{eval echo count($sectionlist)}</label></li>
-	<li>{lang reason}:<label class="orange"><!--{if $edition['reason']!=''}-->{$edition['reason']}<!--{else}--> <!--{/if}--></label></li>
-</ul>
-	
-	<div class="content_1 wordcut">				
+	<a href="{url doc-view-$edition['did']}" target="_self">{lang backDoc}</a>
+	</span>
+	<div class="title_thema"><h1>{$edition['title']}</h1></div>	
+	<div class="content_1 clearfix"><link rel="stylesheet" href="style/{$theme}/content.css">
 		<!--{loop $edition['sectionlist'] $key $section}-->
 		<!--{if $section['flag'] == 1}-->	
 		<!--{if ($key==1)&&!empty($sectionlist)}-->
 		<fieldset id="catalog">
 			<legend><a name='section'>{lang catalog}</a></legend>
+			<div id="full-all">
 			<ul id="hidesection">
 				<!--{loop $sectionlist $k $sec}-->
-				<li <!--{if $k>=4}-->style="display:none"<!--{/if}-->>&#8226; <a href="#{$sec['key']}">{$sec['value']}</a></li>
+				<li><em>$k</em><a href="#{$sec['key']}">{$sec['value']}</a></li>
 				<!--{/loop}-->
 			</ul>
-			<!--{if count($sectionlist) > 4}-->
-			<p><a href="javascript:void(0);" onclick="partsection();"  id="partsection" style="display:none">[{lang showPart}]</a><a href="javascript:void(0);" onclick="fullsection();" id="fullsection">[{lang showAll}]</a></p>
-			<!--{/if}-->
+			</div>
 		</fieldset>
 		<!--{/if}-->
-		<h3><span class="texts">{$section['value']}</span><a href="#section">{lang backCatalog}</a></h3>
+		<h2 name="{$key}" id="{$key}"><span class="texts">{$section['value']}</span></h2>
 		<!--{else}-->	
 		<div class="content_topp">
 		{$section['value']}
@@ -85,41 +86,39 @@
 		<!--{/if}-->	
 		<!--{/loop}-->
 	</div>
-
-	<div class="bor-ccc m-t10 bg-gray notes add">
-		<p class="i6-ff">
-		<label class="l w-550"><b>{lang tag}:</b>
-			<!--{loop $doc['tag'] $key $tag}--> <a href="{url search-tag-$tag}" >{$tag}</a> <!--{/loop}-->
-		</label>
-		</p>
+</article>
+	<div class="columns cate_open">
+		<h2 class="col-h2">{lang tag}</h2>
+		<ul class="doc-list">
+			<!--{loop $doc['tag'] $key $tag}--><li><a href="{url search-tag-$tag}" >{$tag}</a></li><!--{/loop}-->
+		</ul>
 	</div>
-	
+
 </div>
-<div class="r w-230">
-	<div class="columns ctxx">
+<aside class="doc-aside group2">
+	<div class="bor-ccc ctxx">
 	<h2 class="col-h2">{lang docMessage}</h2>
 	<!--{if $author}-->
 	<dl class="col-dl twhp2">
-	<dd><a href="{url user-space-$edition['authorid']}" target="_blank"  class="a-img1"><img src="<!--{if $author[image]}-->$author[image]<!--{else}-->style/default/user_l.jpg<!--{/if}-->" width="38px" height="38px"/></a></dd>
-	<dt><a href="{url user-space-$edition['authorid']}" target="_self">{$edition['author']}</a></dt>
-	<dd><span style="color:{$author['color']}" class="l m-r8">{$author['grouptitle']}</span>
-	<span title="{lang userstars} {$author['stars']}" class="l"><!--{for $i=0; $i<$author['editorstar'][3]; $i++}--><img src="style/default/star_level3.gif"/><!--{/for}--><!--{for $i=0; $i<$author['editorstar'][2]; $i++}--><img src="style/default/star_level2.gif"/><!--{/for}--><!--{for $i=0; $i<$author['editorstar'][1]; $i++}--><img src="style/default/star_level1.gif"/><!--{/for}--></span>
+	<dd><a href="{url user-space-$edition['authorid']}" target="_blank"  class="a-img1"><img src="<!--{if $author[image]}-->$author[image]<!--{else}-->style/default/user_l.jpg<!--{/if}-->" width="50" height="50"/></a></dd>
+	<dt><a href="{url user-space-$edition['authorid']}" target="_self">{$edition['author']}</a><em><img src="style/default/jb.gif" title="{$author['credit1']}{lang gold}"></em></dt>
+	<dd><span class="gray9" style="color:{$author['color']}" class="l m-r8">{$author['grouptitle']}</span>
+	<span title="{lang userstars} {$author['stars']}" class="u-stars"><!--{for $i=0; $i<$author['editorstar'][3]; $i++}--><img src="style/default/star_level3.gif"/><!--{/for}--><!--{for $i=0; $i<$author['editorstar'][2]; $i++}--><img src="style/default/star_level2.gif"/><!--{/for}--><!--{for $i=0; $i<$author['editorstar'][1]; $i++}--><img src="style/default/star_level1.gif"/><!--{/for}--></span>
 	</dd>
-	<dd>{lang editionCreator} <a onclick="return Message.box('{$edition['author']}')" href="javascript:void(0)">{lang sendmessage}</a> &nbsp;&nbsp;<img src="style/default/jb.gif" title="{$author['credit1']}{lang gold}"></dd>
+	<dd><span class="gray9">{lang editionCreator}</span> <a class="s-msg clink" onclick="return Message.box('{$edition['author']}')" href="javascript:void(0)">{lang sendmessage}</a></dd>
 	</dl>
 	<!--{else}-->
 	<dl class="col-dl twhp2">
 	<dd><a class="a-img1">
-	<img alt="{lang haveDel}" src="style/default/user_l.jpg" width="38px" height="38px" /></a></dd>
+	<img alt="{lang haveDel}" src="style/default/user_l.jpg" width="50" height="50" /></a></dd>
 	<dt>{lang userHaveDel}</dt>
-	<dd>{lang editionCreator}</dd>
+	<dd class="gray9">{lang editionCreator}</dd>
 	</dl>
-	<!--{/if}-->
-		
-	<ul class="col-ul bor-ccc">
-	<li>{lang viewTimes}: {$doc['views']}  {lang times}</li>
-	<li>{lang editTimes}: {$doc['editions']} {lang times} <a href="{url edition-list-$doc['did']}" class="m-18" >{lang edition}</a></li>
-	<li>{lang updateTime}: {$doc['lastedit']}</li>
+	<!--{/if}-->	
+	<ul class="col-ul">
+	<li><span class="gray">{lang viewTimes}:</span> {$doc['views']}  {lang times}</li>
+	<li><span class="gray">{lang editTimes}:</span> {$doc['editions']} {lang times} <a href="{url edition-list-$doc['did']}" class="clink" >{lang edition}</a></li>
+	<li><span class="gray">{lang updateTime}:</span> {$doc['lastedit']}</li>
 	</ul>
 
 	</div>
@@ -139,5 +138,6 @@
 	</form>
 	</div>
 	<!--{/if}-->
-</div>
+</aside>
+</section>
 {template footer}

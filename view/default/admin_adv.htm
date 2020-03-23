@@ -47,7 +47,7 @@
 
 <form name="seachadv" method="POST" action="index.php?admin_adv-search" >
 	<ul class="col-ul ul_li_sp m-t10">
-		<li><span>广告标题: </span><input name="title" type="text" class="inp_txt m-r10" size="30" value="{$title}" /></li>
+		<li><span>广告标题: </span><input name="title" type="text" class="inp_txt m-r10" size="30" value="<!--{if isset($title)}-->{$title}<!--{/if}-->" /></li>
 		<li><span>起始时间: </span>
 			<select name="time" id="time" >
 				<option value="">全部起始时间</option>
@@ -68,8 +68,7 @@
 				<option value="3">词条正文广告</option>
 				<option value="4">词条右侧广告</option>
 				<option value="5">对联广告</option>
-				<option value="6">漂浮广告</option>				
-				<option value="8">子分类左侧广告</option>
+				<option value="6">漂浮广告</option>
 			</select>
 		</li>
 		<li><span>排序方式: </span>
