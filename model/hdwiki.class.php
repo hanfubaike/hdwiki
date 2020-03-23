@@ -63,6 +63,9 @@ class hdwiki {
 	}
 	
 	function load_control(){
+		if($this->is_wx_url($this->get[0])){
+			$this->get[0] = 'index';
+		}
 		if($this->get[0]=='plugin'){
 			if(empty($this->get[2])){
 				$this->get[2]=$this->get[1];
@@ -106,11 +109,13 @@ class hdwiki {
 			if($exemption || $control->checkable($querystring) || $control->checkable($regular)){
 				$control->$method();
 			}else{
+				echo 'message';
 				$control->message($regular.$control->view->lang['refuseAction'],'', $isadmin);
 			}
 		}else {
 			$this->notfound('method "'.$method.'" not found!');
-		}
+			}
+		
 	}
 	
 	function notfound($error){
@@ -127,13 +132,22 @@ class hdwiki {
 			if(!empty($this->$check_key)) {
 				foreach($this->$check_key as $getvalue) {
 					foreach ($check_val as $invalue) {
-						if(stripos($getvalue, $invalue) !== false){
+						if(stripos($getvalue, $invalue) !== false && !$this->is_wx_url($getvalue)){
 							$this->notfound('page is not found!');
 							//exit('No Aceess!注意敏感词!');
 						}
 					}
 				}
 			}
+		}
+	}
+
+	#忽略微信自动添加的字符串 如：from=singlemessage、nsukey=
+	function is_wx_url($querystr){
+		if(stripos($querystr, 'nsukey=') !== false || stripos($querystr, 'from=singlemessage') !== false){
+			return true;
+		}else{
+			return false;
 		}
 	}
 }
