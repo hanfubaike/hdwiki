@@ -180,7 +180,7 @@ class control extends base{
 		$this->view->assign("coin", $this->user['credit1']);
 		$this->view->assign("coin_download", $coin_download);
 		$this->view->assign("nav", $nav);
-
+		
 		//$this->view->display('viewdoc');
 		$this->isMobile() ? $_ENV['block']->view('wap-viewdoc') : $_ENV['block']->view('viewdoc');
 		//$_ENV['block']->view('viewdoc');

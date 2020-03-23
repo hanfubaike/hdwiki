@@ -23,11 +23,56 @@
 	                <div class="centent">
 	                    {$section['value']}
 	                </div>
+                    
                 </section>
             <!--{/if}-->
         <!--{/loop}-->
     <!--{/if}-->
 
+    <div style="margin: 10px;">
+     <h3
+      <!--{if count($attachment)==0}-->
+      style="display:none"
+      <!--{/if}-->
+      >{lang attachList}
+      </h3>
+      <dl style="display: none;">
+        <dt><img class="fj_img"/><a></a><br/>
+          <span class="l">
+          <label> {lang attachDownloadNum}0</label>
+          </span></dt>
+        <dd></dd>
+      </dl>
+      <!--{if count($attachment)>0}-->
+      <!--{if $attach_download}-->
+      <!--{loop $attachment $attach}-->
+      <dl id="$attach['id']">
+        <dt style="font-weight: 700;"><img class="fj_img" src="style/default/attachicons/{$attach['icon']}.gif"/><a href="{url attachment-download-$attach['id']}" coin_down="{$attach['coindown']}" attach_id = "{$attach['uid']}" uid = "{$userid}"  class="file_download">{$attach['filename']}</a><br/>
+          <span class="l">
+          <label class="mar-r8">({eval echo sprintf('%.2f',$attach['filesize']/1024)}k)</label>
+          <label>{lang attachDownloadNum}{$attach['downloads']}</label>
+          &nbsp;
+          <label>{lang uploadCredit}{$attach['coindown']}</label>
+          </span>
+          <!--{if $attachment_remove && ($attach['uid']==$userid || $groupid==4) }-->
+          [<a href="javascript:;" onclick="Attachment.remove(this, $attach['id'])">{lang remove}</a>]
+          <!--{/if}-->
+        </dt>
+        <dd>{$attach['description']}</dd>
+      </dl>
+      <!--{/loop}-->
+      <!--{else}-->
+      <p class="m-lr8 m-t8">{lang attachRefuseTrip}</p>
+      <!--{/if}-->
+      <!--{/if}-->    
+    </div>
+    
+<div class="wapcolumns comment">
+  <h2 class="col-h2">{lang commentRelation}</h2>
+  <a href="{url comment-view-$doc['did']}" target="_blank" class="more gray9">{lang viewMore}&gt;</a>
+</div>
+    
+    
     <nav class="column bot-navi">
         <p class="body">
             <!--<a href="">频道1</a><a href="">频道1</a><a href="">频道1</a><a href="">频道1</a><a href="">频道1</a><a href="">频道1</a>-->

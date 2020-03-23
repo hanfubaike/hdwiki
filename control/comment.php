@@ -28,6 +28,7 @@ class control extends base{
 		$start_limit = ($page - 1) * $num;
 		
 		$comments=$_ENV['comment']->get_comments($this->get[2],$start_limit,$num);
+		$doc['comments2']=$comments;
 		$comnum=count($comments);
 		if($comnum<$num){
 			$comments = array_pad($comments,$num,'');
@@ -50,6 +51,7 @@ class control extends base{
 		$doc['title'] = htmlspecial_chars(stripslashes($doc['title']));
 		$this->view->assign('doc',$doc);
 		$page=$doc['comments']<=$num?0:$page;
+		
 		$this->view->assign('page',$page);
 		$this->view->assign('num',$num);
 		

@@ -232,3 +232,10 @@ background: linear-gradient(to bottom, rgba(221,221,221,0) 35%,rgba(221,221,221,
 .pop-gift strong,.pop-gift em,.pop-gift span{display: block;text-align: center;color: #fff;font-weight: 500;}
 .pop-gift em{color:red;}
 .pop-gift .iclose{position: absolute;bottom:2%;left:45%;-webkit-transform: scale(1.2);transform: scale(1.2);}
+
+/*评论框*/
+.inp_txt,.sel-row{border:1px #dcdcdc solid;color:#666;height:24px;line-height:24px;}
+.wapcolumns{display: block;line-height: 22px;margin-top: 20px;padding:20px 0 10px 0;}
+.col-ul,.col-dl,.col-p{margin:8px 20px 12px 25px;padding:0 0 3px 0;}
+.col-ul li{clear:both;list-style: none;}
+.comment li{margin-bottom:10px;}
