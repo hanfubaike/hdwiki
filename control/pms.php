@@ -32,9 +32,9 @@ class control extends base{
 				$this->message($message,'index.php?pms-box-inbox-owner',0);
 			}
 			if(WIKI_CHARSET == 'GBK'){
-				$sendto = string::hiconv($sendto);
-				$subject = string::hiconv($subject);
-				$content = string::hiconv($content);
+				$sendto = _string::hiconv($sendto);
+				$subject = _string::hiconv($subject);
+				$content = _string::hiconv($content);
 			}
 
 			$sendarray = array(
@@ -101,7 +101,7 @@ class control extends base{
 	function docheckrecipient(){
 		$sendto = $this->post['sendto'];
 		if (WIKI_CHARSET == 'GBK'){
-			$sendto = string::hiconv($sendto,'GBK','UTF-8',1);
+			$sendto = _string::hiconv($sendto,'GBK','UTF-8',1);
 		}
 		$send = explode(',',$sendto);
 		if(count($send)>10){
@@ -114,7 +114,7 @@ class control extends base{
 	
 	function doblacklist(){
 		if(isset($this->post['blacklist'])){
-			$blacklist = htmlspecial_chars(string::stripscript($this->post['blacklist']));
+			$blacklist = htmlspecial_chars(_string::stripscript($this->post['blacklist']));
 			if(empty($blacklist)){
 				$result = $_ENV['pms']->remove_blacklist($this->user['uid']);
 			}else{

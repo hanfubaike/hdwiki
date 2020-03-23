@@ -61,13 +61,14 @@ function runquery($sql) {
 }
 
 function createtable($sql, $dbcharset) {
+	global $db;
 	$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
 	$type = in_array($type, array (
 		'MYISAM',
 		'HEAP'
 	)) ? $type : 'MYISAM';
 	return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql) .
-	 (mysql_get_server_info() > '4.1' ? " ENGINE=$type DEFAULT CHARSET='".DB_CHARSET."'" : " TYPE=$type");
+	 (mysqli_get_server_info($db->mlink) > '4.1' ? " ENGINE=$type DEFAULT CHARSET='".DB_CHARSET."'" : " TYPE=$type");
 }
 
 function replace_string($str_content) {
@@ -101,7 +102,7 @@ function encode($string) {
 
 function check_email($email) {
 	if ($email != "") {
-		if (ereg("^.+@.+\\..+$", $email)) {
+		if (preg_match("/^.+@.+\\..+$/", $email)) {
 			return 1;
 		} else {
 			return 0;
@@ -262,7 +263,7 @@ function random($length=32) {
 function generate_key(){
 	$random = random(32);
 	$info = md5($_SERVER['SERVER_SOFTWARE'].$_SERVER['SERVER_NAME'].$_SERVER['SERVER_ADDR'].$_SERVER['SERVER_PORT'].$_SERVER['HTTP_USER_AGENT'].time());
-	$return = '';
+	$return = [];
 	for($i=0; $i<64; $i++) {
 		$p = intval($i/2);
 		$return[$i] = $i % 2 ? $random[$p] : $info[$p];
@@ -311,7 +312,7 @@ function clode_register_install(){
 	include_once HDWIKI_ROOT.'/config.php';
 	include_once HDWIKI_ROOT.'/lib/json.class.php';
 	include_once HDWIKI_ROOT.'/lib/util.class.php';
-	include_once HDWIKI_ROOT.'/lib/string.class.php';
+	include_once HDWIKI_ROOT.'/lib/_string.class.php';
 	$json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
 	$site_url="http://".$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'],0,-20);
 	$site_name='我的HDWiki';
@@ -321,7 +322,7 @@ function clode_register_install(){
 		$flag = 0;
 	}else{
 		if ('gbk' == strtolower(WIKI_CHARSET)){
-			$sitename = string::hiconv($site_name, 'utf-8', 'gbk');
+			$sitename = _string::hiconv($site_name, 'utf-8', 'gbk');
 		} else {
 			$sitename = $site_name;
 		}

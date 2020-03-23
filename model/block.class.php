@@ -32,7 +32,7 @@ class blockmodel {
 					foreach($blocks as $block){
 						if($block['fun'] && method_exists ($obj, $block['fun'])){
 							$block['params']=$block['params']?unserialize($block['params']):'';
-							$blockdata[$block['id']]=$obj->$block['fun']($block['params']);
+							$blockdata[$block['id']]=$obj->{$block['fun']}($block['params']);
 						}
 					}
 				}

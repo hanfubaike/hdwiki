@@ -115,9 +115,9 @@ class control extends base{
 	}
 
 	function domove(){
-		$chkdid=string::hiconv(trim($this->post['chkdid']));
+		$chkdid=_string::hiconv(trim($this->post['chkdid']));
 		$dids=array_unique(explode(',',$chkdid));
-		$chkcid=string::hiconv(trim($this->post['cid']));
+		$chkcid=_string::hiconv(trim($this->post['cid']));
 		if($_ENV['doc']->change_category($dids,$chkcid)){
 			echo '1';
 		}else{
@@ -127,8 +127,8 @@ class control extends base{
 	}
 
 	function dorename(){
-		$title=string::hiconv(trim($this->post['newname']));
-		$title=string::substring(string::stripspecialcharacter($title),0,80);
+		$title=_string::hiconv(trim($this->post['newname']));
+		$title=_string::substring(_string::stripspecialcharacter($title),0,80);
 		if($title==''){
 			echo "-1";
 		}else if($this->db->fetch_by_field('doc','title',$title)){

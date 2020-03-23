@@ -286,7 +286,7 @@ class dbmodel {
 			foreach((array)$files as $file){
 				$eid=substr($file,0,-4);
 				$filename=$path."/".$file;
-				$content=string::haddslashes(file::readfromfile($filename), 1);
+				$content=_string::haddslashes(file::readfromfile($filename), 1);
 				if($content){
 					$this->db->query("UPDATE ".DB_TABLEPRE."edition SET content='$content' WHERE eid=$eid");
 					@unlink($filename);

@@ -183,7 +183,7 @@ class synonymmodel {
 					}
 				}
 				if($synonym=$this->get_synonym_by_src($srctitle)){
-					 if(string::haddslashes($synonym['desttitle'],1)!=$desttitle)
+					 if(_string::haddslashes($synonym['desttitle'],1)!=$desttitle)
 						return array(-5,$srctitle,$synonym['desttitle']);
 				}
 				if($synonym=$this->get_synonym_by_dest('',$srctitle)){

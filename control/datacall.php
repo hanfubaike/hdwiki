@@ -18,7 +18,7 @@ class control extends base{
 		$datastr = nl2br($datastr);
 		$datastr = str_replace("\n", "", $datastr);
 		$datastr = str_replace("\r", "", $datastr);
-		$datastr = string::haddslashes($datastr,1);
+		$datastr = _string::haddslashes($datastr,1);
 		echo "document.write('".$datastr."')";
 	}
 

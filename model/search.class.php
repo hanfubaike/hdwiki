@@ -71,7 +71,7 @@ class searchmodel {
 		$keyword = stripslashes($keyword);
 		// 编码转为UTF8
 		if ('gbk' == strtolower(WIKI_CHARSET)){
-			$keyword = string::hiconv($keyword, 'utf-8', 'gbk');
+			$keyword = _string::hiconv($keyword, 'utf-8', 'gbk');
 		}
 		
 		$keyword = urlencode($keyword);
@@ -134,7 +134,7 @@ class searchmodel {
 		}
 
 		if ('gbk' == strtolower(WIKI_CHARSET)){
-			$sitename = string::hiconv($this->base->setting['site_name'], 'utf-8', 'gbk');
+			$sitename = _string::hiconv($this->base->setting['site_name'], 'utf-8', 'gbk');
 		} else {
 			$sitename = $this->base->setting['site_name'];
 		}

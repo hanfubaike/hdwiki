@@ -76,7 +76,7 @@ class tagmodel {
 			$t=explode("=",$t);
 			$field[$t[0]]=$t[1];
 		}
-		$title=string::hiconv($field['title'],WIKI_CHARSET);
+		$title=_string::hiconv($field['title'],WIKI_CHARSET);
 		$limit=$field['rows']?$field['rows']:10;
 		if($title){
 			$this->base->load('doc');
@@ -99,7 +99,7 @@ class tagmodel {
 			$field[$t[0]]=$t[1];
 		}
 		$limit=$field['rows']?$field['rows']:10;
-		$catename=string::hiconv($field['catename'],WIKI_CHARSET);
+		$catename=_string::hiconv($field['catename'],WIKI_CHARSET);
 		if($catename){
 			$query = $this->db->query("SELECT * FROM ".DB_TABLEPRE."category WHERE name='$catename' ");
 			$cateinfo = $this->db->fetch_array($query);

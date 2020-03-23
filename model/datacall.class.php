@@ -186,10 +186,10 @@ class datacallmodel {
 			return false;
 		}else {
 			$datacall['desc'] = !trim($datacall['desc']) ? $this->base->view->lang['sqlcall'] : (trim($datacall['desc']));
-			$datacall['desc'] = string::substring($datacall['desc'], 0,80);
+			$datacall['desc'] = _string::substring($datacall['desc'], 0,80);
 			$datacall['param']['tplcode'] = !trim($datacall['param']['tplcode']) ? '' : (trim($datacall['param']['tplcode']));
 			$datacall['param']['empty_tplcode'] = !trim($datacall['param']['empty_tplcode']) ? '' : (trim($datacall['param']['empty_tplcode']));
-			$param_str = string::haddslashes(serialize(string::hstripslashes($datacall['param'])),1);
+			$param_str = _string::haddslashes(serialize(_string::hstripslashes($datacall['param'])),1);
 			$classname = 'sql';
 			$function = 'sql';
 			$type = 'sql';

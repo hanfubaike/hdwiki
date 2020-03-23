@@ -5,7 +5,7 @@
 define('MAGIC_QUOTES_GPC', get_magic_quotes_gpc());
 
 require HDWIKI_ROOT.'/config.php';
-require HDWIKI_ROOT.'/lib/string.class.php';
+require HDWIKI_ROOT.'/lib/_string.class.php';
 require HDWIKI_ROOT.'/model/base.class.php';
 
 class hdwiki {
@@ -50,9 +50,9 @@ class hdwiki {
 			exit(' Access Denied !');
 		}
 		//unset($_ENV, $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_COOKIE_VARS, $HTTP_SERVER_VARS, $HTTP_ENV_VARS);
-		$this->get = string::haddslashes($this->get,1);
-		$this->post = string::haddslashes($_POST);
-		$_COOKIE = string::haddslashes($_COOKIE);
+		$this->get = _string::haddslashes($this->get,1);
+		$this->post = _string::haddslashes($_POST);
+		$_COOKIE = _string::haddslashes($_COOKIE);
 		$this->checksecurity();
 		$remain=array('_SERVER','_FILES','_COOKIE','GLOBALS','starttime','mquerynum');
 		foreach ($GLOBALS as $key => $value){

@@ -28,7 +28,7 @@ class control extends base{
 		$synonyms=array();
 		if(!empty($this->post['srctitles'])) {
 			foreach($this->post['srctitles'] as $srctitle) {
-				$srctitle = htmlspecial_chars(string::haddslashes(string::hiconv(trim(string::stripscript($srctitle)))));
+				$srctitle = htmlspecial_chars(_string::haddslashes(_string::hiconv(trim(_string::stripscript($srctitle)))));
 				if('' != $srctitle) {
 					$synonyms[] = $srctitle;
 				}
@@ -37,7 +37,7 @@ class control extends base{
 		$desttitle=trim($this->post['desttitle']);
 		
 		if (WIKI_CHARSET == 'GBK'){
-			$desttitle=string::hiconv($desttitle);
+			$desttitle=_string::hiconv($desttitle);
 		}
 		
 		if(empty($synonyms)){

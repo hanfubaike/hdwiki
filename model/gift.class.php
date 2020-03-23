@@ -36,7 +36,7 @@ class giftmodel {
 		$query = $this->db->query($sql);
 		while($gift = $this->db->fetch_array($query)){
 			$gift['addtime'] = $this->base->date($gift['time']);
-			$gift['shorttitle'] = string::substring($gift['title'],0,8);;
+			$gift['shorttitle'] = _string::substring($gift['title'],0,8);;
 			$giftlist[] = $gift;
 		}
 		return $giftlist;
@@ -96,7 +96,7 @@ class giftmodel {
 		$query = $this->db->query($sql);
 		while($giftlog = $this->db->fetch_array($query)){
 			$giftlog['time'] = $this->base->date($giftlog['time']);
-			$giftlog['title'] = string::substring($giftlog['title'],0,10);
+			$giftlog['title'] = _string::substring($giftlog['title'],0,10);
 			$loglist[] = $giftlog;
 		}
 		return $loglist;
@@ -115,7 +115,7 @@ class giftmodel {
 	
 	/*恢复礼品*/
 	function recover($data){
-		$data=string::haddslashes($data,1);
+		$data=_string::haddslashes($data,1);
 		$this->db->query("INSERT INTO  ".DB_TABLEPRE."gift (id,title,image,credit,description,time,available) 
 					VALUES ('".$data['id']."','".$data['title']."','".$data['image']."','".$data['credit']."','".$data['description']."','".$data['time']."','".$data['available']."')");
 	}

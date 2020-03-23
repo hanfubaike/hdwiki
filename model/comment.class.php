@@ -40,7 +40,7 @@ class commentmodel {
 	
 	function is_in_cookie($type,$id){
 		$id = is_numeric($id) ? $id : 0;
-		$ids=base::hgetcookie($type);
+		$ids=$this->base->hgetcookie($type);
 		$already_ids=explode('|',$ids);
 		if(in_array($id,$already_ids)){
 			return true;
@@ -178,7 +178,7 @@ class commentmodel {
 			$comment['time'] = $this->base->date($comment['time']);
 			$comment['comment']=$comment['comment'];
 			$comment['title']=htmlspecial_chars($comment['title']);
-			$comment['partcomment']=(strlen($comment['comment'])>28)?string::substring($comment['comment'],0,28)."......":$comment['comment'];
+			$comment['partcomment']=(strlen($comment['comment'])>28)?_string::substring($comment['comment'],0,28)."......":$comment['comment'];
 			$commentlist[]=$comment;
 		}
 		return $commentlist;
@@ -192,7 +192,7 @@ class commentmodel {
 			$comment['image'] = $comment['image'] ? $comment['image'] : 'style/default/user.jpg';
 			$comment['image'] = $_ENV['global']->uc_api_avatar($comment['image'], $comment['authorid'], 'small');
 			
-			$comment['tipcomment']=(string::hstrlen($comment['comment'])>12)?string::substring($comment['comment'],0,12)."...":$comment['comment'];
+			$comment['tipcomment']=(_string::hstrlen($comment['comment'])>12)?_string::substring($comment['comment'],0,12)."...":$comment['comment'];
 			$comment['time']=$this->base->date($comment['time']);
 			$comments[]=$comment;
 		}
@@ -223,7 +223,7 @@ class commentmodel {
 	}
 	
 	function recover($data){
-		$data=string::haddslashes($data,1);
+		$data=_string::haddslashes($data,1);
 		$this->db->query("INSERT INTO  ".DB_TABLEPRE."comment (id,did,comment,reply,author,authorid,oppose,aegis,time) 
 					VALUES ('".$data['id']."','".$data['did']."','".$data['comment']."','".$data['reply']."','".$data['author']."','".$data['authorid']."','".$data['oppose']."','".$data['aegis']."','".$data['time']."')");
 	}

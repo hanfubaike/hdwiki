@@ -101,8 +101,8 @@
 
 <script type="text/javascript">
 		function sureDeletedir(fname,dir){
-			if(confirm('确认要删除目录：<!--{eval echo string::haddslashes($currentdir)}-->/'+fname+' 吗？删除此目录后其子目录及文件均会删除，请确认')){
-				$.post("index.php?admin_filemanager-delete", {currentdir:'<!--{eval echo string::haddslashes($currentdir)}-->/',isdir:1,fname:fname,dir:dir},function(data){
+			if(confirm('确认要删除目录：<!--{eval echo _string::haddslashes($currentdir)}-->/'+fname+' 吗？删除此目录后其子目录及文件均会删除，请确认')){
+				$.post("index.php?admin_filemanager-delete", {currentdir:'<!--{eval echo _string::haddslashes($currentdir)}-->/',isdir:1,fname:fname,dir:dir},function(data){
 					alert(data);
 					window.location='index.php?admin_filemanager-default';
 				});
@@ -110,7 +110,7 @@
 		}
 		function sureDeletefile(fname,dir){
 			if(confirm('确认要删除：'+fname+' 吗？删除后将无法恢复。')){
-				$.post("index.php?admin_filemanager-delete", {currentdir:'<!--{eval echo string::haddslashes($currentdir)}-->/',isdir:0,fname:fname,dir:dir},function(data){
+				$.post("index.php?admin_filemanager-delete", {currentdir:'<!--{eval echo _string::haddslashes($currentdir)}-->/',isdir:0,fname:fname,dir:dir},function(data){
 					alert(data);
 					window.location='index.php?admin_filemanager-default';
 				});

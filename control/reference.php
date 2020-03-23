@@ -31,15 +31,15 @@ class control extends base{
 		}
 		
 		$data=$this->post['data'];
-		$data['name'] = htmlspecial_chars(string::stripscript($data['name']));
-		$data['url'] = htmlspecial_chars(string::stripscript($data['url']));
+		$data['name'] = htmlspecial_chars(_string::stripscript($data['name']));
+		$data['url'] = htmlspecial_chars(_string::stripscript($data['url']));
 		//检查验证码
 		if($this->setting['checkcode']!=3 && $this->setting['doc_verification_reference_code'] && strtolower($data['code']) != $_ENV['user']->get_code()){
 			exit('code.error');
 		}
 		
 		if (WIKI_CHARSET == 'GBK'){
-			$data['name']=string::hiconv($data['name']);
+			$data['name']=_string::hiconv($data['name']);
 		}
 		
 		if (empty($data['name'])){

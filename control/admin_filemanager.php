@@ -156,7 +156,7 @@ class control extends base{
 	//删除文件或文件夹
 	function dodelete(){
 		if(isset($this->post['currentdir']) && isset($this->post['fname'])){
-			$fname=string::hstripslashes($this->post['currentdir']).$this->post['fname'];
+			$fname=_string::hstripslashes($this->post['currentdir']).$this->post['fname'];
 		}
 		if(!file_exists($fname)){
 			echo $this->view->lang['file_not_exist'];
@@ -171,13 +171,13 @@ class control extends base{
 		}
 	}
 	function dodown(){
-		$fname=string::hstripslashes(str_replace('*', '.',$this->get[2]));
+		$fname=_string::hstripslashes(str_replace('*', '.',$this->get[2]));
 		$_ENV['filemanager']->file_down($fname);
 	}
 	//改名
 	function dorename(){
 		$isdir=$this->get[3];
-		$fname=string::hstripslashes(str_replace('*', '.',$this->get[2]));
+		$fname=_string::hstripslashes(str_replace('*', '.',$this->get[2]));
 		$dir=str_replace('*', '.',$this->get[4]);
 		if($this->post['dosubmit']){
 			if ($this->post['newname']){
@@ -197,7 +197,7 @@ class control extends base{
 					$fname = trim($fname);
 					$newpath = ($fname[strlen($fname)-1] == '/' || $fname[strlen($fname)-1] == "/") ? substr($fname,0,-1) : $fname;
 					$newpath = substr($newpath,0,strrpos($newpath, '/')+1);
-					$newpath = string::hstripslashes($newpath.$newname);
+					$newpath = _string::hstripslashes($newpath.$newname);
 					if (file_exists($newpath)){
 						$this->message($this->view->lang['exist_refill'],"index.php?admin_filemanager-default");
 					}else{
@@ -216,7 +216,7 @@ class control extends base{
 	}
 	//修改权限
 	function dochmod(){
-		$fname=string::hstripslashes(str_replace('*', '.',$this->get[2]));
+		$fname=_string::hstripslashes(str_replace('*', '.',$this->get[2]));
 		$isdir=$this->get[3];
 		$dir=str_replace('*', '.',$this->get[4]);
 		if ($this->post['dosubmit']){
@@ -224,7 +224,7 @@ class control extends base{
 			if(!isset($chmodstr) || empty($chmodstr)) 
 				$this->message($this->view->lang['nothing'],'index.php?admin_filemanager-default');
 			$dir=$this->post['dir'];
-			$fname=string::hstripslashes($this->post['fname']);
+			$fname=_string::hstripslashes($this->post['fname']);
 			$fileperm = base_convert($chmodstr,8,10);
 			@chmod($fname,$fileperm) ? $this->message($this->view->lang['chmod_change_success'],"index.php?admin_filemanager-default-".urlencode($dir)) : $this->message($this->view->lang['chmod_change_fail'],"index.php?admin_filemanager-default");
 			
@@ -243,7 +243,7 @@ class control extends base{
 		$currentdir = $this->post['currentdir'];
 		if (!isset($newfile) || empty($newfile)) $this->message($this->view->lang['nothing'],'index.php?admin_filemanager-default');
 		$dir = $this->post['dir'];
-		$mkfile = string::hstripslashes($currentdir)."/".$newfile;
+		$mkfile = _string::hstripslashes($currentdir)."/".$newfile;
 		if (file_exists($mkfile)){
 			$this->message($this->view->lang['file_exist_change_name'],"index.php?admin_filemanager-default-".urlencode($dir));
 		}else{
@@ -258,7 +258,7 @@ class control extends base{
 	function douploadfile(){
 		if($this->post['dosubmit'])
 		{
-			$currentdir= string::hstripslashes($this->post['currentdir']);
+			$currentdir= _string::hstripslashes($this->post['currentdir']);
 			$dir=$this->post['dir'];
 			$overfile=$this->post['overfile'];
 			$newname=$this->post['newname'];
@@ -284,7 +284,7 @@ class control extends base{
 	}
 	//编辑文件内容
 	function doedit(){
-		$fname=string::hstripslashes(str_replace('*', '.',$this->get[2]));
+		$fname=_string::hstripslashes(str_replace('*', '.',$this->get[2]));
 		$dir=str_replace('*', '.',$this->get[3]);
 		if($this->post['fname']!="")
 			$fname = $this->post['fname'];

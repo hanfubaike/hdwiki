@@ -6,11 +6,11 @@ class hddb {
 
 	function hddb($dbhost, $dbuser, $dbpw, $dbname = '',$dbcharset='utf8', $pconnect=0){
 		if($pconnect){
-			if(!$this->mlink = @mysql_pconnect($dbhost, $dbuser, $dbpw)){
+			if(!$this->mlink = @mysqli_connect('p:'.$dbhost, $dbuser, $dbpw)){
 				$this->halt('Can not connect to MySQL');
 			}
 		} else {
-			if(!$this->mlink = @mysql_connect($dbhost, $dbuser, $dbpw)){
+			if(!$this->mlink = @mysqli_connect($dbhost, $dbuser, $dbpw)){
 				$this->halt('Can not connect to MySQL');
 			}
 		}
@@ -19,19 +19,19 @@ class hddb {
 				$dbcharset='utf8';
 			}
 			if($dbcharset){
-				mysql_query("SET character_set_connection=$dbcharset, character_set_results=$dbcharset, character_set_client=binary", $this->mlink);
+				mysqli_query($this->mlink, "SET character_set_connection=$dbcharset, character_set_results=$dbcharset, character_set_client=binary");
 			}
 			if($this->version() > '5.0.1'){
-				mysql_query("SET sql_mode=''", $this->mlink);
+				mysqli_query($this->mlink, "SET sql_mode=''");
 			}
 		}
 		if($dbname){
-			mysql_select_db($dbname, $this->mlink);
+			mysqli_select_db($this->mlink, $dbname);
 		}
 	}
 
 	function select_db($dbname){
-		return mysql_select_db($dbname, $this->mlink);
+		return mysqli_select_db($this->mlink, $dbname);
 	}
 	
 	function get_array($sql){
@@ -43,8 +43,8 @@ class hddb {
 		return $list;
 	}
 	
-	function fetch_array($query, $result_type = MYSQL_ASSOC){
-		return (is_resource($query))? mysql_fetch_array($query, $result_type) :false;
+	function fetch_array($query, $result_type = MYSQLI_ASSOC){
+		return (get_class($query)=='mysqli_result')? mysqli_fetch_array($query, $result_type) :false;
 	}
 
 	function result_first($sql){
@@ -72,8 +72,8 @@ class hddb {
 	
 	function query($sql, $type = 'SILENT'){
 		global $mquerynum;
-		$func = $type == 'UNBUFFERED' && @function_exists('mysql_unbuffered_query') ? 'mysql_unbuffered_query' : 'mysql_query';
-		if(!($query = $func($sql, $this->mlink)) && $type != 'SILENT'){
+		$func = $type == 'UNBUFFERED' && @function_exists('mysqli_unbuffered_query') ? 'mysqli_unbuffered_query' : 'mysqli_query';
+		if(!($query = $func($this->mlink, $sql)) && $type != 'SILENT'){
 			$this->halt("MySQL Query Error",'TRUE',$sql);
 		}
 		$mquerynum++;
@@ -81,54 +81,57 @@ class hddb {
 	}
 
 	function affected_rows(){
-		return mysql_affected_rows($this->mlink);
+		return mysqli_affected_rows($this->mlink);
 	}
 
 	function error(){
-		return (($this->mlink) ? mysql_error($this->mlink) : mysql_error());
+		return (($this->mlink) ? mysqli_error($this->mlink) : mysqli_error());
 	}
 
 	function errno(){
-		return intval(($this->mlink) ? mysql_errno($this->mlink) : mysql_errno());
+		return intval(($this->mlink) ? mysqli_errno($this->mlink) : mysqli_errno());
 	}
 
-	function result($query, $row){
-		$query = @mysql_result($query, $row);
-		return $query;
+	function result($query, $row, $field = 0){
+        mysqli_data_seek($query, $row);
+        $row = mysqli_fetch_array($query);
+        return $row[$field];
+//		$query = @mysql_result($query, $row);
+//		return $query;
 	}
 
 	function num_rows($query){
-		$query = mysql_num_rows($query);
+		$query = mysqli_num_rows($query);
 		return $query;
 	}
 
 	function num_fields($query){
-		return mysql_num_fields($query);
+		return mysqli_num_fields($query);
 	}
 
 	function free_result($query){
-		return mysql_free_result($query);
+		return mysqli_free_result($query);
 	}
 
 	function insert_id(){
-		return ($id = mysql_insert_id($this->mlink)) >= 0 ? $id : $this->result($this->query('SELECT last_insert_id()'), 0);
+		return ($id = mysqli_insert_id($this->mlink)) >= 0 ? $id : $this->result($this->query('SELECT last_insert_id()'), 0);
 	}
 
 	function fetch_row($query){
-		$query = mysql_fetch_row($query);
+		$query = mysqli_fetch_row($query);
 		return $query;
 	}
 
 	function fetch_fields($query){
-		return mysql_fetch_field($query);
+		return mysqli_fetch_field($query);
 	}
 
 	function version(){
-		return mysql_get_server_info($this->mlink);
+		return mysqli_get_server_info($this->mlink);
 	}
 
 	function close(){
-		return mysql_close($this->mlink);
+		return mysqli_close($this->mlink);
 	}
 
 	function halt($msg, $debug=true, $sql=''){

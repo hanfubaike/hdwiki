@@ -37,10 +37,10 @@
     <li>{lang pluginDescript}:{$defaultstyle[desc]}</li>
     <li>{lang focusmanageTag}:
     <!--{loop $defaultstyle[tag] $defaulttag}-->
-        <a href="{$appurl}/template.php?action=search&tag={eval echo urlencode(string::hiconv($defaulttag,'utf-8','gbk'))}" target="_blank">{$defaulttag}</a>
+        <a href="{$appurl}/template.php?action=search&tag={eval echo urlencode(_string::hiconv($defaulttag,'utf-8','gbk'))}" target="_blank">{$defaulttag}</a>
     <!--{/loop}-->
     <!--{loop $defaultstyle[charset] $defaultcharset}-->
-        <a href="{$appurl}/template.php?action=search&tag={eval echo urlencode(string::hiconv($defaultcharset,'utf-8','gbk'))}" target="_blank">{$defaultcharset}</a>
+        <a href="{$appurl}/template.php?action=search&tag={eval echo urlencode(_string::hiconv($defaultcharset,'utf-8','gbk'))}" target="_blank">{$defaultcharset}</a>
     <!--{/loop}-->
     </li>
     <li><input class="inp_btn2" name="Button1" type="button" onclick="javascript:window.location='index.php?admin_theme-editxml-{$defaultstyle[path]}-share'" value="{lang pluginShare}" /><input type="button" onclick="javascript:window.location='index.php?admin_theme-edit-{$defaultstyle[path]}';" value="{lang styleEdit}" class="inp_btn2"/></li>
@@ -79,7 +79,7 @@
 	<li><a href="{$style[weburl]}" target="_blank" >{$style[name]}</a>{lang pluginVersion} {$style[version]}  BY <a href="{$style[authorurl]}" target="_blank">{$style[author]}</a></li>
 	<li>描述:{$style[desc]}</li>
     <li>{lang suit_edition}:{$style[hdversion]}</li>
-	<li>标签:<!--{loop $style[tag] $tag}--><a href="{$appurl}/template.php?action=search&tag={eval echo urlencode(string::hiconv($tag,'utf-8','gbk'))}" target="_blank">{$tag}</a> <!--{/loop}--><!--{loop $style[charset] $charset}--><a href="{$appurl}/template.php?action=search&tag={eval echo urlencode(string::hiconv($charset,'utf-8','gbk'))}" target="_blank">{$charset}</a> <!--{/loop}--></li>
+	<li>标签:<!--{loop $style[tag] $tag}--><a href="{$appurl}/template.php?action=search&tag={eval echo urlencode(_string::hiconv($tag,'utf-8','gbk'))}" target="_blank">{$tag}</a> <!--{/loop}--><!--{loop $style[charset] $charset}--><a href="{$appurl}/template.php?action=search&tag={eval echo urlencode(_string::hiconv($charset,'utf-8','gbk'))}" target="_blank">{$charset}</a> <!--{/loop}--></li>
     <li>
     <input type="button" class="inp_btn2" value="{lang pluginShare}" onclick="window.location='index.php?admin_theme-editxml-{$style[path]}-share';" class="btn_plug"/>
     <input type="button" class="inp_btn2" value="{lang commonEdit}" onclick="window.location='index.php?admin_theme-edit-{$style[path]}'" class="btn_plug"/>

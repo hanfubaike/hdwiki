@@ -163,8 +163,8 @@ class control extends base{
 		$_ENV['user']->add_coin($uid, $coin);
 		
 		if(WIKI_CHARSET == 'GBK'){
-			$names = string::hiconv($names);
-			$content = string::hiconv($content);
+			$names = _string::hiconv($names);
+			$content = _string::hiconv($content);
 		}
 		
 		$return = 1;

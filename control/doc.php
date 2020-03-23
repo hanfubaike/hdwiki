@@ -71,7 +71,7 @@ class control extends base{
 			$this->load('anticopy');
 			$_ENV['anticopy']->add_randomstr($doc['content']);
 		}
-		$doc['content'] = string::filter_expression($doc['content']);
+		$doc['content'] = _string::filter_expression($doc['content']);
 		$doc['content']=$_ENV['innerlink']->get($doc['did'], $doc['content']);
 		$doc['sectionlist']=$_ENV['doc']->splithtml($doc['content']);
 		$doc['doctitle'] = $doc['title'];
@@ -145,9 +145,9 @@ class control extends base{
 		$doc['qq_title'] = $doc['title'].":".$doc['summary'];
 		$doc['qq_title'] = strip_tags($doc['qq_title']);
 		$doc['qq_title'] = str_replace(array("\r\n", '\r', '\n', '"'), '', $doc['qq_title']);
-		$tem_strlen = string::hstrlen($doc['qq_title']);
+		$tem_strlen = _string::hstrlen($doc['qq_title']);
 		if(100< $tem_strlen) {
-			$doc['qq_title'] = string::substring($doc['qq_title'], 0, 99).'...';
+			$doc['qq_title'] = _string::substring($doc['qq_title'], 0, 99).'...';
 		}
 	//	var_dump($sectionlist);exit;
         // 获取摘要图
@@ -232,7 +232,7 @@ class control extends base{
 			if(!(bool)$_ENV['category']->vilid_category($this->post['category'])){
 				$this->message($this->view->lang['categoryNotExist'],'BACK',0);
 			}
-			$title=string::substring(string::stripscript($_ENV['doc']->replace_danger_word(trim($this->post['title']))),0,80);
+			$title=_string::substring(_string::stripscript($_ENV['doc']->replace_danger_word(trim($this->post['title']))),0,80);
 			if(!(bool)$title){
 				$this->message($this->view->lang['createDocTip16'],'BACK',0);
 			}
@@ -281,7 +281,7 @@ class control extends base{
 			if(@trim($this->post['content'])==''||@trim($this->post['title'])==''){
 				$this->message($this->view->lang['contentIsNull'],'BACK',0);
 			}
-			$doc['title']=string::substring(string::stripscript($_ENV['doc']->replace_danger_word(trim($this->post['title']))),0,80);
+			$doc['title']=_string::substring(_string::stripscript($_ENV['doc']->replace_danger_word(trim($this->post['title']))),0,80);
 			$_doc=$this->db->fetch_by_field('doc','title',$doc['title']);
 			if((bool)$_doc && !empty($_doc['content'])){
 				$this->message($this->view->lang['createDocTip5'],'BACK',0);
@@ -293,29 +293,29 @@ class control extends base{
 				$doc['summary']=trim(strip_tags($_ENV['doc']->replace_danger_word($this->post['summary'])));
 			}
 			$doc['did']=intval($this->post['did']);
-			$doc['letter']=string::getfirstletter($this->post['title']);
+			$doc['letter']=_string::getfirstletter($this->post['title']);
 			$doc['category']=$this->post['category'];
 
 			//$doc['tags']=$_ENV['doc']->jointags($this->post['tags']);
 			$doc['tags']=$this->post['tags'];
 			$doc['tags']=$_ENV['doc']->replace_danger_word($doc['tags']);
-			$doc['tags'] = htmlspecial_chars(string::stripscript($doc['tags']));
+			$doc['tags'] = htmlspecial_chars(_string::stripscript($doc['tags']));
 			
 			$doc['content'] = $_ENV['doc']->replace_danger_word($this->post['content']);
 			$doc['content'] = preg_replace('/(<embed.*?(?:allowscriptaccess)=)\\\?([\'"]?)(\w*?)\\\?\2(.*?>)/i','$1$2never$2$4',$doc['content']);//将embed标签中的allowscriptaccess属性设置为never
 			$doc['content'] = preg_replace('/(<embed(?:(?!allowscriptaccess).)+?)(>)/i','$1 allowscriptaccess="never" $2',$doc['content']);//将embed标签中如果不存在allowscriptaccess属性则添加属性并设为never
 
-			$doc['content'] = addslashes(string::stripscript(stripslashes($doc['content'])));
+			$doc['content'] = addslashes(_string::stripscript(stripslashes($doc['content'])));
 			$doc['content'] = $this->setting['auto_picture']?$_ENV['doc']->auto_picture($doc['content'],$doc['did']):$doc['content'];
-			$doc['content'] = string::filter_expression($doc['content']);
+			$doc['content'] = _string::filter_expression($doc['content']);
 			$doc['summary'] = trim(strip_tags($_ENV['doc']->replace_danger_word($doc['summary'])));//去除敏感词
 			$doc['summary'] = (bool)$doc['summary']?$doc['summary']:$doc['content'];
-			$doc['summary'] = trim(string::convercharacter(string::substring(strip_tags($doc['summary']),0,100)));//去除换行符截断字符串
-			$doc['summary'] = htmlspecial_chars(addslashes(stripslashes(string::stripscript(strip_tags($doc['summary'])))));//去除特殊字符 去除javascript代码
+			$doc['summary'] = trim(_string::convercharacter(_string::substring(strip_tags($doc['summary']),0,100)));//去除换行符截断字符串
+			$doc['summary'] = htmlspecial_chars(addslashes(stripslashes(_string::stripscript(strip_tags($doc['summary'])))));//去除特殊字符 去除javascript代码
 
 			$doc['images']=util::getimagesnum($doc['content']);
 			$doc['time']=$this->time;
-			$doc['words']=string::hstrlen($doc['content']);
+			$doc['words']=_string::hstrlen($doc['content']);
 			$doc['visible']=$this->setting['verify_doc'] != 0 ? '0' : '1';
 
 			if(strpos($this->user['regulars'], 'doc-immunity') === false && 4 != $this->user['groupid']) {
@@ -348,7 +348,7 @@ class control extends base{
 				$_ENV['user']->add_credit($this->user['uid'],'doc-create',$this->setting['credit_create'],$this->setting['coin_create']);
 			}
 			/*foreach($this->post['tags'] as $search_tags){
-				$doc['search_tags'] .=string::convert_to_unicode($search_tags).";";
+				$doc['search_tags'] .=_string::convert_to_unicode($search_tags).";";
 			}*/
 			$did=$_ENV['doc']->add_doc($doc);
 			$_ENV['user']->update_field('creates',$this->user['creates']+1,$this->user['uid']);
@@ -391,12 +391,12 @@ class control extends base{
 
 	function doverify(){
 		$ajaxtitle=trim($this->post['title']);
-		if (WIKI_CHARSET == 'GBK'){$ajaxtitle = string::hiconv($ajaxtitle);}
-		$title=string::substring(string::stripscript($ajaxtitle),0,80);
+		if (WIKI_CHARSET == 'GBK'){$ajaxtitle = _string::hiconv($ajaxtitle);}
+		$title=_string::substring(_string::stripscript($ajaxtitle),0,80);
 		if($_ENV['doc']->have_danger_word($title)){
 			$this->message("-1","",2);
 		}
-		if($ajaxtitle!=string::stripscript($ajaxtitle)){
+		if($ajaxtitle!=_string::stripscript($ajaxtitle)){
 			$this->message("-2","",2);
 		}
 		if($synonym=$_ENV['synonym']->get_synonym_by_src($ajaxtitle)){
@@ -414,7 +414,7 @@ class control extends base{
 		$this->_anti_copy();
 		if(isset($this->post['predoctitle'])){
 			$title = $this->post['predoctitle'];
-			$content=string::stripscript($_ENV['doc']->replace_danger_word($this->post['content']));
+			$content=_string::stripscript($_ENV['doc']->replace_danger_word($this->post['content']));
 			$this->view->assign("content",stripslashes($content));
 			$this->view->assign("title",$title);
 			//$this->view->display("previewdoc");
@@ -423,8 +423,8 @@ class control extends base{
 		}
 		if(isset($this->post['tagtext'])){
 			$tags = $this->post['tagtext'];
-			if(string::hstrtoupper(WIKI_CHARSET)=='GBK'){
-				$tags=string::hiconv($tags,'gbk','utf-8');
+			if(_string::hstrtoupper(WIKI_CHARSET)=='GBK'){
+				$tags=_string::hiconv($tags,'gbk','utf-8');
 			}
 			$tags = trim(strip_tags($_ENV['doc']->replace_danger_word($tags)));
 			$did = $this->post['did'];
@@ -495,7 +495,7 @@ class control extends base{
 				$doc['content']=$autosave['content'];
 				$doc['autosavetime']=$this->date($autosave['time']);
 			}
-			$doc['content'] = string::filter_expression($doc['content']);
+			$doc['content'] = _string::filter_expression($doc['content']);
 			$referencelist = $_ENV['reference']->getall($doc['did']);
 			//$attachment=$_ENV['attachment']->get_attachment('did',$doc['did'],0);
 			//$this->view->assign('attachment',$attachment);
@@ -525,26 +525,26 @@ class control extends base{
 			//$doc['tags']=$_ENV['doc']->jointags($this->post['tags']);
 			$doc['tags']=$this->post['tags'];
 			$doc['tags']=$_ENV['doc']->replace_danger_word($doc['tags']);
-			$doc['tags'] = htmlspecial_chars(string::stripscript($doc['tags']));
+			$doc['tags'] = htmlspecial_chars(_string::stripscript($doc['tags']));
 
 			$doc['content'] = $_ENV['doc']->replace_danger_word($this->post['content']);
 			$doc['content'] = preg_replace('/(<embed.*?(?:allowscriptaccess)=)\\\?([\'"]?)(\w*?)\\\?\2(.*?>)/i','$1$2never$2$4',$doc['content']);//将embed标签中的allowscriptaccess属性设置为never
 			$doc['content'] = preg_replace('/(<embed(?:(?!allowscriptaccess).)+?)(>)/i','$1 allowscriptaccess="never" $2',$doc['content']);//将embed标签中如果不存在allowscriptaccess属性则添加属性并设为never
 
-			$doc['content'] = addslashes(string::stripscript(stripslashes($doc['content'])));
+			$doc['content'] = addslashes(_string::stripscript(stripslashes($doc['content'])));
 			$doc['content']= $this->setting['auto_picture']?$_ENV['doc']->auto_picture($doc['content'], $did):$doc['content'];
-			$doc['content'] = string::filter_expression($doc['content']);
+			$doc['content'] = _string::filter_expression($doc['content']);
 
 
 			$doc['summary'] = trim(strip_tags($_ENV['doc']->replace_danger_word($this->post['summary'])));//去除敏感词
 			$doc['summary'] = (bool)$doc['summary']?$doc['summary']:$doc['content'];
-			$doc['summary'] = trim(string::convercharacter(string::substring(strip_tags($doc['summary']),0,100)));//去除换行符截断字符串
-			$doc['summary'] = htmlspecial_chars(addslashes(stripslashes(string::stripscript(strip_tags($doc['summary'])))));//去除特殊字符 去除javascript代码
+			$doc['summary'] = trim(_string::convercharacter(_string::substring(strip_tags($doc['summary']),0,100)));//去除换行符截断字符串
+			$doc['summary'] = htmlspecial_chars(addslashes(stripslashes(_string::stripscript(strip_tags($doc['summary'])))));//去除特殊字符 去除javascript代码
 			
 			$doc['time']=$this->time;
 			$doc['reason']=htmlspecial_chars(trim(implode(',',$this->post['editreason'])," \t\n,"));
 			/*foreach($this->post['tags'] as $search_tags){
-				$doc['search_tags'] .=string::convert_to_unicode($search_tags).";";
+				$doc['search_tags'] .=_string::convert_to_unicode($search_tags).";";
 			}*/
 
 			if (0 == $doc['visible'] && $this->user['uid'] == $doc['lasteditorid'] && $this->user['type'] == 2){
@@ -724,21 +724,21 @@ class control extends base{
 			}
 			$tem=$_ENV['doc']->splithtml($doc['content']);
 			$tem[$id+1]['value']=$_ENV['doc']->replace_danger_word(stripcslashes($this->post['content']));
-			$doc['content']=string::haddslashes(string::stripscript($_ENV['doc']->joinhtml($tem)),1);
+			$doc['content']=_string::haddslashes(_string::stripscript($_ENV['doc']->joinhtml($tem)),1);
 			//$doc['tags']=$_ENV['doc']->jointags($this->post['tags']);
 			$doc['tags']=$this->post['tags'];
 			$doc['tags']=$_ENV['doc']->replace_danger_word($doc['tags']);
 			$doc['summary']=trim(strip_tags($_ENV['doc']->replace_danger_word($this->post['summary'])));
 			$doc['summary']=(bool)$doc['summary']?$doc['summary']:$doc['content'];
-			$doc['summary'] =trim(string::convercharacter(string::substring(strip_tags($doc['summary']),0,100)));
-			$doc['summary'] = htmlspecial_chars(addslashes(stripslashes(string::stripscript(strip_tags($doc['summary'])))));//去除特殊字符 去除javascript代码
+			$doc['summary'] =trim(_string::convercharacter(_string::substring(strip_tags($doc['summary']),0,100)));
+			$doc['summary'] = htmlspecial_chars(addslashes(stripslashes(_string::stripscript(strip_tags($doc['summary'])))));//去除特殊字符 去除javascript代码
 			$doc['images']=util::getimagesnum($doc['content']);
 			$doc['time']=$this->time;
 			$doc['visible']=$this->setting['verify_doc']?'0':'1';
-			$doc['words']=string::hstrlen($doc['content']);
+			$doc['words']=_string::hstrlen($doc['content']);
 			$doc['reason']=htmlspecial_chars(trim(implode(',',$this->post['editreason']),' \t\n,'));
 			/*foreach($this->post['tags'] as $search_tags){
-				$doc['search_tags'] .=string::convert_to_unicode($search_tags).";";
+				$doc['search_tags'] .=_string::convert_to_unicode($search_tags).";";
 			} */
 
 			if(!$_ENV['doc']->check_submit_interval($this->user['uid'])) {
@@ -822,7 +822,7 @@ class control extends base{
 	function doinnerlink(){
 		$len=strlen('doc-innerlink-');
 		$title=str_replace("+",urlencode("+"),substr($_SERVER['QUERY_STRING'],$len));
-		$title=string::haddslashes(string::hiconv(trim(urldecode($title))),1);
+		$title=_string::haddslashes(_string::hiconv(trim(urldecode($title))),1);
 		if($this->setting['seo_suffix']){
 			$title=str_replace($this->setting['seo_suffix'],'',$title);
 		}
@@ -839,7 +839,7 @@ class control extends base{
 			}else{
 				$this->view->assign("search_tip_switch", $this->setting['search_tip_switch']);
 				$this->view->assign("searchtext",stripslashes($title));
-				$this->view->assign("searchword",urlencode(string::hiconv($title,'utf-8')));
+				$this->view->assign("searchword",urlencode(_string::hiconv($title,'utf-8')));
 				$this->view->assign("title",$title);
 				$this->view->display("notexist");
 			}
@@ -859,8 +859,8 @@ class control extends base{
 		$title2 = $title;
 
 		$title=urldecode($title);
-		if(string::hstrtoupper(WIKI_CHARSET)=='GBK'){
-			$title=string::hiconv($title,$to='gbk',$from='utf-8');
+		if(_string::hstrtoupper(WIKI_CHARSET)=='GBK'){
+			$title=_string::hiconv($title,$to='gbk',$from='utf-8');
 		}
 		$doc=$this->db->fetch_by_field('doc','title',$title);
 		if((bool)$doc){
@@ -942,13 +942,13 @@ class control extends base{
 
 	function dochangename(){
 		$ajaxtitle = trim($this->post['newname']);
-		if(string::hstrtoupper(WIKI_CHARSET)=='GBK'){
-			$ajaxtitle=string::hiconv($ajaxtitle,'gbk','utf-8','true');
+		if(_string::hstrtoupper(WIKI_CHARSET)=='GBK'){
+			$ajaxtitle=_string::hiconv($ajaxtitle,'gbk','utf-8','true');
 		}
-		$title=string::substring(string::stripscript($_ENV['doc']->replace_danger_word(trim($ajaxtitle))),0,80);
+		$title=_string::substring(_string::stripscript($_ENV['doc']->replace_danger_word(trim($ajaxtitle))),0,80);
 		if(@!is_numeric($this->post['did'])){
 			$this->message("-1","",2);
-		}elseif($ajaxtitle!=string::stripscript($ajaxtitle)){
+		}elseif($ajaxtitle!=_string::stripscript($ajaxtitle)){
 			$this->message("-3","",2);
 		}elseif(!$title){
 			$this->message("-4","",2);
@@ -1049,7 +1049,7 @@ class control extends base{
 		$id=isset($this->post['id'])?$this->post['id']:-1;
 		$notfirst=isset($this->post['notfirst'])?$this->post['notfirst']:0;
 		$savecontent=isset($this->post['savecontent'])?$this->post['savecontent']:'';
-		if (WIKI_CHARSET == 'GBK'){$savecontent = string::hiconv($savecontent);}
+		if (WIKI_CHARSET == 'GBK'){$savecontent = _string::hiconv($savecontent);}
 		if($savecontent!==''){
 			$_ENV['doc']->update_autosave($this->user['uid'],$did,$savecontent,$id,$notfirst);
 		}
@@ -1113,9 +1113,9 @@ class control extends base{
 		if(is_numeric($did)){
 			$relate = trim($this->post['relatename']);
 			$title = htmlspecial_chars(trim($this->post['title']));
-			if(string::hstrtoupper(WIKI_CHARSET)=='GBK'){
-				$relate=string::hiconv($relate,'gbk','utf-8');
-				$title=string::hiconv($title,'gbk','utf-8');
+			if(_string::hstrtoupper(WIKI_CHARSET)=='GBK'){
+				$relate=_string::hiconv($relate,'gbk','utf-8');
+				$title=_string::hiconv($title,'gbk','utf-8');
 			}
 
 			$list=array();
@@ -1143,7 +1143,7 @@ class control extends base{
 			if($cooperatedocs[$i]==''){
 				unset($cooperatedocs[$i]);
 			}else{
-				$coopdoc[$i]['shorttitle'] = (string::hstrlen($cooperatedocs[$i])>4)?string::substring($cooperatedocs[$i],0,4)."...":$cooperatedocs[$i];
+				$coopdoc[$i]['shorttitle'] = (_string::hstrlen($cooperatedocs[$i])>4)?_string::substring($cooperatedocs[$i],0,4)."...":$cooperatedocs[$i];
 				$coopdoc[$i]['title'] = $cooperatedocs[$i];
 			}
 		}
@@ -1158,8 +1158,8 @@ class control extends base{
 		$cats = $_ENV['doc']->get_cids_by_did($did);
 		if($cats){
 			foreach($cats as $cat){
-				$cat['name'] = string::haddslashes($cat['name'],1);
-				$evaljs .= "catevalue.scids.push(".$cat['cid'].");catevalue.scnames.push('".string::haddslashes($cat['name'])."');";
+				$cat['name'] = _string::haddslashes($cat['name'],1);
+				$evaljs .= "catevalue.scids.push(".$cat['cid'].");catevalue.scnames.push('"._string::haddslashes($cat['name'])."');";
 			}
 		}
 		$this->message($evaljs,'',2);

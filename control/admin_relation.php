@@ -22,11 +22,11 @@ class control extends base{
 		$relatelist = array_unique(explode(';',$relatedoc));
 		foreach($relatelist as $relate){
 			$relate=trim($relate);
-			$relate = string::stripscript($relate);
+			$relate = _string::stripscript($relate);
 			if(empty($relate)){
 				unset($relate);
 			}else{
-				$relate = string::haddslashes($relate);
+				$relate = _string::haddslashes($relate);
 				$relatelists[] = $relate;
 			}
 		}

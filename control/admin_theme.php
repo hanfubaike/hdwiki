@@ -146,7 +146,7 @@ class control extends base{
 	function docreatestyle(){
 		$style = $this->post['style'];
 		if($style['desc']!=""){
-			$style['desc'] = string::stripscript($style['desc']);
+			$style['desc'] = _string::stripscript($style['desc']);
 		}
 		$stylelist=$_ENV['theme']->get_style_list(0);
 		if(in_array($style[path],$stylelist)){
@@ -401,7 +401,7 @@ class control extends base{
 		if( file_exists($filedir) ){
 			$data=file::readfromfile($filedir);
 		}
-		$title=string::hiconv($data,'utf-8','gbk');
+		$title=_string::hiconv($data,'utf-8','gbk');
 		echo $title;
 	}
 	
@@ -423,7 +423,7 @@ class control extends base{
 		if ($this->post['isbackup'] && !copy($filedir.$this->post['filename'],$filebakdir.$filename)) {
 		    echo $this->view->lang['styleFileBackFail'];
 		}else{
-			$this->post['html_con']=string::hiconv($this->post['html_con']);
+			$this->post['html_con']=_string::hiconv($this->post['html_con']);
 			file::writetofile($filedir.$this->post['filename'],stripcslashes($this->post['html_con']));
 			$this->message($this->view->lang['styleEditSuccess'],'index.php?admin_theme-codeedit-'.$this->get[2].'-'.$type[0].'-'.$type[1]);
 		}
@@ -668,13 +668,13 @@ class control extends base{
 		file_exists($this->tempfile)&&include($this->tempfile);
 		
 		if(strtoupper(WIKI_CHARSET) == 'GBK' && isset($this->post['params'])){//ajax在gbk下传过来的值是utf8的，所以gbk下需要转码。
-			//array_walk($this->post['params'],string::hiconv());
+			//array_walk($this->post['params'],_string::hiconv());
 			foreach($this->post['params'] as $key=>$val){
-				$this->post['params'][$key]=string::hiconv($val);
+				$this->post['params'][$key]=_string::hiconv($val);
 			}
 		}
 		
-		$this->post = string::hstripslashes($this->post);
+		$this->post = _string::hstripslashes($this->post);
 
 		if($this->post['tplcontent']){
 		    $tplc = $this->post['tplcontent'];

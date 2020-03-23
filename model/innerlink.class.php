@@ -47,7 +47,7 @@ class innerlinkmodel {
 			//在PHP4.3版本，在 foreach 语句当中使用 & 引用符号导致语法错误
 			foreach($matchs[1] as $i=>$title){
 				$title2=trim(urldecode($title));
-				if('gbk' == strtolower(WIKI_CHARSET)) {$title2 = string::hiconv($title2,'gbk','utf-8');}
+				if('gbk' == strtolower(WIKI_CHARSET)) {$title2 = _string::hiconv($title2,'gbk','utf-8');}
 				$title2=addslashes($title2);
 				
 				if(isset($rows[$title2])){//titleid
@@ -112,7 +112,7 @@ class innerlinkmodel {
 			}
 			$data[]="('$did','$title','$titleid')";
 			
-			$title2= ('gbk'==strtolower(WIKI_CHARSET))?string::hiconv($title,'utf-8','gbk'): $title;
+			$title2= ('gbk'==strtolower(WIKI_CHARSET))?_string::hiconv($title,'utf-8','gbk'): $title;
 			$title2=urlencode($title2);
 			$this->titles[$title2][0]=$titleid;
 		}

@@ -18,7 +18,7 @@ class attachmentmodel {
 	
 	function add_attachment($uid,$did,$filename,$attachment,$description,$filetype='.jpg',$isimage=1,$coindown=0){
 		$filesize=filesize($attachment);
-		$filename=string::haddslashes($filename);
+		$filename=_string::haddslashes($filename);
 		if(empty($coindown) || !is_numeric($coindown)) {
 			$coindown = 0;
 		}
@@ -90,7 +90,7 @@ class attachmentmodel {
 	}
 	
 	function recover($data){
-		$data=string::haddslashes($data,1);
+		$data=_string::haddslashes($data,1);
 		$this->db->query("INSERT INTO  ".DB_TABLEPRE."attachment (id,did,time,filename,description,filetype,filesize,attachment,downloads,isimage,uid,state,focus) 
 					VALUES ('".$data['id']."','".$data['did']."','".$data['time']."','".$data['filename']."','".$data['description']."','".$data['filetype']."','".$data['filesize']."','".$data['attachment']."','".$data['downloads']."','".$data['isimage']."','".$data['uid']."','".$data['state']."','".$data['focus']."')");
 	}
@@ -219,7 +219,7 @@ class attachmentmodel {
 		while($attach=$this->db->fetch_array($query)){
 			$attach['time'] = $this->base->date($attach['time']);
 			$attach['title'] = htmlspecial_chars($attach['title']);
-			$attach['filename'] = string::substring($attach['filename'],0,28);
+			$attach['filename'] = _string::substring($attach['filename'],0,28);
 			$attach['filename'] .= (strlen($attach['filename'])>28)?"......":"";
 			$attach['filesize']=sprintf('%.2f',$attach['filesize']/1024)."k";
 			$attachlist[]=$attach;

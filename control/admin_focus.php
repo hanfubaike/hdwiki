@@ -72,8 +72,8 @@ class control extends base{
 			if(!is_numeric($did)){
 				$this->message($this->view->lang['docIdMustNum'],'BACK');
 			}
-			$summary=string::hiconv($this->post['summary']);
-			$image=string::hiconv($this->post['image']);
+			$summary=_string::hiconv($this->post['summary']);
+			$image=_string::hiconv($this->post['image']);
 			$order=$this->post['displayorder'];
 			$type=$this->post['doctype'];
 			if(is_numeric($order)&&$_ENV['doc']->save_focus_content($did,$summary,$image,$order,$type)){

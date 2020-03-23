@@ -40,11 +40,11 @@ class usermodel {
 	
 	function add_referer(){
 		if($_SERVER['HTTP_REFERER']){
-			$this->db->query("UPDATE ".DB_TABLEPRE."session SET referer ='".string::haddslashes($_SERVER['HTTP_REFERER'])."' WHERE sid='".base::hgetcookie('sid')."'");
+			$this->db->query("UPDATE ".DB_TABLEPRE."session SET referer ='"._string::haddslashes($_SERVER['HTTP_REFERER'])."' WHERE sid='".$this->base->hgetcookie('sid')."'");
 		}
 	}
 	function get_referer(){
-		$session=$this->db->fetch_first("SELECT referer FROM ".DB_TABLEPRE."session  WHERE sid='".base::hgetcookie('sid')."'");
+		$session=$this->db->fetch_first("SELECT referer FROM ".DB_TABLEPRE."session  WHERE sid='".$this->base->hgetcookie('sid')."'");
 		if($session['referer']==""){
 			$session['referer']="index.php";
 		}else{
@@ -55,10 +55,10 @@ class usermodel {
 		return $session['referer'];
 	}
 	function  refresh_user($uid){
-		$sid=base::hgetcookie('sid');
+		$sid=$this->base->hgetcookie('sid');
 		$this->base->user=$this->db->fetch_first("SELECT * FROM ".DB_TABLEPRE."user u,".DB_TABLEPRE."usergroup g WHERE u.uid=$uid AND u.groupid=g.groupid");
 		$session=$this->db->fetch_first("SELECT referer FROM ".DB_TABLEPRE."session  WHERE sid='".$sid."'");
-		$this->db->query("REPLACE INTO ".DB_TABLEPRE."session (sid,uid,username,islogin,`time`,referer) VALUES ('$sid',$uid,'".$this->base->user['username']."',1,{$this->base->time},'".string::haddslashes($session['referer'])."')");
+		$this->db->query("REPLACE INTO ".DB_TABLEPRE."session (sid,uid,username,islogin,`time`,referer) VALUES ('$sid',$uid,'".$this->base->user['username']."',1,{$this->base->time},'"._string::haddslashes($session['referer'])."')");
 		$password=$this->base->user['password'];
 		$auth = $this->base->authcode("$uid\t$password",'ENCODE');
 		$this->base->hsetcookie('auth',$auth,24*3600*365);
@@ -218,7 +218,7 @@ class usermodel {
 	}
 	
 	function recover($data){
-		$data=string::haddslashes($data,1);
+		$data=_string::haddslashes($data,1);
 		$this->db->query("INSERT INTO  ".DB_TABLEPRE."user (uid,username,password,email,gender,credit2,credit1,birthday,image,location,regip,regtime,lastip,lasttime,groupid,timeoffset,style,language,signature,creates,edits,views,checkup) 
 					VALUES ('".$data['uid']."','".$data['username']."','".$data['password']."','".$data['email']."','".$data['gender']."','".$data['credits']."','".$data['credit1']."','".$data['birthday']."','".$data['image']."','".$data['location']."','".$data['regip']."','".$data['regtime']."','".$data['lastip']."','".$data['lasttime']."','".$data['groupid']."','".$data['timeoffset']."','".$data['style']."','".$data['language']."','".$data['signature']."','".$data['creates']."','".$data['edits']."','".$data['views']."','".$data['checkup']."')");
 	}
@@ -409,7 +409,7 @@ class usermodel {
 		$query=$this->db->query("SELECT * FROM ".DB_TABLEPRE."user WHERE checkup=1 ORDER BY views DESC LIMIT $start,$limit");
 		while($user=$this->db->fetch_array($query)){
 		    if ($user['signature']) {
-                $user['signature'] = trim((string::substring(strip_tags($user['signature']),0,15))) . '...';
+                $user['signature'] = trim((_string::substring(strip_tags($user['signature']),0,15))) . '...';
 		    }
 			$userlist[]=$user;
 		}
@@ -439,7 +439,7 @@ class usermodel {
 		$query=$this->db->query("SELECT u.uid, u.username,u.signature, u.image, sum( c.credit2 ) credit, u.creates, u.views  FROM ".DB_TABLEPRE."user u,".DB_TABLEPRE."creditdetail c WHERE u.uid=c.uid AND c.time>$starttime AND c.time <$endtime AND u.groupid!=1  GROUP BY u.uid ORDER BY credit  DESC LIMIT $start,$limit");
 		while($user=$this->db->fetch_array($query)){
 		    if ($user['signature']) {
-                $user['signature'] = trim((string::substring(strip_tags($user['signature']),0,15))) . '...';
+                $user['signature'] = trim((_string::substring(strip_tags($user['signature']),0,15))) . '...';
 		    }
 			$weekuserlist[]=$user;
 		}
@@ -451,7 +451,7 @@ class usermodel {
 		$query=$this->db->query("SELECT u.uid, u.username,u.signature,u.image,u.credit2 credit FROM ".DB_TABLEPRE."user u  ORDER BY u.credit2  DESC LIMIT $start,$limit");
 		while($user=$this->db->fetch_array($query)){
 		    if ($user['signature']) {
-                $user['signature'] = trim((string::substring(strip_tags($user['signature']),0,15))) . '...';
+                $user['signature'] = trim((_string::substring(strip_tags($user['signature']),0,15))) . '...';
 		    }
 			$userlist[]=$user;
 		}

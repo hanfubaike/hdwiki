@@ -27,7 +27,7 @@ class control extends base{
 		// 词条查找
 		$doc=$this->db->fetch_by_field('doc','title',$title);
 //		/$this->view->assign("searchtext",$title);
-//		//$this->view->assign("searchword",urlencode(string::hiconv($title,'utf-8')));
+//		//$this->view->assign("searchword",urlencode(_string::hiconv($title,'utf-8')));
 
 		if(!(bool)$doc){
 			$title = str_replace(array('-', '.'),array('&#45;', '&#46;'), $title);
@@ -62,12 +62,12 @@ class control extends base{
 			}
 			// 获得搜索类型和搜索关键字
 			$element['searchtype']=$this->get[2];	// tag or title
-			$element['keyword']=isset($this->get[3])?string::haddslashes(str_replace(array('&#45;', '&#46;'), array('-', '.'), rawurldecode($this->get[3]))):'';
+			$element['keyword']=isset($this->get[3])?_string::haddslashes(str_replace(array('&#45;', '&#46;'), array('-', '.'), rawurldecode($this->get[3]))):'';
 			// 自动转码，将编码变为当前设置编码
-			//$element['keyword']= string::hiconv(trim($element['keyword']));
-			//$element['keyword']=string::haddslashes($element['keyword'],1);
+			//$element['keyword']= _string::hiconv(trim($element['keyword']));
+			//$element['keyword']=_string::haddslashes($element['keyword'],1);
 			
-			$author=isset($this->get[4])?string::haddslashes(urldecode($this->get[4])):'';
+			$author=isset($this->get[4])?_string::haddslashes(urldecode($this->get[4])):'';
 			$element['author']=$author?str_replace('*','%',$author):'';
 			$element['categoryid']=isset($this->get[5])?explode(",",$this->get[5]):'all';
 			$element['timelimited']=isset($this->get[6])?$this->get[6]:0;
@@ -163,7 +163,7 @@ class control extends base{
 
 			$this->view->assign("title",$title);
 			$this->view->assign("keyword",rawurlencode($element['keyword']));
-			$this->view->assign("searchword",urlencode(string::hiconv($title,'utf-8')));
+			$this->view->assign("searchword",urlencode(_string::hiconv($title,'utf-8')));
 			$this->view->assign("search_tip_switch", $this->setting['search_tip_switch']);
 				
  			$this->view->assign('cloudsearch',$cloudsearch);

@@ -33,7 +33,7 @@ class control extends base{
 			$this->view->assign("navmodellist", $navmodellist);
 			$this->view->display('admin_navmodeladd');
 		}else{
-			$name = string::stripscript(trim($this->post['name']));
+			$name = _string::stripscript(trim($this->post['name']));
 			if(!$name){
 				$this->message('JAVASCRIPT脚本会被过滤,过滤后名称不能为空!','BACK');
 			}

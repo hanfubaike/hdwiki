@@ -226,7 +226,7 @@ class base {
 	function init_user() {
 		$sid=$this->hgetcookie('sid');//notice error 
 		$auth=$this->hgetcookie('auth');
-		list($uid,$password) = empty($auth) ? array(0,0) : string::haddslashes(explode("\t", $this->authcode($auth, 'DECODE')), 1);
+		list($uid,$password) = empty($auth) ? array(0,0) : _string::haddslashes(explode("\t", $this->authcode($auth, 'DECODE')), 1);
 		if(!$sid){
 			$sid=util::random(6);
 			$this->hsetcookie('sid',$sid,24*3600*365, true);

@@ -19,7 +19,7 @@ class control extends base{
 		
 		$title=substr($querystring,$len);
 		$title = urldecode($title);
-		if(strtolower(WIKI_CHARSET) == 'gbk'){$title = string::hiconv($title,'gbk','utf-8');}
+		if(strtolower(WIKI_CHARSET) == 'gbk'){$title = _string::hiconv($title,'gbk','utf-8');}
 		if($title){
 			$doc = $_ENV['hdapi']->get_doc_by_title($title);
 			if(is_array($doc)){
@@ -28,11 +28,11 @@ class control extends base{
 				//$doc['content'] = $_ENV['hdapi']->filter_external($doc['content']);
 				$his = $_ENV['hdapi']->get_recent_editon_info($doc['did']);
 				if(strtolower(WIKI_CHARSET) == 'gbk'){
-					$doc['content'] = string::hiconv($doc['content'],'utf-8','gbk',true);
-					$doc['author'] = string::hiconv($doc['author'],'utf-8','gbk',true);
-					$his['reason'] = string::hiconv($his['reason'],'utf-8','gbk',true);
-					$doc['lasteditor'] = string::hiconv($doc['lasteditor'],'utf-8','gbk',true);
-					$doc['title'] = string::hiconv($doc['title'],'utf-8','gbk',true);
+					$doc['content'] = _string::hiconv($doc['content'],'utf-8','gbk',true);
+					$doc['author'] = _string::hiconv($doc['author'],'utf-8','gbk',true);
+					$his['reason'] = _string::hiconv($his['reason'],'utf-8','gbk',true);
+					$doc['lasteditor'] = _string::hiconv($doc['lasteditor'],'utf-8','gbk',true);
+					$doc['title'] = _string::hiconv($doc['title'],'utf-8','gbk',true);
 				}
 				$output = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>
 <ROOT>
@@ -68,7 +68,7 @@ class control extends base{
 		if (empty($uniontitle)){
 			$uniontitle = $_ENV["hdapi"]->get_tit_url($doc['title']);
 			if(isset($uniontitle['docdeclaration']) && strtolower(WIKI_CHARSET) == 'gbk'){
-				$uniontitle['docdeclaration'] = string::hiconv($uniontitle['docdeclaration'], 'gbk', 'utf-8');
+				$uniontitle['docdeclaration'] = _string::hiconv($uniontitle['docdeclaration'], 'gbk', 'utf-8');
 			}
 			if (!empty($uniontitle['docdeclaration'])){
 				$_ENV["hdapi"]->save_uniontitle_by_did($did, $uniontitle['docdeclaration']);
@@ -106,7 +106,7 @@ class control extends base{
 		if('comment' == $action){
 			$content = $this->post['comment'];
 			if(strtolower(WIKI_CHARSET) == 'gbk'){
-				$content = string::hiconv($content,'gbk','utf-8',true);
+				$content = _string::hiconv($content,'gbk','utf-8',true);
 			}
 		}
 		

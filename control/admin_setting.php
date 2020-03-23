@@ -34,7 +34,7 @@ class control extends base{
 			if('/'==substr($settings['site_url'],-1)){
 				$settings['site_url']=substr($settings['site_url'],0,-1);
 			}
-			$settings['site_url'] = string::stripspecialcharacter($settings['site_url']);
+			$settings['site_url'] = _string::stripspecialcharacter($settings['site_url']);
 			$setting=$_ENV['setting']->update_setting($settings);
 			$this->cache->removecache('setting');
 			$this->message($this->view->lang['baseConfigSuccess'],'index.php?admin_setting-base');
@@ -315,7 +315,7 @@ class control extends base{
 				'comment_add' => empty($this->post['comment_add']) ? '' : implode(',', $this->post['comment_add']),
 			));
 
-			$this->post['noticemailtpl'] = string::hstripslashes($this->post['noticemailtpl']);
+			$this->post['noticemailtpl'] = _string::hstripslashes($this->post['noticemailtpl']);
 //			foreach($this->post['noticemailtpl'] as $key => $val) { //由于已经在base里执行了 addslashes，此处必须先去掉slashes
 //				$this->post['noticemailtpl'][$key] = stripslashes($val);
 //			}
@@ -379,7 +379,7 @@ class control extends base{
 			}else if(file_exists(HDWIKI_ROOT."/.htaccess")){
 				unlink (HDWIKI_ROOT."/.htaccess");
 			}
-			$this->post['seo_headers'] = string::stripscript($this->post['seo_headers']);
+			$this->post['seo_headers'] = _string::stripscript($this->post['seo_headers']);
 			$setting=$_ENV['setting']->update_setting($this->post);
 			$this->cache->removecache('setting');
 			file::cleardir(HDWIKI_ROOT.'/data/view');
@@ -585,8 +585,8 @@ define('PP_KEY', '".$this->post['ppkey']."');
 	
 	function doshortcut(){
 		$shortcut = trim($this->post['link']);
-		if(string::hstrtoupper(WIKI_CHARSET)=='GBK'){
-			$shortcut=string::hiconv($shortcut,'gbk','utf-8');
+		if(_string::hstrtoupper(WIKI_CHARSET)=='GBK'){
+			$shortcut=_string::hiconv($shortcut,'gbk','utf-8');
 		}
 		$setting['shortcut']=$shortcut;
 		$setting['shortcutstate']=$this->post['shortcutstate'];

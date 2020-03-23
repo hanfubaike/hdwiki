@@ -34,7 +34,7 @@ class control extends base{
 			$outhtml = $_ENV['archiver']->get_html_header().'No Body! No Body!'.$_ENV['archiver']->get_html_footer();
 		}
 		if ('gbk' == strtolower(WIKI_CHARSET)){
-			$outhtml = string::hiconv($outhtml, 'utf-8', 'gbk');
+			$outhtml = _string::hiconv($outhtml, 'utf-8', 'gbk');
 		}
 		$_ENV['archiver']->close_mysql();
 		echo $outhtml;

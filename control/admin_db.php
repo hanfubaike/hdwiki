@@ -278,7 +278,7 @@ class control extends base{
 			}else{
 				if($sqltype==1){
 					$sql = str_replace("\r","",$sql);
-					$sqls = split(";[ \t]{0,}\n",$sql);
+					$sqls = preg_split(";[ \t]{0,}\n",$sql);
 					$i=0;
 					foreach($sqls as $q){
 						$q = trim($q);
@@ -310,7 +310,6 @@ class control extends base{
 	function dodownloadfile(){
 		$filename=$this->get[2];
 		$filename=str_replace('*','.',$filename);
-		$filename = basename($filename);
 		$filedir=HDWIKI_ROOT."/data/db_backup/".$filename;
 		file::downloadfile($filedir);
 	}

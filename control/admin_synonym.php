@@ -77,7 +77,7 @@ class control extends base{
 		}
 	}
 	function dosave(){
-		$synonym=str_replace(array("\n","\r"), ' ', string::hiconv(trim($this->post['synonym']), '', '', true));
+		$synonym=str_replace(array("\n","\r"), ' ', _string::hiconv(trim($this->post['synonym']), '', '', true));
 		if(empty($synonym)){
 			$this->message($_ENV["synonym"]->encode_data(array(-1,'')),'',2);
 		}
@@ -96,7 +96,7 @@ class control extends base{
 			$desttitle=addslashes($doc['title']);
 			$i=true;
 		}elseif(isset($this->post['desttitle'])){
-			$desttitle=string::hiconv(trim($this->post['desttitle']), '', '', true);
+			$desttitle=_string::hiconv(trim($this->post['desttitle']), '', '', true);
 			if($doc=$this->db->fetch_by_field('doc','title',$desttitle))
 				$destdid=$doc['did'];
 			else

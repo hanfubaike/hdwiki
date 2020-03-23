@@ -61,10 +61,10 @@ class hdapimodel {
 			return $a;
 		}
 		if (is_string($a)){
-			$a = string::hiconv($a, 'utf-8');
+			$a = _string::hiconv($a, 'utf-8');
 		} else if (is_array($a)){
 			foreach($a as $k => $v){
-				$k2 = string::hiconv($k, 'utf-8');
+				$k2 = _string::hiconv($k, 'utf-8');
 				if ($k2 != $k) {
 					unset($a[$k]);
 					$k = $k2;
@@ -73,7 +73,7 @@ class hdapimodel {
 			}
 		} else if (is_object($a)){
 			foreach($a as $k => $v){
-				$k2 = string::hiconv($k, 'utf-8');
+				$k2 = _string::hiconv($k, 'utf-8');
 				if ($k2 != $k) {
 					unset($a->$k);
 					$k = $k2;
@@ -91,10 +91,10 @@ class hdapimodel {
 		}
 		
 		if (is_string($a)){
-			$a = string::hiconv($a, 'gbk');
+			$a = _string::hiconv($a, 'gbk');
 		} else if (is_array($a)){
 			foreach($a as $k => $v){
-				$k2 = string::hiconv($k, 'gbk');
+				$k2 = _string::hiconv($k, 'gbk');
 				if ($k2 != $k) {
 					unset($a[$k]);
 					$k = $k2;
@@ -103,7 +103,7 @@ class hdapimodel {
 			}
 		} else if (is_object($a)){
 			foreach($a as $k => $v){
-				$k2 = string::hiconv($k, 'gbk');
+				$k2 = _string::hiconv($k, 'gbk');
 				if ($k2 != $k) {
 					unset($a->$k);
 					$k = $k2;
@@ -175,7 +175,7 @@ class hdapimodel {
 	
 	function islock($title){
 		if($this->islocal()){return false;}
-		if(strtolower(WIKI_CHARSET) == 'gbk') {$title = string::hiconv($title,'utf-8','gbk');}
+		if(strtolower(WIKI_CHARSET) == 'gbk') {$title = _string::hiconv($title,'utf-8','gbk');}
 		$xmldata = $this->hfopen($this->auth_url(WIKI_LOCK_URL,$this->base->user['username']).'title='.urlencode($title).'&lock_type=1');
 		$xmlarray = $this->xml2array($xmldata);
 		if('true'== $xmlarray['locked']) {return true;}
@@ -184,7 +184,7 @@ class hdapimodel {
 
 	function lock($title){
 		if($this->islocal()){return false;}
-		if(strtolower(WIKI_CHARSET) == 'gbk') {$title = string::hiconv($title,'utf-8','gbk');}
+		if(strtolower(WIKI_CHARSET) == 'gbk') {$title = _string::hiconv($title,'utf-8','gbk');}
 		$xmldata = $this->hfopen($this->auth_url(WIKI_LOCK_URL,$this->base->user['username']).'title='.urlencode($title).'&lock_type=2');
 		$xmlarray = $this->xml2array($xmldata);
 		if('true'== $xmlarray['success']) {return true;}
@@ -193,7 +193,7 @@ class hdapimodel {
 
   	function un_lock($title){
 		if($this->islocal()){return false;}
-  		if(strtolower(WIKI_CHARSET) == 'gbk') {$title = string::hiconv($title,'utf-8','gbk');}
+  		if(strtolower(WIKI_CHARSET) == 'gbk') {$title = _string::hiconv($title,'utf-8','gbk');}
 		$xmldata = $this->hfopen($this->auth_url(WIKI_LOCK_URL,$this->base->user['username']).'title='.urlencode($title).'&lock_type=3');
 		$xmlarray = $this->xml2array($xmldata);
 		if('true'== $xmlarray['success']){return true;}
@@ -202,7 +202,7 @@ class hdapimodel {
 
 	function refresh_lock($title){
 		if($this->islocal()){return false;}
-	  	if(strtolower(WIKI_CHARSET) == 'gbk') {$title = string::hiconv($title,'utf-8','gbk');}
+	  	if(strtolower(WIKI_CHARSET) == 'gbk') {$title = _string::hiconv($title,'utf-8','gbk');}
 		$xmldata = $this->hfopen($this->auth_url(WIKI_LOCK_URL,$this->base->user['username']).'title='.urlencode($title).'&lock_type=4');
 		$xmlarray = $this->xml2array($xmldata);
 		if('true'==$xmlarray['success']) {return true;}
@@ -214,8 +214,8 @@ class hdapimodel {
 		else {$usernick = $name;}
 		$sitenick = $this->base->setting['site_nick'];
 		if('gbk' == strtolower(WIKI_CHARSET)){
-			$usernick = string::hiconv($usernick,'utf-8','gbk',true);
-			$sitenick = string::hiconv($sitenick,'utf-8','gbk',true);
+			$usernick = _string::hiconv($usernick,'utf-8','gbk',true);
+			$sitenick = _string::hiconv($sitenick,'utf-8','gbk',true);
 		}
 	    return $url."?key=".$this->base->setting['site_key']."&site_nick=".urlencode($sitenick)."&user_nick=".urlencode($usernick)."&";
 	}
@@ -235,7 +235,7 @@ class hdapimodel {
 		
 		$doc = $_ENV['doc']->get_doc_by_title(addslashes($title), 'summary,lastedit');
 		
-		if('gbk' == strtolower(WIKI_CHARSET)) {$title = string::hiconv($title,'utf-8','gbk');}
+		if('gbk' == strtolower(WIKI_CHARSET)) {$title = _string::hiconv($title,'utf-8','gbk');}
 		
 		if($doc && $doc['summary']){
 			$lastedit = $doc['lastedit'];
@@ -276,7 +276,7 @@ class hdapimodel {
 	function get_content_import($title,$type=1,$return_info=false){
 		$key = md5($title);
 		if($this->is_private_title($title)){return '';}
-	  	if('gbk' == strtolower(WIKI_CHARSET)) {$title = string::hiconv($title,'utf-8','gbk');}
+	  	if('gbk' == strtolower(WIKI_CHARSET)) {$title = _string::hiconv($title,'utf-8','gbk');}
 		$l = $this->auth_url(WIKI_GET_URL).'title='.urlencode($title).'&type='.$type.'&encode='.strtolower(WIKI_CHARSET);
 		$xmldata = $this->hfopen($l);
 		
@@ -294,7 +294,7 @@ class hdapimodel {
 			$this->content_mark[$key.'_isedit'] = $xmlarray['is_edit']; //is allow client edit
 			$this->cache->writecache('hdapi_content_mark_'.$key[0], $this->content_mark);
 		}else if (isset($xmlarray['return_info'])){
-			if('gbk' == strtolower(WIKI_CHARSET)) {$xmlarray['return_info'] = string::hiconv($xmlarray['return_info'],'gbk','utf-8');}
+			if('gbk' == strtolower(WIKI_CHARSET)) {$xmlarray['return_info'] = _string::hiconv($xmlarray['return_info'],'gbk','utf-8');}
 			$content = array(
 				'return_info'=>$xmlarray['return_info'],
 				'return_type'=>$xmlarray['type']
@@ -306,7 +306,7 @@ class hdapimodel {
 	
 	function get_tit_url($title){
 		if (!is_array($this->doclink)) $this->doclink = array();
-		if(strtolower(WIKI_CHARSET) == 'gbk')$title = string::hiconv($title,'utf-8','gbk');
+		if(strtolower(WIKI_CHARSET) == 'gbk')$title = _string::hiconv($title,'utf-8','gbk');
 		$l = WIKI_UNION_URL.'?title='.urlencode($title).'&encode='.strtolower(WIKI_CHARSET);
 		$xmldata = $this->hfopen($l);
 		$xmlarray = $this->xml2array($xmldata);
@@ -338,8 +338,8 @@ class hdapimodel {
 		$json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
 		$sitenick = $this->base->setting['site_nick'];
 		if('gbk' == strtolower(WIKI_CHARSET)){
-		  	$title=  string::hiconv($title,'utf-8','gbk');
-			$sitenick = string::hiconv($sitenick,'utf-8','gbk');
+		  	$title=  _string::hiconv($title,'utf-8','gbk');
+			$sitenick = _string::hiconv($sitenick,'utf-8','gbk');
 		}
 		$postdata = array('type'=>'notbatch','site_nick'=>urlencode($sitenick),'key'=>$this->base->setting['site_key'],'docList'=>array($title));
 		$l = NEW_WIKI_POST_URL;
@@ -462,7 +462,7 @@ class hdapimodel {
 			if (function_exists('iconv')){
 				$var['sitenick'] = iconv('GBK', 'UTF-8', $var['sitenick']);
 			}else{
-				$var['sitenick'] = string::hiconv($var['sitenick'],'utf-8','gbk');
+				$var['sitenick'] = _string::hiconv($var['sitenick'],'utf-8','gbk');
 			}
 		}
 		if($this->checkUser($var['sitekey'],$var['sitenick'])){	return true;}
@@ -471,7 +471,7 @@ class hdapimodel {
 
 	function get_doc_title_by_catname($catname){
 		$l = "http://api.hudong.com/categorydocs.do";
-		if(strtolower(WIKI_CHARSET) == 'gbk') {$catname = string::hiconv($catname,'utf-8','gbk');}
+		if(strtolower(WIKI_CHARSET) == 'gbk') {$catname = _string::hiconv($catname,'utf-8','gbk');}
 		include HDWIKI_ROOT.'/lib/json.class.php';
 		$json = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
 		$postdata=array(
@@ -491,7 +491,7 @@ class hdapimodel {
 					$t .= $p.'|||';
 				}
 				if('gbk' == strtolower(WIKI_CHARSET)) {
-					$t = string::hiconv($t,'gbk','utf-8');
+					$t = _string::hiconv($t,'gbk','utf-8');
 				}
 				return str_replace('|||', $this->exploder, $t);
 			}else{
@@ -512,7 +512,7 @@ class hdapimodel {
 				if($doc){
 					$sql = "SELECT * FROM `".DB_TABLEPRE."doc` WHERE title='{$doc}'";
 					if(!is_array($this->db->fetch_first($sql))){
-						$letter = string::getfirstletter($doc);
+						$letter = _string::getfirstletter($doc);
 						$author = $this->base->user['username'];
 						$authorid = $this->base->user['uid'];
 						$sql = "INSERT INTO `".DB_TABLEPRE."doc` (`cid`,`letter`,`title`,`author`,`authorid`,`time`,`lastedit`,`lasteditor`) VALUES ('{$cid}','{$letter}','{$doc}','{$author}','{$authorid}','{$time}','{$time}','{$author}')";
@@ -526,14 +526,14 @@ class hdapimodel {
 	}
 
 	function update_doc($did,$content){
-		$summary = addslashes(string::substring(strip_tags($content),0,100));
+		$summary = addslashes(_string::substring(strip_tags($content),0,100));
 		$content = addslashes($content);
 		$sql = "UPDATE `".DB_TABLEPRE."doc` SET summary = '{$summary}', content = '{$content}' WHERE did = '{$did}'";
 		$this->db->query($sql);
 	}
 
 	function update_doc_by_time($did,$content){
-		$summary = addslashes(string::substring(strip_tags($content),0,100));
+		$summary = addslashes(_string::substring(strip_tags($content),0,100));
 		$content = addslashes($content);
 		$time = time();
 		$tmpdoc = $this->get_doc_title_by_id($did);
@@ -553,7 +553,7 @@ class hdapimodel {
 		$sql = "SELECT `did`,`title` FROM `".DB_TABLEPRE."doc` WHERE 1 LIMIT {$start},{$limit}";
 		$query = $this->db->query($sql);
 		while($tmp = $this->db->fetch_array($query)){
-			if('gbk' == strtolower(WIKI_CHARSET)) {$title[] = string::hiconv($tmp['title'],'utf-8','gbk');}
+			if('gbk' == strtolower(WIKI_CHARSET)) {$title[] = _string::hiconv($tmp['title'],'utf-8','gbk');}
 			else {$title[] = $tmp['title'];}
 		}
 		if(!$title){return false;}
@@ -563,7 +563,7 @@ class hdapimodel {
 			$l = NEW_WIKI_POST_URL;
 			$sitenick = $this->base->setting['site_nick'];
 			if('gbk' == strtolower(WIKI_CHARSET)){
-				$sitenick = string::hiconv($sitenick,'utf-8','gbk');
+				$sitenick = _string::hiconv($sitenick,'utf-8','gbk');
 			}
 			$postdata = array('type'=>'batch','site_nick'=>urlencode($sitenick),'key'=>$this->base->setting['site_key'],'docList'=>$title);
 			if($postdata['site_nick'] && $postdata['key']){
@@ -603,12 +603,12 @@ class hdapimodel {
 		$appkey =$this->base->setting['site_appkey'];
 		
 	  	if('gbk' == strtolower(WIKI_CHARSET)) {
-			$title = string::hiconv($title,'utf-8','gbk');
-			$summary = string::hiconv($summary,'utf-8','gbk');
-			$content = string::hiconv($content,'utf-8','gbk');
+			$title = _string::hiconv($title,'utf-8','gbk');
+			$summary = _string::hiconv($summary,'utf-8','gbk');
+			$content = _string::hiconv($content,'utf-8','gbk');
 		}
 		
-		$summary=string::convercharacter($summary);
+		$summary=_string::convercharacter($summary);
 		
 		$link=urlencode(WIKI_URL.'/?doc-innerlink-'.urlencode($title));
 		

@@ -123,7 +123,7 @@ class recyclemodel {
 			$content = unserialize($recycle['content']);
 			if($models[$recycle['type']]['model'] == 'doc') {
 				// 判断词条是否已经存在
-				$content['doc'][0]['title']=string::haddslashes($content['doc'][0]['title']);
+				$content['doc'][0]['title']=_string::haddslashes($content['doc'][0]['title']);
 				$data=$this->db->fetch_by_field('doc','title',$content['doc'][0]['title']);
 				if((bool)$data){
 						$return['doc'][]['title'] = $content['doc'][0]['title'];

@@ -98,7 +98,7 @@ class thememodel {
 			$xmlarray['path']=$filenames;
 			for($x=0;$x<$xmlcounts;$x++){
 				if($values[$x]['level']==2){
-					$values[$x]['value']=isset($values[$x]['value']) ? string::hiconv($values[$x]['value']) : '';
+					$values[$x]['value']=isset($values[$x]['value']) ? _string::hiconv($values[$x]['value']) : '';
 					$xmlarray[$values[$x]['tag']]=$values[$x]['value'];
 				}
 			}

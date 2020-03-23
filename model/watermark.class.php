@@ -34,7 +34,7 @@ class watermarkmodel {
 			$this->$key=$value;
 		}
 		if($this->watermarktype==2 && WIKI_CHARSET=='GBK'){
-			$this->watermarktext['text']=string::hiconv($this->watermarktext['text'],'utf-8','gbk');
+			$this->watermarktext['text']=_string::hiconv($this->watermarktext['text'],'utf-8','gbk');
 		}
 		if($this->watermarkstatus =='0'){
 			return false;

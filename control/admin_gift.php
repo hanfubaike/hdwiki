@@ -59,9 +59,9 @@ class control extends base{
 		if(!isset($this->post['submit'])){
 			$this->view->display('admin_addgift');
 		}else{
-			$title = htmlspecial_chars(string::haddslashes(string::hiconv(trim($this->post['title']))));
+			$title = htmlspecial_chars(_string::haddslashes(_string::hiconv(trim($this->post['title']))));
 			$credit = trim($this->post['credit']);
-			$description = htmlspecial_chars(string::haddslashes(string::hiconv(trim($this->post['description']))));
+			$description = htmlspecial_chars(_string::haddslashes(_string::hiconv(trim($this->post['description']))));
 			$imgname=$_FILES['giftfile']['name'];
 			$extname=file::extname($imgname);
 			$destfile = 'uploads/gift/'.util::random(8).'.'.$extname;

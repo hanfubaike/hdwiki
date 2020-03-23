@@ -99,9 +99,9 @@ class wordmodel {
 		if($result){
 			if( file_exists($destfile) ){
 				if(WIKI_CHARSET == 'UTF-8'){
-					$data = string::hiconv(file::readfromfile($destfile), 'utf-8');
+					$data = _string::hiconv(file::readfromfile($destfile), 'utf-8');
 				}else{
-					$data = string::hiconv(file::readfromfile($destfile), 'gbk');
+					$data = _string::hiconv(file::readfromfile($destfile), 'gbk');
 				}
 			}
 			$filewords = array_filter(explode(',', str_replace('，', ',', addslashes($data))),array($this,"trimwords"));

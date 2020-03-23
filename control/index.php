@@ -12,7 +12,7 @@ class control extends base{
  	function dodefault() {
 		if($this->setting['compatible']){
 		    $all_category=$_ENV['category']->get_category_cache();
-		    $categorylist=$_ENV['category']->get_site_category(0,$all_category);
+//		    $categorylist=$_ENV['category']->get_site_category(0,$all_category);
 		    $indexcache=$this->cache->getcache('indexcache',$this->setting['index_cache_time']);
 		    if(!(bool)$indexcache){
 			    $this->load('doc');

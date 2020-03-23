@@ -107,7 +107,7 @@ class control extends base{
 			    }
 			    $doc['did'] = $doc['page_id'];
 			    $doc['title']=$doc['page_title'];
-			    $doc['letter']=string::getfirstletter($doc['page_title']);
+			    $doc['letter']=_string::getfirstletter($doc['page_title']);
 
 			    $wiki = $text_wiki->singleton($parser);
 			    $result = $wiki->transform($source);
@@ -115,10 +115,10 @@ class control extends base{
 
 			    $doc['old_text']=mysql_real_escape_string($doc['old_text']);
 			    $doc['tags']='';
-			    $doc['summary']=trim(string::convercharacter(string::substring(strip_tags($doc['old_text']),0,100)));
+			    $doc['summary']=trim(_string::convercharacter(_string::substring(strip_tags($doc['old_text']),0,100)));
 			    $doc['images']=util::getimagesnum($doc['old_text']);
 			    $doc['time']=$this->time;
-			    $doc['words']=string::hstrlen($doc['old_text']);
+			    $doc['words']=_string::hstrlen($doc['old_text']);
 			    $doc['visible']='1';
 			    $doc['cid'] = $_ENV['mwimport']->get_cid($this->wmdb,'',$doc['did']);
 

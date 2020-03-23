@@ -58,7 +58,7 @@ class control extends base{
 				$this->view->assign("navmodellist", $navmodellist);
 				break;
 			case 2:
-				$navname = string::stripscript(trim($this->post['navname']));
+				$navname = _string::stripscript(trim($this->post['navname']));
 				if(!$navname){
 					$this->message('该导航模块名称不能为空!','BACK');
 				}

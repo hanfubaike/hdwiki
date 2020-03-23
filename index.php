@@ -1,9 +1,10 @@
 <?php
 
 /*the hdwiki entrance */
-error_reporting(0);
+error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+//error_reporting(0);
 
-@set_magic_quotes_runtime(0);
+//@set_magic_quotes_runtime(0);
 $mtime = explode(' ', microtime());
 $starttime = $mtime[1] + $mtime[0];
 

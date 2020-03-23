@@ -37,7 +37,7 @@ class sitemapmodel {
 		$doc = array();
 		$page_last_did = 0;
 		while($row = $this->db->fetch_array($query)){
-			$doc_id = ('1'==$this->base->setting['seo_type'] && '1'==$this->base->setting['seo_type_doc']) ? rawurlencode(string::hiconv($row['title'])) : $row['did'];
+			$doc_id = ('1'==$this->base->setting['seo_type'] && '1'==$this->base->setting['seo_type_doc']) ? rawurlencode(_string::hiconv($row['title'])) : $row['did'];
 			$doc['loc']        = WIKI_URL.'/'.$this->base->view->url("doc-view-{$doc_id}");
 			$doc['lastmod']    = gmdate('Y-m-d\TH:i:s+00:00', $row['lastedit']);
 			$doc['changefreq'] = $this->setting['doc_changefreq']; //////////////////

@@ -253,7 +253,7 @@ class docmodel {
 			$edition = $doc;
 		}else{
 			$edition=$this->db->fetch_first("SELECT * FROM ".DB_TABLEPRE."doc WHERE did=".$doc['did']);
-			$edition=string::haddslashes($edition,1);
+			$edition=_string::haddslashes($edition,1);
 		}
 
 		$edition_sql = $increase_edition ? 'edits=edits+1,editions=editions+1,' : '';
@@ -261,7 +261,7 @@ class docmodel {
 		tag='".$doc['tags']."' ,summary='".$doc['summary']."' ,content='".$doc['content']."',lastedit='".$doc['time']."',
 		lasteditor='".$this->base->user['username']."',lasteditorid='".$this->base->user['uid']."',{$edition_sql}visible='".$doc['visible']."' WHERE did=".$doc['did']);
 		
-		$words=string::hstrlen($edition['content']);
+		$words=_string::hstrlen($edition['content']);
 		$images=util::getimagesnum($edition['content']);
 		if(!empty($this->base->setting['db_storage']) && $this->base->setting['db_storage']=='txt'){
 			$content=stripslashes($edition['content']);
@@ -350,7 +350,7 @@ class docmodel {
 	
 	function spilttags($tag){
 		$taglist=array();
-		$tags=split(';',$tag) ;
+		$tags=explode(';',$tag) ;
 		foreach ($tags as $tag){
 			if(!empty($tag)){
 				$taglist[]=$tag;
@@ -475,7 +475,7 @@ class docmodel {
 			$doc['time']=$this->base->date($doc['time']);
 			$doc['rawtitle']=$doc['title'];
 			$doc['title']=htmlspecial_chars($doc['title']);
-			$doc['shorttitle']=(string::hstrlen($doc['title'])>16)?string::substring($doc['title'],0,16)."...":$doc['title'];
+			$doc['shorttitle']=(_string::hstrlen($doc['title'])>16)?_string::substring($doc['title'],0,16)."...":$doc['title'];
 			$doc['category']=empty($doc['cid']) ? NULL : $categorylist[$doc['cid']];
 			$doc['img'] = util::getfirstimg($doc['content']);
 			$doclist[]=$doc;
@@ -556,7 +556,7 @@ class docmodel {
 					$focus['image']='style/default/recommend_l.jpg';
 				}
 			}
-			$focus['shorttitle']=(string::hstrlen($focus['title'])>12)?string::substring($focus['title'],0,12)."...":$focus['title'];
+			$focus['shorttitle']=(_string::hstrlen($focus['title'])>12)?_string::substring($focus['title'],0,12)."...":$focus['title'];
 			$focus['rawtitle']=$focus['title'];
 			$img=explode('/',$focus['image']);
 			$focus['simage']=$img[0].'/'.$img[1].'/s_f_'.$img[2];
@@ -574,16 +574,16 @@ class docmodel {
 	function set_focus_doc($dids,$doctype){
 		$doclist=$this->get_doc_by_ids($dids);
 		foreach($doclist as $key=>$doc){
-			$title = string::haddslashes($doc['rawtitle'],1);
-			$tag = string::haddslashes($this->jointags($doc['tag']),1);
+			$title = _string::haddslashes($doc['rawtitle'],1);
+			$tag = _string::haddslashes($this->jointags($doc['tag']),1);
 			if($doctype==2){
-				$summary =trim(string::convercharacter(string::substring(strip_tags($doc['content']),0,30)));
+				$summary =trim(_string::convercharacter(_string::substring(strip_tags($doc['content']),0,30)));
 			}elseif($doctype==3){
-				$summary =trim(string::convercharacter(string::substring(strip_tags($doc['content']),0,80)));
+				$summary =trim(_string::convercharacter(_string::substring(strip_tags($doc['content']),0,80)));
 			}else{
-				$summary =trim(string::convercharacter(string::substring(strip_tags($doc['content']),0,100)));
+				$summary =trim(_string::convercharacter(_string::substring(strip_tags($doc['content']),0,100)));
 			}
-			$summary = string::haddslashes($summary,1);
+			$summary = _string::haddslashes($summary,1);
 			$image = $this->setfocusimg(util::getfirstimg($doc['content']));
 			$this->db->query("REPLACE INTO ".DB_TABLEPRE."focus (did,title,tag,summary,image,time,type)VALUES (".$doc['did'].",'$title','$tag','$summary','$image','".$this->base->time."','$doctype')");
 		}
@@ -624,7 +624,7 @@ class docmodel {
 	}
 	
 	function change_name($did,$title){
-		$letter=string::getfirstletter($title);
+		$letter=_string::getfirstletter($title);
 		if($this->db->query("UPDATE ".DB_TABLEPRE."doc SET title='$title',letter='$letter' WHERE did=$did")){
 			$this->db->query("UPDATE ".DB_TABLEPRE."edition SET title='$title' WHERE did=$did");
 			return true;
@@ -749,7 +749,7 @@ class docmodel {
 	}
 	
 	function recover($data){
-		$data=string::haddslashes($data,1);
+		$data=_string::haddslashes($data,1);
 		for($i=0,$count=count($data['doc']);$i<$count;$i++){
 			$this->db->query("INSERT INTO  ".DB_TABLEPRE."doc (did,cid,letter,title,tag,summary,content,author,authorid,time,lastedit,lasteditor,lasteditorid,views,edits,editions,comments,votes,visible,locked) 
 			VALUES ('".$data['doc'][$i]['did']."','".$data['doc'][$i]['cid']."','".$data['doc'][$i]['letter']."','".$data['doc'][$i]['title']."','".$data['doc'][$i]['tag']."','".$data['doc'][$i]['summary']."','".$data['doc'][$i]['content']."','".$data['doc'][$i]['author']."','".$data['doc'][$i]['authorid']."','".$data['doc'][$i]['time']."','".$data['doc'][$i]['lastedit']."','".$data['doc'][$i]['lasteditor']."','".$data['doc'][$i]['lasteditorid']."','".$data['doc'][$i]['views']."','".$data['doc'][$i]['edits']."','".$data['doc'][$i]['editions']."','".$data['doc'][$i]['comments']."','".$data['doc'][$i]['votes']."','".$data['doc'][$i]['visible']."','".$data['doc'][$i]['locked']."') ");
@@ -1036,7 +1036,7 @@ class docmodel {
 	}
 	
 	function recover_edition($data){
-		$data=string::haddslashes($data,1);
+		$data=_string::haddslashes($data,1);
 		$this->db->query("INSERT INTO  ".DB_TABLEPRE."edition (eid,cid,did,author,authorid,time,ip,title,tag,summary,content,words,images,type,judge,excellent,big,reason,coins) 
 					VALUES ('".$data['eid']."','".$data['cid']."','".$data['did']."','".$data['author']."','".$data['authorid']."','".$data['time']."','".$data['ip']."','".$data['title']."','".$data['tag']."','".$data['summary']."','".$data['content']."','".$data['words']."','".$data['images']."','".$data['type']."','".$data['judge']."','".$data['excellent']."','".$data['big']."','".$data['reason']."','".$data['coins']."')");
 		$this->db->query("UPDATE ".DB_TABLEPRE."doc SET editions=editions+1 WHERE did=".$data['did']);
@@ -1071,7 +1071,7 @@ class docmodel {
 		$edition['tags']=$data['tag'];
 		$edition['time']=$this->base->time;
 		$edition['visible']=$this->base->setting['verify_doc']?'0':'1';
-		$this->edit_doc(string::haddslashes($edition,1));
+		$this->edit_doc(_string::haddslashes($edition,1));
 		return true;
 	}
 	
@@ -1410,7 +1410,7 @@ class docmodel {
 			if(empty($cooperatedocs[$i])){
 				unset($cooperatedocs[$i]);
 			}else{
-				$coopdoc[$i]['shorttitle'] = (string::hstrlen($cooperatedocs[$i])>10)?string::substring($cooperatedocs[$i],0,5)."...":$cooperatedocs[$i];
+				$coopdoc[$i]['shorttitle'] = (_string::hstrlen($cooperatedocs[$i])>10)?_string::substring($cooperatedocs[$i],0,5)."...":$cooperatedocs[$i];
 				$coopdoc[$i]['title'] = $cooperatedocs[$i];
 			}
 		}

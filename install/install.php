@@ -152,11 +152,11 @@ for ($i = 1; $i < $steptotal; $i++) {
 			
 			if ($curr_php_version >= '7.0') {
 				$curr_php_version = "$curr_php_version <font color='red'>{$lang['step2PHPVersionTooHighTip']}</font>";
-				$nextAccess = 0;
+				//$nextAccess = 0;
 				$extend .= '{B}'.$lang['step2PHPVersionTooHighTip']."\n";
 			}
 
-			if (!function_exists('mysql_connect')) {
+			if (!function_exists('mysqli_connect')) {
 				$MySQLVersion = "<font color='s3_color'>{$lang['commonUnsupport']}</font>";
 				$nextAccess = 0;
 				$extend .= '{C}'.'mysql'.$lang['commonUnsupport']."\n";
@@ -334,23 +334,23 @@ $str = $str."<div id=\"wrapper1\">
 				}
 
 				if ($nextAccess == 1) {
-					if(!@mysql_connect($dbhost, $dbuser, $dbpassword)) {
+					if(!($conn=@mysqli_connect($dbhost, $dbuser, $dbpassword))) {
 						$msg .= '<SPAN class=err>'.$lang['step3NoConnDB'].'</span>';
 						$nextAccess = 0;
 						$extend .= '{M}'.$lang['step3NoConnDB']."\n";
 					} else {
-						if(mysql_get_server_info() > '4.1') {
-							mysql_query("CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER SET $dbcharset");
+						if(mysqli_get_server_info($conn) > '4.1') {
+							mysqli_query($conn, "CREATE DATABASE IF NOT EXISTS `$dbname` DEFAULT CHARACTER SET $dbcharset");
 						} else {
-							mysql_query("CREATE DATABASE IF NOT EXISTS `$dbname`");
+							mysqli_query($conn, "CREATE DATABASE IF NOT EXISTS `$dbname`");
 						}
-						if(mysql_errno()) {
+						if(mysqli_errno($conn)) {
 							$msg .= "<SPAN class=err>{$lang['step3DBNoPower']}</span><br />";
 							$nextAccess = 0;
 							$extend .= '{N}'.$lang['step3DBNoPower']."\n";
 						}
 
-						mysql_close();
+						mysqli_close($conn);
 					}
 				}
 
@@ -386,7 +386,7 @@ $str = $str."<div id=\"wrapper1\">
 					$nextAccess = 0;
 					$extend .= '{O}'.$lang['step2PHPVersionTooLowTip']."\n";
 				}
-				if (!function_exists('mysql_connect')) {
+				if (!function_exists('mysqli_connect')) {
 					$msg .= "<SPAN class=err>{$lang['step3MySQLExtErrorTip']}</span><br /><br />";
 					$nextAccess = 0;
 					$extend .= '{P}'.$lang['step3MySQLExtErrorTip']."\n";
@@ -417,20 +417,21 @@ $str = $str."<div id=\"wrapper1\">
 			break;
 		case 4 :
 				require_once HDWIKI_ROOT.'/config.php';
-				if(!@mysql_connect(DB_HOST, DB_USER, DB_PW)) {
+
+				if(!($conn = @mysqli_connect(DB_HOST, DB_USER, DB_PW))) {
 					$msg .= '<SPAN class=err>'.$lang['step3NoConnDB'].'</span><br/>';
 					$nextAccess = 0;
 					$extend .= '{Q}'.$lang['step3NoConnDB']."\n";
 				} else {
-					$curr_mysql_version = mysql_get_server_info();
+					$curr_mysql_version = mysqli_get_server_info($conn);
 					if($curr_mysql_version < '3.23') {
 						$msg .= '<SPAN class=err>'.$lang['step3MySqlVersionToLowTip'].'</span><br/>';
 						$nextAccess = 0;
 						$extend .= '{R}'.$lang['step3MySqlVersionToLowTip']."\n";
 					}
-					$islink=mysql_select_db(DB_NAME);
+					$islink=mysqli_select_db($conn, DB_NAME);
 					if($islink){
-						$result = mysql_query("SELECT COUNT(*) FROM ".DB_TABLEPRE."setting");
+						$result = mysqli_query($conn, "SELECT COUNT(*) FROM ".DB_TABLEPRE."setting");
 						if($result) {
 							$msg .= '<SPAN class=err>'.$lang['step3DBAlreadyExist'].'</span><br/>';
 							$alert = " onClick=\"return confirm('{$lang['step3DBDropTableConfirm']}');\"";
@@ -1147,10 +1148,10 @@ EOT;
 	$pluginbase->install('hdapi');
  	$pluginbase->install('ucenter');
 */	
-					if (mysql_error()) {
-						$str = "<SPAN class=err>" . $strtip . ' ' . mysql_error() . "</span>";
+					if (mysqli_error($db->mlink)) {
+						$str = "<SPAN class=err>" . $strtip . ' ' . mysqli_error($db->mlink) . "</span>";
 						$nextAccess = 0;
-						$extend .= '{W}'.$strtip . ' ' . mysql_error()."\n";
+						$extend .= '{W}'.$strtip . ' ' . mysqli_error($db->mlink)."\n";
 					}
 					if($nextAccess==1){
 						$str = "<div id=\"tips\">{$lang['stepSetupDelInstallDirTip']}</div>";

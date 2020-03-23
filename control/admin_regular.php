@@ -62,11 +62,11 @@ class control extends base{
 	
 	/*edit regular*/
 	function doedit(){
-		$regularname=string::hiconv(trim($this->post['regularname']));
+		$regularname=_string::hiconv(trim($this->post['regularname']));
 		$regularexpr = trim($this->post['regularexpr']);
 		$regulargroupid = $this->post['regulargroupid'];
 		$regulargroupid=is_numeric($regulargroupid)?intval($regulargroupid):0;
-		$regularname = string::hiconv($regularname);
+		$regularname = _string::hiconv($regularname);
 	    $_ENV['regular']->edit_regular($regularname, $regularexpr, $regulargroupid,$this->post['id']);
 		$this->message($this->view->lang['regularEditSuccess'],'index.php?admin_regular');
 	}

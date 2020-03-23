@@ -64,7 +64,49 @@ class template{
 		return $this->objfile;
 	}
 
-	function  compile() {
+    function  compile() {
+	    $self = $this;
+        $template = file::readfromfile($this->tplfile);
+        $template = preg_replace_callback("/\{block:([^\}]+?)\/\}/is", function($matches) use ($self) { return $self->block($matches[1]); }, $template);
+
+        $template = preg_replace("/\<\!\-\-\{(.+?)\}\-\-\>/s", "{\\1}", $template);
+        $template = preg_replace_callback("/\{lang.(\w+?)\}/is", function($matches) { return $this->lang($matches[1]); }, $template);
+        if('1'==$this->vars['setting']['seo_type'] && '1'==$this->vars['setting']['seo_type_doc']){
+            $template = preg_replace_callback("/\{url.doc\-view\-(.+?)\['did'\]\}/is", function($matches) { return $this->stripvtag('{url doc-view-{eval echo rawurlencode('.$matches[1].'[\'rawtitle\']);}}'); }, $template);
+        }
+        $template = preg_replace("/\{($this->var_regexp)\}/", "<?php echo \\1?>", $template);
+        $template = preg_replace("/\{($this->const_regexp)\}/", "<?php echo \\1?>", $template);
+        $template = preg_replace("/(?<!\<\?php echo |\\\\)$this->var_regexp/", "<?php echo \\0?>", $template);
+        $template = preg_replace_callback("/\{\{eval (.*?)\}\}/is", function($matches) { return $this->stripvtag('<?php '.$matches[1].'?>'); }, $template);
+
+        $template = preg_replace_callback("/\{eval (.*?)\}/is", function($matches) { return $this->stripvtag('<?php '.$matches[1].'?>'); }, $template);
+        $template = preg_replace_callback("/\{for (.*?)\}/is", function($matches) { return $this->stripvtag('<?php for('.$matches[1].') {?>'); }, $template);
+        $template = preg_replace_callback("/\{elseif\s+(.+?)\}/is", function($matches) { return $this->stripvtag('<?php } elseif('.$matches[1].') {?>'); }, $template);
+
+        $template = preg_replace_callback("/\{hdwiki:([^\}]+?)\/\}/is", function($matches) { return $this->hdwiki($matches[1]); }, $template);
+        for($i=0; $i<2; $i++) {
+            $template = preg_replace_callback("/\{hdwiki:(.+?)\}(.+?)\{\/hdwiki\}/is", function($matches) { return $this->hdwiki($matches[1], $matches[2]); }, $template);
+            $template = preg_replace_callback("/\{loop\s+$this->vtag_regexp\s+$this->vtag_regexp\s+$this->vtag_regexp\}(.+?)\{\/loop\}/is", function($matches) { return $this->loopsection($matches[1], $matches[2], $matches[3], $matches[4]); }, $template);
+            $template = preg_replace_callback("/\{loop\s+$this->vtag_regexp\s+$this->vtag_regexp\}(.+?)\{\/loop\}/is", function($matches) { return $this->loopsection($matches[1], '', $matches[2], $matches[3]); }, $template);
+        }
+
+        $template = preg_replace_callback("/\{if\s+(.+?)\}/is", function($matches) { return $this->stripvtag('<?php if('.$matches[1].') { ?>'); }, $template);
+        $template = preg_replace("/\{template\s+(\w+?)\}/is", "<?php include \$this->gettpl('\\1');?>", $template);
+        $template = preg_replace_callback("/\{template\s+(.+?)\}/is", function($matches) { return $this->stripvtag('<?php include \$this->gettpl('.$matches[1].') { ?>'); }, $template);
+        $template = preg_replace("/\{else\}/is", "<?php } else { ?>", $template);
+        $template = preg_replace("/\{\/if\}/is", "<?php } ?>", $template);
+        $template = preg_replace("/\{\/for\}/is", "<?php } ?>", $template);
+        $template = preg_replace("/$this->const_regexp/", "<?php echo \\1?>", $template);
+        $template = "<?php if(!defined('HDWIKI_ROOT')) exit('Access Denied');?>\r\n$template";
+        $template = preg_replace("/(\\\$[a-zA-Z_]\w+\[)([a-zA-Z_]\w+)\]/i", "\\1'\\2']", $template);
+        $template = preg_replace_callback("/\{url.(.+?)\}/is", function($matches) { return $this->url($matches[1]); }, $template);
+
+        $template = preg_replace_callback("/\{datacall:([^\}]+?)\/\}/is", function($matches) { return $this->datacall($matches[1]); }, $template);
+        $fp = fopen($this->objfile, 'w');
+        fwrite($fp, $template);
+        fclose($fp);
+    }
+	function  compile_old() {
 		$template = file::readfromfile($this->tplfile);
 		$template = preg_replace("/\{block:([^\}]+?)\/\}/ies", "\$this->block('\\1')", $template);
 		

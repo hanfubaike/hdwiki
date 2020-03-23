@@ -45,7 +45,7 @@ class control extends base{
 			$titles=$this->post['titles'];
 			
 			if (WIKI_CHARSET == 'GBK'){
-				$titles=string::hiconv($titles);
+				$titles=_string::hiconv($titles);
 			}
 			$titles = explode("\n", $titles);
 			$_ENV['hdapi']->update_private_titles($titles);
@@ -99,7 +99,7 @@ class control extends base{
 	}
 	
 	function form($key){
-		return string::hiconv($this->post[$key]);
+		return _string::hiconv($this->post[$key]);
 	}
 	
 	function dodefault() {
@@ -122,7 +122,7 @@ class control extends base{
 		
 		//获取站长的信用信息
 		$sitenick2 = $sitenick;
-		if(strtolower(WIKI_CHARSET) == 'gbk') {$sitenick2 = string::hiconv($sitenick,'utf-8','gbk',true);}
+		if(strtolower(WIKI_CHARSET) == 'gbk') {$sitenick2 = _string::hiconv($sitenick,'utf-8','gbk',true);}
 		$json = array('site_nick' => array($sitenick2));
 		
 		$json = $_ENV['hdapi']->tojson($json);
@@ -131,7 +131,7 @@ class control extends base{
 		$data = $_ENV['hdapi']->hfopen($url);
 		
 		if($data){
-			if(strtolower(WIKI_CHARSET) == 'gbk') {$data = string::hiconv($data,'gbk','utf-8',true);}
+			if(strtolower(WIKI_CHARSET) == 'gbk') {$data = _string::hiconv($data,'gbk','utf-8',true);}
 			$data = str_replace(':[{', ':{', $data);
 			$data = str_replace('}}]}', '}}}', $data);				
 			$data = str_replace('[', '{', $data);
@@ -189,7 +189,7 @@ class control extends base{
 			$json = $_ENV['hdapi']->tojson($arr);
 			$url='http://api.hudong.com/siteoutermodify.do?json='.$json;
 			$data = $_ENV['hdapi']->hfopen($url);
-			$data = string::hiconv($data, WIKI_CHARSET);
+			$data = _string::hiconv($data, WIKI_CHARSET);
 			echo $data;
 		} else {
 			echo '';
@@ -197,13 +197,13 @@ class control extends base{
 	}
 	
 	function dotitles(){
-		$tag=string::hiconv($this->post['tag']);
+		$tag=_string::hiconv($this->post['tag']);
 	 	$titles=$_ENV['hdapi']->get_doc_title_by_catname($tag);
 	    $this->message($titles,'',2);
 	}
 	
 	function doimport(){
-		$title=string::hiconv(trim($this->post['title']));
+		$title=_string::hiconv(trim($this->post['title']));
 		$data=$_ENV['doc']->get_doc_by_title($title);
 		$page = $this->cache->getcache('systemdata');
 		if(empty($page))$page = array(1);
@@ -219,14 +219,14 @@ class control extends base{
 			$this->load('innerlink');
 			$doc['category']=$this->post['cid'];
 			$doc['title']=$title;
-			$doc['letter']=string::getfirstletter($title);
+			$doc['letter']=_string::getfirstletter($title);
 			$doc['content']=mysql_real_escape_string($doc['content']);
 			$doc['content']=str_replace('\r\n', "\r\n", $doc['content']);
 			$doc['tags']=$_ENV['doc']->jointags($doc['tags']);
-			$doc['summary']=trim(string::convercharacter(strip_tags($doc['content'])));
+			$doc['summary']=trim(_string::convercharacter(strip_tags($doc['content'])));
 			$doc['images']=util::getimagesnum($doc['content']);
 			$doc['time']=$this->time;
-			$doc['words']=string::hstrlen($doc['content']);
+			$doc['words']=_string::hstrlen($doc['content']);
 			$doc['visible']='1';//$this->setting['verify_doc']?'0':'1';
 			$did=$_ENV['doc']->add_doc($doc);
 			$_ENV['doc']->add_searchindex($did,$doc['title'],$doc['search_tags'],$doc['content']);
@@ -351,7 +351,7 @@ class control extends base{
 	function doprivatedoc(){
 		$titles=$this->post['titles'];
 		if (WIKI_CHARSET == 'GBK'){
-			$titles=string::hiconv($titles);
+			$titles=_string::hiconv($titles);
 		}
 		$titles = explode("\n", $titles);
 		$_ENV['hdapi']->update_private_titles($titles);

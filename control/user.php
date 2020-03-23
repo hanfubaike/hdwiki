@@ -67,12 +67,12 @@ class control extends base{
 					}
 					$_ENV['user']->add_credit($this->user['uid'],'user-register',$user_credit,$this->setting['coin_register']);
 					if('0' !== $this->setting['send_welcome']) {
-						$mail_subject = string::haddslashes(str_replace('_USERNAME_', $username, $this->setting['welcome_subject']));
+						$mail_subject = _string::haddslashes(str_replace('_USERNAME_', $username, $this->setting['welcome_subject']));
 						$mail_content = nl2br($this->setting['welcome_content']);
 						$mail_content = str_replace('_USERNAME_', $username, $mail_content);
 						$mail_content = str_replace('_SITENAME_', $this->setting['site_name'], $mail_content);
 						$mail_content = str_replace('_LINK_', "<a href='".WIKI_URL."'>".WIKI_URL."</a>", $mail_content);
-						$mail_content = string::haddslashes(str_replace('_TIME_', $this->date($this->time), $mail_content));
+						$mail_content = _string::haddslashes(str_replace('_TIME_', $this->date($this->time), $mail_content));
 						if('1' === $this->setting['send_welcome']) {
 							$this->load('pms');
 							$_ENV['pms']->send_sys_message($this->user, $mail_subject, $mail_content);
@@ -127,7 +127,7 @@ class control extends base{
             if (!$this->check_csrf_token()){
                 $this->message('缺少TOKEN参数', 'BACK',$this->post['indexlogin']?2:0);
             }
-			$username=string::hiconv(trim($this->post['username']));
+			$username=_string::hiconv(trim($this->post['username']));
 			$password=md5($this->post['password']);
 			$error=$this->setting['checkcode']!=3?$this->docheckcode($this->post['code'],1):'OK';
 			if($error=='OK'){
@@ -209,7 +209,7 @@ class control extends base{
 	function docheckusername($username='',$type=0){
 		$msg='OK';
 		$type=isset($this->post['type'])?$this->post['type']:$type;
-		if(empty($username)&&($username=string::hiconv(trim($this->post['username'])))==''){
+		if(empty($username)&&($username=_string::hiconv(trim($this->post['username'])))==''){
 			$msg=$this->view->lang['usernameIsNull'];
 		}else{
 			if(!preg_match("/^[\w\s\d_\x80-\xff]+$/i", $username) || (!$_ENV['user']->check_name($username) && $type>0)){
@@ -308,8 +308,8 @@ class control extends base{
 			$location = $this->post['location'];
 			$signature = $this->post['signature'];
 			if (WIKI_CHARSET == 'GBK'){
-				$location = string::hiconv($location);
-				$signature = string::hiconv($signature);
+				$location = _string::hiconv($location);
+				$signature = _string::hiconv($signature);
 			}
 			$location = htmlspecial_chars($location);
 			$signature = htmlspecial_chars(str_replace(array('\n','\r'),'',$signature));

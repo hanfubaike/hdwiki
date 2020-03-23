@@ -16,14 +16,14 @@ class control extends base{
 			$wordids = $this->post['upword_id'];
 			$find = $this->post['find'];
 			$replacement = $this->post['replacement'];
-			$newfind = string::haddslashes(htmlspecial_chars($this->post['newfind']));
-			$muliword = string::haddslashes(htmlspecial_chars($this->post['muliword']));
-			$newreplacement = string::substring(string::haddslashes(htmlspecial_chars($this->post['newreplacement'])), 0, 18);
+			$newfind = _string::haddslashes(htmlspecial_chars($this->post['newfind']));
+			$muliword = _string::haddslashes(htmlspecial_chars($this->post['muliword']));
+			$newreplacement = _string::substring(_string::haddslashes(htmlspecial_chars($this->post['newreplacement'])), 0, 18);
 			$words = NULL;
 			if(is_array($wordids)){
 				foreach($wordids as $id => $wordid){
-					$find[$id] = string::substring($find[$id], 0, 18);
-					$replacement[$id] = string::substring($replacement[$id], 0, 18);
+					$find[$id] = _string::substring($find[$id], 0, 18);
+					$replacement[$id] = _string::substring($replacement[$id], 0, 18);
 					$words[] = array('id'=>$wordid,'find'=>$find[$id],'replacement'=>$replacement[$id]);
 				}
 			}
@@ -57,7 +57,7 @@ class control extends base{
 				$alluploadwords = $_ENV['word']->filewords($alluploadwords, $this->setting['attachment_size']);
 			}
 			if($alluploadwords){
-				array_walk($alluploadwords, create_function('&$v, $k', '$v = string::substring($v, 0, 18);'));
+				array_walk($alluploadwords, create_function('&$v, $k', '$v = _string::substring($v, 0, 18);'));
 				$alluploadwords = array_diff($alluploadwords, $havebannedwords);
 				$alluploadwords = array_unique($alluploadwords);
 				$alluploadwords = array_values($alluploadwords);

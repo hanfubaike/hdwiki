@@ -3,7 +3,7 @@
 	<a href="{url doc-cooperate}"  class="more">{lang more}</a>
 	<ul class="col-ul clearfix" >
 		<!--{loop $data['list'] $coopdoc}-->
-			<li><a href="{url doc-innerlink-{eval echo urlencode(string::hiconv({$coopdoc['title']}, 'utf-8'))}}"  title="{$coopdoc['title']}">{$coopdoc['shorttitle']}</a></li>
+			<li><a href="{url doc-innerlink-{eval echo urlencode(_string::hiconv({$coopdoc['title']}, 'utf-8'))}}"  title="{$coopdoc['title']}">{$coopdoc['shorttitle']}</a></li>
 		<!--{/loop}-->
 	</ul>
 </div>

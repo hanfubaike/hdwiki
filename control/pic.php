@@ -49,7 +49,7 @@ class control extends base{
 		$comments=$_ENV['comment']->get_comments($did,$start=0,$limit=5);
 		if(!empty($comments)) {
 			foreach($comments as $key=>$comment){
-				$comments[$key]['comment']=(string::hstrlen($comment['comment'])>60)?string::substring($comment['comment'],0,60)."...":$comment['comment'];
+				$comments[$key]['comment']=(_string::hstrlen($comment['comment'])>60)?_string::substring($comment['comment'],0,60)."...":$comment['comment'];
 			}
 		}
 
@@ -130,8 +130,8 @@ class control extends base{
 			else
 				$this->hsetcookie('searchtime',$this->time,24*3600*365);
 		}
-		$searchtext=isset($this->post['searchtext'])?$this->post['searchtext']:string::haddslashes(urldecode($this->get[2]),1);
-		$searchtext= string::hiconv(trim($searchtext));
+		$searchtext=isset($this->post['searchtext'])?$this->post['searchtext']:_string::haddslashes(urldecode($this->get[2]),1);
+		$searchtext= _string::hiconv(trim($searchtext));
 		if(empty($searchtext)){
 			$this->message($this->view->lang['pic_no_title'],'BACK',0);
 		}
@@ -145,7 +145,7 @@ class control extends base{
 		}
 		
 		if ('gbk' == strtolower(WIKI_CHARSET)){
-			$searchtexts = string::hiconv($searchtext, 'utf-8', 'gbk');
+			$searchtexts = _string::hiconv($searchtext, 'utf-8', 'gbk');
 		}
 		$url=$this->setting['seo_prefix']?"pic-search-".urlencode($searchtext):"index.php?pic-search-".urlencode($searchtext);
 		$departstr=$this->multi($count, $num, $page,$url);

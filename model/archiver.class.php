@@ -88,7 +88,7 @@ class archivermodel {
 			else $transition = 0;
 			foreach($doc as $k=>$v) {
 				if($transition ) {
-					$v = string::hiconv($v, 'utf-8', 'gbk', 1);
+					$v = _string::hiconv($v, 'utf-8', 'gbk', 1);
 				}
 				$outxml .= "<$k><![CDATA[".$v."]]></$k>\n";
 			}

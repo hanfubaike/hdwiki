@@ -27,7 +27,7 @@
 		   'title' : '{lang docCategory}',
 		   'seoprefix' : '{$setting['seo_prefix']}', // 后台返回的路径
 		   'categoryid' : '{$category[cid]}',
-		   'categoryname' : '{eval htmlspecialchars(string::haddslashes($category[name]),1)}',
+		   'categoryname' : '{eval htmlspecialchars(_string::haddslashes($category[name]),1)}',
 		   'did' : "{$doc['did']}"
 		};
 
@@ -369,7 +369,7 @@
 </div>
   <!--{/if}-->
   <!--{if isset($advlist[4][1]) && isset($setting['advmode']) && '1'==$setting['advmode']}-->
-  <div class="ad nomar" id="advlist_4_1"> {$advlist[4][1][code]} </div>
+  <!--<div class="ad nomar" id="advlist_4_1"> {$advlist[4][1][code]} </div>-->
   <!--{elseif isset($advlist[4][1]) && (!isset($setting['advmode']) || !$setting['advmode'])}-->
   <div class="ad nomar" id="advlist_4_1"> </div>
   <!--{/if}-->
@@ -730,7 +730,7 @@ function closepop(name){
 		init:function(){
 			if('{$category[cid]}'!=''){
 				this.scids.push({$category[cid]});
-				this.scnames.push('{eval htmlspecialchars(string::haddslashes($category[name]),1)}');
+				this.scnames.push('{eval htmlspecialchars(_string::haddslashes($category[name]),1)}');
 			}
 		},
 		

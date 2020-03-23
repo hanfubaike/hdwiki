@@ -47,7 +47,7 @@ function add(pathname){
             <dd class="link_orange bold"><a href="{$style['homepage']}" target="_blank">{$style['name']}</a> version: {$style['version']}  BY <a href="{$style['homepage']}" target="_blank"> {$style['copyright']}</a></dd>
             <dd>{lang focusmanageTag}:
             <!--{loop $style['tag'] $tag}-->
-            <a href="{$tag_url}{eval echo urlencode(string::hiconv($tag,'utf-8','gbk'))}" target="_blank">{$tag}</a>
+            <a href="{$tag_url}{eval echo urlencode(_string::hiconv($tag,'utf-8','gbk'))}" target="_blank">{$tag}</a>
             <!--{/loop}--></dd>
             <dd>{lang suit_edition}:{$style['suit']}</dd>
             <dd>{lang install_num}:{$style['install']}<a href="{$style['install_list']}" target="_blank">{lang install_list}</a></dd>

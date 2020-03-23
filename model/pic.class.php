@@ -54,7 +54,7 @@ class picmodel {
 		$pic['rawtitle']=$pic['title'];
 		$pic['sizeinfo']=$picinfo[0].'*'.$picinfo[1].' - '.round($pic['filesize']/1024).'k - '.$pic['filetype'];
 		$pic['description']=empty($pic['description'])?$pic['title']:$pic['description'];
-		$pic['subdescription']=strlen($pic['description'])>18?string::substring($pic['description'],0,8).'...':$pic['description'];
+		$pic['subdescription']=strlen($pic['description'])>18?_string::substring($pic['description'],0,8).'...':$pic['description'];
 		/*
 		if(false===strpos($pic['attachment'],'hdpic')){
 			$pathinfo=pathinfo($pic['attachment']);

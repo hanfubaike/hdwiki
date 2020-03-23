@@ -5,7 +5,7 @@
 <div class="l group1 bor-ccc dwsct">	
 	<ul class="col-ul clearfix">
 	<!--{loop $coopdoc $cooperatedoc}-->
-	<li><a href="{url doc-innerlink-{eval echo rawurlencode(string::hiconv({$cooperatedoc['title']}, 'utf-8'))}}" target="_blank" title="{$cooperatedoc['title']}">{$cooperatedoc['title']}</a></li>
+	<li><a href="{url doc-innerlink-{eval echo rawurlencode(_string::hiconv({$cooperatedoc['title']}, 'utf-8'))}}" target="_blank" title="{$cooperatedoc['title']}">{$cooperatedoc['title']}</a></li>
 	<!--{/loop}-->
 	</ul>
 </div>

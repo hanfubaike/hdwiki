@@ -113,13 +113,13 @@ class control extends base{
 		$re_id=$this->post['re_id'];
 		$anonymity=$this->post['anonymity'];
 		
-		if (WIKI_CHARSET == 'GBK'){$comment=string::hiconv($comment);}
-		$comment=string::stripscript($_ENV['doc']->replace_danger_word($comment));
+		if (WIKI_CHARSET == 'GBK'){$comment=_string::hiconv($comment);}
+		$comment=_string::stripscript($_ENV['doc']->replace_danger_word($comment));
 		$comment=nl2br(htmlspecial_chars($comment));
 		if(empty($comment)){
 			$this->message(0,'',2);
 		}elseif(strlen($comment)>200){
-			$comment=string::substring($comment,0,200);
+			$comment=_string::substring($comment,0,200);
 		}
 		$reply=$re_id?$_ENV['comment']->get_re_comment_by_id($re_id):'';
 		$id=$_ENV['comment']->add_comment($did,$comment,addslashes($reply),$anonymity);
@@ -169,9 +169,9 @@ class control extends base{
 			$this->message($this->view->lang['commentError'],'',2);
 		}
 		$comment=trim($this->post['comment']);
-		if (WIKI_CHARSET == 'GBK'){$comment=string::hiconv($comment);}
+		if (WIKI_CHARSET == 'GBK'){$comment=_string::hiconv($comment);}
 
-		$comment=string::stripscript($_ENV['doc']->replace_danger_word($comment));
+		$comment=_string::stripscript($_ENV['doc']->replace_danger_word($comment));
 		$_ENV["comment"]->edit_comment_by_id($id,$comment);
 		$this->message(1,'',2);
 	}
@@ -203,7 +203,7 @@ class control extends base{
 	function doreport(){
 		$usernames=array();
 		$id=intval($this->post['id']) ? $this->post['id'] : 0;
-		$report=trim(htmlspecial_chars(WIKI_CHARSET==GBK?string::hiconv($this->post['report']):$this->post['report']));
+		$report=trim(htmlspecial_chars(WIKI_CHARSET==GBK?_string::hiconv($this->post['report']):$this->post['report']));
 		if(empty($id)||empty($report)){
 			$this->message(-1,'',2);
 		}

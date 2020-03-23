@@ -36,7 +36,7 @@ class control extends base{
 			$discrib='';
 			if($catnames){
 				foreach($catnames as $catname){
-					$catname = trim(string::stripscript($catname));
+					$catname = trim(_string::stripscript($catname));
 					if($catname){
 						if(!$_ENV['category']->add_category($pid,$catname,$ico,$discrib)){
 						//	$this->message($this->view->lang['CateExsit'],'index.php?admin_category-list-'.$pid);
@@ -73,7 +73,7 @@ class control extends base{
 		$catnames = $this->post['catname'];
 		if($catnames){
 			foreach($catnames as $catname){
-				$catname = trim(string::stripscript($catname));
+				$catname = trim(_string::stripscript($catname));
 				if($catname){
 					$_ENV['category']->add_category($hiddencid,$catname,'','');
 					$orders[] = $_ENV['category']->get_cate_info($hiddencid,$catname);
@@ -102,7 +102,7 @@ class control extends base{
 			if($cid==$pid || ($subcid && in_array($pid,explode(",",$subcid)))){
 				$this->message($this->view->lang['editCateWrong'],'BACK');
 			}
-			$catname = string::stripscript($catname);
+			$catname = _string::stripscript($catname);
 			$_ENV['category']->edit_category($cid,$pid,$catname,$ico,$discrib);
 			$this->cache->removecache('category');
 			$this->message($this->view->lang['editCateSuccess'],'index.php?admin_category-list-'.$pid);
