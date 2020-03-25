@@ -14,7 +14,7 @@ class settingmodel {
 
 	function update_setting($setting){
 		foreach($setting as $key=>$value){
-			if($key == 'site_url' && $value != 'WIKI_URL') { //site_url 存入 config.php 文件
+			if($key == 'site_url' && $value != WIKI_URI) { //site_url 存入 config.php 文件
 				$cfg = file::readfromfile(HDWIKI_ROOT.'/config.php');
 				$new_cfg = preg_replace("/WIKI_URL(['\"])\s*,\s*(['\"])(.*)\\1/", 'WIKI_URL${1}, ${2}'.$value.'${2}', $cfg);
 				file::writetofile(HDWIKI_ROOT.'/config.php', $new_cfg, 0);
