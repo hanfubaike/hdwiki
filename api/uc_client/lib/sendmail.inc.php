@@ -14,6 +14,10 @@ if($mail_setting['mailsilent']) {
 	error_reporting(0);
 }
 
+if (function_exists("fastcgi_finish_request")) {
+	fastcgi_finish_request();
+}
+
 $maildelimiter = $mail_setting['maildelimiter'] == 1 ? "\r\n" : ($mail_setting['maildelimiter'] == 2 ? "\r" : "\n");
 $mailusername = isset($mail_setting['mailusername']) ? $mail_setting['mailusername'] : 1;
 $appname = $this->base->cache['apps'][$mail['appid']]['name'];
@@ -43,7 +47,7 @@ if($mail_setting['mailsend'] == 1 && function_exists('mail')) {
 	
 	try {
 		//Server settings
-		$mailer->setLanguage('zh-cn', '/lib/PHPMailer-5.2.28/language');
+		$mailer->setLanguage('zh-cn', HDWIKI_ROOT.'/lib/PHPMailer-5.2.28/language');
 		$mailer->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
 		$mailer->isSMTP();                                            // Send using SMTP
 		$mailer->Host       = $mail_setting['mailserver'];                    // Set the SMTP server to send through
@@ -58,7 +62,7 @@ if($mail_setting['mailsend'] == 1 && function_exists('mail')) {
 		}
 		
 		//是否启用SSL
-		if($mail_setting['ssl']){
+		if($mail_setting['mailssl']){
 			$mailer->SMTPSecure = 'ssl';
 		}
 	
@@ -78,9 +82,9 @@ if($mail_setting['mailsend'] == 1 && function_exists('mail')) {
 		// Content
 		$mailer->isHTML(true);                                  // Set email format to HTML
 		$mailer->Subject = $mail['subject'];
-		$mailer->Body    = $mail['message'];
+		$mailer->Body    = base64_decode($mail['message']);
 		//$mailer->AltBody = 'This is the body in plain text for non-HTML mail clients';
-	
+		//$mailer->Debugoutput = function($str, $level) {error_log("debug level $level; message: $str");};
 		$mailer->send();
 		echo 'Message has been sent';
 		return true;
