@@ -85,7 +85,7 @@ if($mail_setting['mailsend'] == 1 && function_exists('mail')) {
 		echo 'Message has been sent';
 		return true;
 	} catch (Exception $e) {
-		echo "Message could not be sent. Mailer Error: {$mailer->ErrorInfo}";
+		error_log("Message could not be sent. Mailer Error: {$mailer->ErrorInfo}");
 		return false
 	}
 

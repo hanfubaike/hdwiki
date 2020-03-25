@@ -31,7 +31,7 @@ if($mail_setting['mailsend'] == 1 && function_exists('mail')) {
 	
 	try {
 		//Server settings
-		$mailer->setLanguage('zh-cn', '/lib/PHPMailer-5.2.28/language');
+		$mailer->setLanguage('zh-cn', HDWIKI_ROOT.'/lib/PHPMailer-5.2.28/language');
 		$mailer->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
 		$mailer->isSMTP();                                            // Send using SMTP
 		$mailer->Host       = $mail_setting['mailserver'];                    // Set the SMTP server to send through
@@ -73,7 +73,7 @@ if($mail_setting['mailsend'] == 1 && function_exists('mail')) {
 		echo 'Message has been sent';
 		return true;
 	} catch (Exception $e) {
-		echo "Message could not be sent. Mailer Error: {$mailer->ErrorInfo}";
+		error_log("Message could not be sent. Mailer Error: {$mailer->ErrorInfo}");
 		return false
 	}
 	
