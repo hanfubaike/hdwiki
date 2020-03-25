@@ -8,6 +8,7 @@
 */
 
 !defined('IN_UC') && exit('Access Denied');
+require '/lib/PHPMailer-5.2.28/PHPMailerAutoload.php';
 
 if($mail_setting['mailsilent']) {
 	error_reporting(0);
