@@ -644,7 +644,7 @@ REPLACE INTO wiki_setting(variable,value) VALUES
 	('gift_range', 'a:4:{i:0;s:2:"50";i:50;s:3:"100";i:100;s:3:"200";i:200;s:3:"500";}'),
 	('watermark', 'a:8:{s:8:"imagelib";s:1:"0";s:11:"imageimpath";s:0:"";s:15:"watermarkstatus";s:1:"0";s:17:"watermarkminwidth";s:3:"180";s:18:"watermarkminheight";s:3:"180";s:13:"watermarktype";s:1:"0";s:14:"watermarktrans";s:2:"60";s:16:"watermarkquality";s:3:"100";}'),
 	('coin_unit', ''),
-	('mail_config', 'a:10:{s:11:"maildefault";s:{$admin_email_len}:"{$admin_email}";s:8:"mailsend";s:1:"1";s:10:"mailserver";s:0:"";s:8:"mailport";s:2:"25";s:8:"mailauth";s:1:"0";s:8:"mailfrom";s:0:"";s:17:"mailauth_username";s:0:"";s:17:"mailauth_password";s:0:"";s:13:"maildelimiter";s:1:"0";s:12:"mailusername";s:1:"1";}'),
+	('mail_config', 'a:10:{s:11:"maildefault";s:{$admin_email_len}:"{$admin_email}";s:8:"mailsend";s:1:"1";s:10:"mailserver";s:0:"";s:8:"mailport";s:2:"25";s:8:"mailauth";s:8:"mailssl";s:1:"0";s:8:"mailfrom";s:0:"";s:17:"mailauth_username";s:0:"";s:17:"mailauth_password";s:0:"";s:13:"maildelimiter";s:1:"0";s:12:"mailusername";s:1:"1";}'),
 	('sitemap_config', 'a:5:{s:8:"use_gzip";s:1:"1";s:14:"idx_changefreq";s:5:"daily";s:14:"doc_changefreq";s:7:"monthly";s:10:"textcolumn";s:7:"summary";s:10:"updateperi";s:2:"30";}'),
 	('auto_baiduxml', '0'),
 	('random_open', '0'),

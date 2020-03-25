@@ -37,97 +37,56 @@ if($mail_setting['mailsend'] == 1 && function_exists('mail')) {
 
 } elseif($mail_setting['mailsend'] == 2) {
 
-	if(!$fp = fsockopen($mail_setting['mailserver'], $mail_setting['mailport'], $errno, $errstr, 30)) {
-		return false;
-	}
-
- 	stream_set_blocking($fp, true);
-
-	$lastmessage = fgets($fp, 512);
-	if(substr($lastmessage, 0, 3) != '220') {
-		return false;
-	}
-
-	fputs($fp, ($mail_setting['mailauth'] ? 'EHLO' : 'HELO')." discuz\r\n");
-	$lastmessage = fgets($fp, 512);
-	if(substr($lastmessage, 0, 3) != 220 && substr($lastmessage, 0, 3) != 250) {
-		return false;
-	}
-
-	while(1) {
-		if(substr($lastmessage, 3, 1) != '-' || empty($lastmessage)) {
- 			break;
- 		}
- 		$lastmessage = fgets($fp, 512);
-	}
-
-	if($mail_setting['mailauth']) {
-		fputs($fp, "AUTH LOGIN\r\n");
-		$lastmessage = fgets($fp, 512);
-		if(substr($lastmessage, 0, 3) != 334) {
-			return false;
+	// Instantiation and passing `true` enables exceptions
+	$mailer = new PHPMailer(true);
+	
+	try {
+		//Server settings
+		$mailer->setLanguage('zh-cn', '/lib/PHPMailer-5.2.28/language');
+		$mailer->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
+		$mailer->isSMTP();                                            // Send using SMTP
+		$mailer->Host       = $mail_setting['mailserver'];                    // Set the SMTP server to send through
+		
+		if($mail_setting['mailauth']){
+			$mailer->SMTPAuth   = true;                                   // Enable SMTP authentication
+			$mailer->Username   = $mail_setting['mailauth_username'];                     // SMTP username
+			$mailer->Password   = $mail_setting['mailauth_password'];                               // SMTP password
+			$mailer->Port       = $mail_setting['mailport'];                                    // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
+		}else{
+			$mailer->SMTPAuth   = false;
 		}
-
-		fputs($fp, base64_encode($mail_setting['mailauth_username'])."\r\n");
-		$lastmessage = fgets($fp, 512);
-		if(substr($lastmessage, 0, 3) != 334) {
-			return false;
+		
+		//是否启用SSL
+		if($mail_setting['ssl']){
+			$mailer->SMTPSecure = 'ssl';
 		}
-
-		fputs($fp, base64_encode($mail_setting['mailauth_password'])."\r\n");
-		$lastmessage = fgets($fp, 512);
-		if(substr($lastmessage, 0, 3) != 235) {
-			return false;
-		}
-
-		$email_from = $mail_setting['mailfrom'];
+	
+		//Recipients
+		$mailer->setFrom($mail_setting['mailfrom'],$sitename);
+		$mailer->addAddress($mail['email_to']);     // Add a recipient
+		//$mailer->addAddress('ellen@example.com');               // Name is optional
+		//$mailer->addReplyTo('info@example.com', 'Information');
+		//抄送
+		$mailer->addCC($mail_setting['mailfrom'],$sitename);
+		//$mailer->addBCC('bcc@example.com');
+	
+		// Attachments
+		//$mailer->addAttachment('/var/tmp/file.tar.gz');         // Add attachments
+		//$mailer->addAttachment('/tmp/image.jpg', 'new.jpg');    // Optional name
+	
+		// Content
+		$mailer->isHTML(true);                                  // Set email format to HTML
+		$mailer->Subject = $mail['subject'];
+		$mailer->Body    = $mail['message'];
+		//$mailer->AltBody = 'This is the body in plain text for non-HTML mail clients';
+	
+		$mailer->send();
+		echo 'Message has been sent';
+		return true;
+	} catch (Exception $e) {
+		echo "Message could not be sent. Mailer Error: {$mailer->ErrorInfo}";
+		return false
 	}
-
-	fputs($fp, "MAIL FROM: <".preg_replace("/.*\<(.+?)\>.*/", "\\1", $email_from).">\r\n");
-	$lastmessage = fgets($fp, 512);
-	if(substr($lastmessage, 0, 3) != 250) {
-		fputs($fp, "MAIL FROM: <".preg_replace("/.*\<(.+?)\>.*/", "\\1", $email_from).">\r\n");
-		$lastmessage = fgets($fp, 512);
-		if(substr($lastmessage, 0, 3) != 250) {
-			return false;
-		}
-	}
-
-	$email_tos = array();
-	foreach(explode(',', $mail['email_to']) as $touser) {
-		$touser = trim($touser);
-		if($touser) {
-			fputs($fp, "RCPT TO: <".preg_replace("/.*\<(.+?)\>.*/", "\\1", $touser).">\r\n");
-			$lastmessage = fgets($fp, 512);
-			if(substr($lastmessage, 0, 3) != 250) {
-				fputs($fp, "RCPT TO: <".preg_replace("/.*\<(.+?)\>.*/", "\\1", $touser).">\r\n");
-				$lastmessage = fgets($fp, 512);
-				return false;
-			}
-		}
-	}
-
-	fputs($fp, "DATA\r\n");
-	$lastmessage = fgets($fp, 512);
-	if(substr($lastmessage, 0, 3) != 354) {
-		return false;
-	}
-
-	$headers .= 'Message-ID: <'.gmdate('YmdHs').'.'.substr(md5($mail['message'].microtime()), 0, 6).rand(100000, 999999).'@'.$_SERVER['HTTP_HOST'].">{$maildelimiter}";
-
-	fputs($fp, "Date: ".gmdate('r')."\r\n");
-	fputs($fp, "To: ".$mail['email_to']."\r\n");
-	fputs($fp, "Subject: ".$mail['subject']."\r\n");
-	fputs($fp, $headers."\r\n");
-	fputs($fp, "\r\n\r\n");
-	fputs($fp, "$mail[message]\r\n.\r\n");
-	$lastmessage = fgets($fp, 512);
-	if(substr($lastmessage, 0, 3) != 250) {
-		return false;
-	}
-
-	fputs($fp, "QUIT\r\n");
-	return true;
 
 } elseif($mail_setting['mailsend'] == 3) {
 

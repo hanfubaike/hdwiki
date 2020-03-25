@@ -52,6 +52,13 @@
 			</td>
 		</tr>
 		<tr>
+			<td >{lang mailSmtpSsl}</td>
+			<td >
+				<label><input type="radio" class="radio" name="mailssl"{if $mailconfig['mailssl'] == 1} checked="checked"{/if} value="1" />{lang commonYes}</label>
+				<label><input type="radio" class="radio" name="mailssl"{if $mailconfig['mailssl'] == 0} checked="checked"{/if} value="0" />{lang commonNo}</label>
+			</td>
+		</tr>
+		<tr>
 			<td >{lang mailSmtpEmail}</td>
 			<td ><input class="inp_txt" name="mailfrom"  maxlength="50" value="{$mailconfig['mailfrom']}"></td>
 		</tr>

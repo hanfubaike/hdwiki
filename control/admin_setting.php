@@ -274,7 +274,8 @@ class control extends base{
  			$config['mailsend'] = $this->post['mailsend'];
  			$config['mailserver'] = $this->post['mailserver'];
  			$config['mailport'] = $this->post['mailport'];
- 			$config['mailauth'] = $this->post['mailauth'];
+			$config['mailauth'] = $this->post['mailauth'];
+			$config['mailssl'] = $this->post['mailssl'];
  			$config['mailfrom'] = $this->post['mailfrom'];
  			$config['mailauth_username'] = $this->post['mailauth_username'];
  			$config['mailauth_password'] = $this->post['mailauth_password'];

@@ -912,6 +912,7 @@ $lang['methodMail']='通过 PHP 函数的 sendmail 发送(推荐此方式)';
 $lang['methodSMTP']='通过 SOCKET 连接 SMTP 服务器发送(支持 ESMTP 验证)';
 $lang['methodWinSMTP']='通过 PHP 函数 SMTP 发送 Email(仅 Windows 主机下有效, 不支持 ESMTP 验证)';
 $lang['mailSmtpAuth']='SMTP 服务器是否要求身份验证';
+$lang['mailSmtpSsl']='是否启用ssl（请确认服务器是否支持）';
 $lang['mailSmtpHost']='SMTP服务器';
 $lang['mailSmtpPort']='SMTP服务器端口';
 $lang['mailSmtpEmail']='SMTP服务器的用户邮箱';
