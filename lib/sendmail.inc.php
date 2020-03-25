@@ -1,6 +1,6 @@
 <?php
 !defined('IN_HDWIKI') && exit('Access Denied');
-require '/lib/PHPMailer-5.2.28/PHPMailerAutoload.php';
+require HDWIKI_ROOT.'/lib/PHPMailer-5.2.28/PHPMailerAutoload.php';
 
 $maildelimiter = $mail_setting['maildelimiter'] == 1 ? "\r\n" : ($mail_setting['maildelimiter'] == 2 ? "\r" : "\n");
 $mailusername = isset($mail_setting['mailusername']) ? $mail_setting['mailusername'] : 1;
