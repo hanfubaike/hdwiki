@@ -35,9 +35,9 @@ class control extends base{
 			$channel['position']=intval($this->post['position']);
 			$channel['available']=trim($this->post['available']);
 			if(!empty($channel['name']) && !empty($channel['url'])){
-				if(substr($channel['url'],0,7)!="http://"){
-					$channel['url']="http://".$channel['url'];
-				}
+				//if(substr($channel['url'],0,7)!="http://"){
+					//$channel['url']="http://".$channel['url'];
+				//}
 				$_ENV['channel']->add_channel($channel);
 				$this->cache->removecache('channel');
 				$this->message($this->view->lang['channel_AddSuccess'],'index.php?admin_channel');
@@ -59,9 +59,9 @@ class control extends base{
 			$channel['position']=intval($this->post['position']);
 			$channel['id']=$this->post['id'];
 			if(!empty($channel['name']) && !empty($channel['url']) && is_numeric($channel['id'])){
-				if(substr($channel['url'],0,7)!="http://"){
-					$channel['url']="http://".$channel['url'];
-				}
+				//if(substr($channel['url'],0,7)!="http://"){
+					//$channel['url']="http://".$channel['url'];
+				//}
 				$_ENV['channel']->edit_channel($channel);
 				$this->cache->removecache('channel');
 				$this->message($this->view->lang['channel_EditSuccess'],'index.php?admin_channel');

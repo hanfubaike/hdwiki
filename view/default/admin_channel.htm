@@ -65,7 +65,7 @@ function IsURL(str_url){
 <form name="channeledit" id="channeledit" method="post" action="index.php?admin_channel-add" onsubmit="return checknull();">
 	<ul class="col-ul ul_li_sp m-t10">
 		<li><span>频道名称</span><input type='text' class="inp_txt m-r10" name='name' id="name" value="" size='50'><input type = 'hidden' name='id' id='id' value="{$channel['id']}" /><b class="red">*</b></li>
-		<li><span>频道URL</span><input type='text' class="inp_txt m-r10" name='url' id="url" value="http://" size='50'><b class="red">*</b></li>
+		<li><span>频道URL</span><input type='text' class="inp_txt m-r10" name='url' id="url" value="" size='50'><b class="red">*</b></li>
 		<li>
 			<span>频道状态</span>
 			<input type="radio" name="available" value="1" checked="checked" />显示

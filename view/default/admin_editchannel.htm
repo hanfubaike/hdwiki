@@ -17,7 +17,9 @@ function checknull(){
 	}
 }
 function IsURL(str_url){
-	return(/(?:https?:\/\/)?\w+\.\w+/.test(str_url));
+	//return(/(?:https?:\/\/)?\w+\.\w+/.test(str_url));
+	//匹配 http(s) 或 / 开头的字符串
+	return (/http(s|):\/\//.test(str_url) || /^\/+/.test(str_url))
 }
 </script>
 <p class="map">全局：基本设置</p>
@@ -31,7 +33,7 @@ function IsURL(str_url){
 		</tr>
 		<tr>
 			<td>频道URL</td>
-			<td><input type='text' class="inp_txt" name='url' id="url" value="{$channel['url']}" size='50'> <b class="red">*</b></td>
+			<td><input type='text' class="inp_txt" name='url' id="url" value="{$channel['url']}" size='50' placeholder='支持相对链接，如：/index.php'> <b class="red">*</b></td>
 		</tr>
 		<tr>
 			<td>频道状态</td>
