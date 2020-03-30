@@ -5,7 +5,7 @@
 class control extends base{
 	var $pluginid;
 	function control(& $get,& $post){
-		$this->base( & $get,& $post);
+		$this->base( $get,$post);
 		$this->load('plugin');
 		$this->loadplugin('momo');
 		$this->view->setlang('zh','back');

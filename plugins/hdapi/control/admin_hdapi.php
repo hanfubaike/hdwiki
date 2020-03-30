@@ -12,7 +12,7 @@ class control extends base{
 	var $pluginid;
 	
 	function control(& $get,& $post){
-		$this->base( & $get,& $post);
+		$this->base( $get,$post);
 		$this->load('category');
 		$this->load('doc');
 		$this->load('user');
