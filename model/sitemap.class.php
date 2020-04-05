@@ -37,7 +37,8 @@ class sitemapmodel {
 		$doc = array();
 		$page_last_did = 0;
 		while($row = $this->db->fetch_array($query)){
-			$doc_id = ('1'==$this->base->setting['seo_type'] && '1'==$this->base->setting['seo_type_doc']) ? rawurlencode(_string::hiconv($row['title'])) : $row['did'];
+			//$doc_id = ('1'==$this->base->setting['seo_type'] && '1'==$this->base->setting['seo_type_doc']) ? rawurlencode(_string::hiconv($row['title'])) : $row['did'];
+			$doc_id = ('1'==$this->base->setting['seo_type']) ? rawurlencode(_string::hiconv($row['title'])) : $row['did'];
 			$doc['loc']        = WIKI_URL.'/'.$this->base->view->url("doc-view-{$doc_id}");
 			$doc['lastmod']    = gmdate('Y-m-d\TH:i:s+00:00', $row['lastedit']);
 			$doc['changefreq'] = $this->setting['doc_changefreq']; //////////////////
@@ -233,7 +234,8 @@ XML;
     	fwrite($fh, $xml);
     	$query = $this->db->query("SELECT d.did, d.title, $textcolumn d.lastedit, c.name as category FROM ".DB_TABLEPRE."doc d left join ".DB_TABLEPRE."category c on d.cid = c.cid order by did desc limit 100");
     	while($row = $this->db->fetch_array($query)){
-    		$doc_id = ('1'==$this->base->setting['seo_type'] && '1'==$this->base->setting['seo_type_doc']) ? rawurlencode($row['title']) : $row['did'];
+			//$doc_id = ('1'==$this->base->setting['seo_type'] && '1'==$this->base->setting['seo_type_doc']) ? rawurlencode($row['title']) : $row['did'];
+			$doc_id = ('1'==$this->base->setting['seo_type']) ? rawurlencode($row['title']) : $row['did'];
 			$doc_link = WIKI_URL.'/'.$this->base->view->url("doc-view-{$doc_id}");
     		$item = "<item>\n\r";
     		$item .= "<link>{$doc_link}</link>\n\r";

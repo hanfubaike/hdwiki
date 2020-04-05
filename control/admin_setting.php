@@ -364,6 +364,7 @@ class control extends base{
 	RewriteBase $base_root
 	RewriteCond %{REQUEST_FILENAME} !-f
 	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^wiki/(.*)$ index.php?doc-innerlink-$1
 	RewriteRule ^.*$ index.php?\$0
 </IfModule>";
 				}

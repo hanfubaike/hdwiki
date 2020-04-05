@@ -80,7 +80,8 @@ class innerlinkmodel {
 					$content = str_replace($row[1], WIKI_URL.'/wiki/'.$title, $content);
 				}else if($setting['seo_type']){
 					//使用did的rewrite
-					$content = str_replace($row[1], WIKI_URL.'/doc-view-'.$row[0].$setting['seo_suffix'], $content);
+					//$content = str_replace($row[1], WIKI_URL.'/doc-view-'.$row[0].$setting['seo_suffix'], $content);
+					$content = str_replace($row[1], WIKI_URL.'/wiki/'.$title, $content);
 				}else{
 					//不支持rewrite
 					$content = str_replace($row[1], WIKI_URL.'/'.$setting['seo_prefix'].'doc-view-'.$row[0].$setting['seo_suffix'], $content);

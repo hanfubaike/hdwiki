@@ -71,7 +71,8 @@ class template{
 
         $template = preg_replace("/\<\!\-\-\{(.+?)\}\-\-\>/s", "{\\1}", $template);
         $template = preg_replace_callback("/\{lang.(\w+?)\}/is", function($matches) { return $this->lang($matches[1]); }, $template);
-        if('1'==$this->vars['setting']['seo_type'] && '1'==$this->vars['setting']['seo_type_doc']){
+		//if('1'==$this->vars['setting']['seo_type'] && '1'==$this->vars['setting']['seo_type_doc']){
+		if('1'==$this->vars['setting']['seo_type']){
             $template = preg_replace_callback("/\{url.doc\-view\-(.+?)\['did'\]\}/is", function($matches) { return $this->stripvtag('{url doc-view-{eval echo rawurlencode('.$matches[1].'[\'rawtitle\']);}}'); }, $template);
         }
         $template = preg_replace("/\{($this->var_regexp)\}/", "<?php echo \\1?>", $template);
@@ -112,7 +113,8 @@ class template{
 		
 		$template = preg_replace("/\<\!\-\-\{(.+?)\}\-\-\>/s", "{\\1}", $template);
 		$template = preg_replace("/\{lang.(\w+?)\}/ise", "\$this->lang('\\1')", $template);
-		if('1'==$this->vars['setting']['seo_type'] && '1'==$this->vars['setting']['seo_type_doc']){
+		//if('1'==$this->vars['setting']['seo_type'] && '1'==$this->vars['setting']['seo_type_doc'])
+		if('1'==$this->vars['setting']['seo_type']){
 			$template = preg_replace("/\{url.doc\-view\-(.+?)\['did'\]\}/ise", "\$this->stripvtag('{url doc-view-{eval echo rawurlencode(\\1[\'rawtitle\']);}}')", $template);
 		}
 		$template = preg_replace("/\{($this->var_regexp)\}/", "<?php echo \\1?>", $template);
@@ -167,7 +169,8 @@ class template{
 		if(substr($u,0,10)=='user-login'||substr($u,0,11)=='user-logout'||substr($u,0,13)=='user-register'||substr($u,0,9)=='user-code'
 			|| substr($u,0,10)=='pic-search'|| substr($u,0,7)=='search-'){
 			return 'index.php?'.$u;
-		}elseif('1'==$this->vars['setting']['seo_type'] &&'1'==$this->vars['setting']['seo_type_doc'] && 'doc-view-'==substr($u,0,9)){
+		//elseif('1'==$this->vars['setting']['seo_type'] &&'1'==$this->vars['setting']['seo_type_doc'] && 'doc-view-'==substr($u,0,9))
+		}elseif('1'==$this->vars['setting']['seo_type'] && 'doc-view-'==substr($u,0,9)){
 			return "wiki/".substr($u,9);
 		}else{
 			return $this->vars['setting']['seo_prefix'].$u.$this->vars['setting']['seo_suffix'];
