@@ -241,8 +241,8 @@
         box: function(id, title, content, conf) {
             var id = id||"__box", op = {
                 id: id,
-                width: 500,
-                height: 200,
+                width: $(window).width()*0.7,
+                height: $(window).height()*0.6,
                 align: 'center',
                 title: title,
                 content: "",
@@ -255,8 +255,23 @@
             if (typeof content === "object") {
                 op = $.extend(true, op, content);
             } else if (typeof content === "string") {
+                if (content.substr(0,4) == 'url:'){
+                    op.type = 'url';
+                    op.url = content.substr(4);
+                }else if (content.substr(0,4) == 'img:'){
+                    op.type = 'img';
+                    op.url = content.substr(4);
+                }else if (content.substr(0,7) == 'iframe:'){
+                    op.type = 'iframe';
+                    op.url = content.substr(7);
+                }else if (content.substr(0,9) == 'selector:'){
+                    op.type = 'selector';
+                    op.content = content.substr(9);
+                }else {
+                    op.type = 'html';
+                    op.content = content;
+                }
                 op.title = title;
-                op.content = content;
             } else if (conf && typeof conf === "object") {
                 op = $.extend(true, op, conf);
             }
@@ -774,8 +789,10 @@
                         return;
                     }
                     self.completed = 1;
-                    var width = img.width > 950 ? 950 : img.width;
-                    self.setContent('<img src="' + url + '" width="' + width + '" />');
+                    //var width = img.width > 950 ? 950 : img.width;
+                    var width = 'auto';
+                    var height = '95%'
+                    self.setContent('<img src="' + url + '" width="' + width + '"height="' + height + '" />');
                     self.setPosition();
                 };
                 img.onerror = function() {
