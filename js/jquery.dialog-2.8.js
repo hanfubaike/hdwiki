@@ -241,8 +241,8 @@
         box: function(id, title, content, conf) {
             var id = id||"__box", op = {
                 id: id,
-                width: $(window).width()*0.7,
-                height: $(window).height()*0.6,
+                width: $(window).width()*0.8,
+                height: $(window).height()*0.8,
                 align: 'center',
                 title: title,
                 content: "",
