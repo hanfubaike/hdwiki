@@ -2,6 +2,11 @@
 
 !defined('IN_HDWIKI') && exit('Access Denied');
 
+if (function_exists("opcache_reset")) {
+	//清除缓存
+	opcache_reset();
+}
+
 class control extends base{
 
 	function control(& $get,& $post){
