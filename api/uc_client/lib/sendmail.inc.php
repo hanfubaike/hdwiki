@@ -26,8 +26,31 @@ $mail['message'] = chunk_split(base64_encode(str_replace("\r\n.", " \r\n..", str
 
 $email_from = $mail['frommail'] == '' ? '=?'.$mail['charset'].'?B?'.base64_encode($appname)."?= <$mail_setting[maildefault]>" : (preg_match('/^(.+?) \<(.+?)\>$/',$email_from, $from) ? '=?'.$mail['charset'].'?B?'.base64_encode($from[1])."?= <$from[2]>" : $mail['frommail']);
 
+$email_to = [];
 foreach(explode(',', $mail['email_to']) as $touser) {
-	$tousers[] = preg_match('/^(.+?) \<(.+?)\>$/',$touser, $to) ? ($mailusername ? '=?'.$mail['charset'].'?B?'.base64_encode($to[1])."?= <$to[2]>" : $to[2]) : $touser;
+	$_touser = '';
+	if (preg_match('/^(.+?)\<(.+?)\>$/',$touser, $to)){
+		if ($mailusername){
+			$_touser = "$to[1]<$to[2]>";
+			$email_to[] = array(
+				'name' => $to[1],
+				'email' => $to[2]
+			);
+		}else{
+			$_touser = $to[2];
+			$email_to[] = array(
+				'name' => '',
+				'email' => $to[2]
+			);
+		}
+	}else{
+		$_touser = $touser;
+		$email_to[] = array(
+			'name' => '',
+			'email' => $touser
+		);
+	}
+	$tousers[] = $_touser;
 }
 
 $mail['email_to'] = implode(',', $tousers);
@@ -51,7 +74,8 @@ if($mail_setting['mailsend'] == 1 && function_exists('mail')) {
 		$mailer->SMTPDebug = SMTP::DEBUG_SERVER;                      // Enable verbose debug output
 		$mailer->isSMTP();                                            // Send using SMTP
 		$mailer->Host       = $mail_setting['mailserver'];                    // Set the SMTP server to send through
-		
+		$mailer->Charset='UTF-8';
+
 		if($mail_setting['mailauth']){
 			$mailer->SMTPAuth   = true;                                   // Enable SMTP authentication
 			$mailer->Username   = $mail_setting['mailauth_username'];                     // SMTP username
@@ -68,7 +92,12 @@ if($mail_setting['mailsend'] == 1 && function_exists('mail')) {
 	
 		//Recipients
 		$mailer->setFrom($mail_setting['mailfrom'],$sitename);
-		$mailer->addAddress($mail['email_to']);     // Add a recipient
+		foreach($email_to as $email_array){
+			$email_name = $email_array['name'];
+			$email_address = $email_array['email'];
+			$mailer->addAddress($email_address,$email_name);     // Add a recipient
+		}
+		
 		//$mailer->addAddress('ellen@example.com');               // Name is optional
 		//$mailer->addReplyTo('info@example.com', 'Information');
 		//抄送
@@ -92,7 +121,7 @@ if($mail_setting['mailsend'] == 1 && function_exists('mail')) {
 		error_log("Message could not be sent. Mailer Error: {$mailer->ErrorInfo}");
 		return false;
 	}
-
+	
 } elseif($mail_setting['mailsend'] == 3) {
 
 	ini_set('SMTP', $mail_setting['mailserver']);
