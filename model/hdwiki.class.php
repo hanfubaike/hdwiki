@@ -34,7 +34,9 @@ class hdwiki {
 			$querystring=substr($querystring,0,$pos);
 		}
 		$this->get = explode('-' , $querystring);
-		
+
+		//过滤掉不相关的字符串 ，比如微信添加的&from=singlemessage 或 ?from=singlemessage
+		$this->get[0] = preg_replace(["/\&.*/","/\?.*/","/\%26.*/","/\%3F.*/"],"",$this->get[0]);
 		if (getCount($this->get) <= 3 && getCount($_POST) == 0 && substr($querystring, 0, 6) == 'admin_' && substr($querystring, 0, 10) != 'admin_main'){
 			$this->querystring = $querystring;
 		}
@@ -78,10 +80,14 @@ class hdwiki {
 		}else{
 			$controlfile=HDWIKI_ROOT.'/control/'.$this->get[0].'.php';
 			if(false===@include($controlfile)){
-				//$this->notfound('control "'.$this->get[0].'"  not found!');
-				$this->get[0] = 'index';
-				$controlfile=HDWIKI_ROOT.'/control/'.$this->get[0].'.php';
-				@include($controlfile);
+				$this->notfound('control "'.$this->get[0].'"  not found!');
+				//$this->get[0] = preg_replace(["/\&.*/","/\?.*/","/\%26.*/","/\%3F.*/"],"",$this->get[0]);
+				//$controlfile=HDWIKI_ROOT.'/control/'.$this->get[0].'.php';
+				//if(false===@include($controlfile)){
+					//$this->get[0] = 'index';
+					//$pluginfile=HDWIKI_ROOT.'/plugins/'.$this->get[1].'/control/'.$this->get[2].'.php';
+					//@include($controlfile);
+				//}
 			}
 		}
 	}
@@ -109,7 +115,6 @@ class hdwiki {
 			if($exemption || $control->checkable($querystring) || $control->checkable($regular)){
 				$control->$method();
 			}else{
-				echo 'message';
 				$control->message($regular.$control->view->lang['refuseAction'],'', $isadmin);
 			}
 		}else {
