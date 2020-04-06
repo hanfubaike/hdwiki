@@ -14,6 +14,7 @@ class control extends base{
 		$this->load("comment");
 		$this->load("innerlink");
 		$this->load("search");
+		$this->replaced = false;
 	}
 
 	function doview() {
@@ -837,11 +838,18 @@ class control extends base{
 				$this->doview();
 				exit;
 			}else{
-				$this->view->assign("search_tip_switch", $this->setting['search_tip_switch']);
-				$this->view->assign("searchtext",stripslashes($title));
-				$this->view->assign("searchword",urlencode(_string::hiconv($title,'utf-8')));
-				$this->view->assign("title",$title);
-				$this->view->display("notexist");
+				if ((strpos($title,'&')!== false || strpos($title,'?')!== false) && !$this->replaced){
+					$_SERVER['QUERY_STRING'] = preg_replace(["/\&.*/","/\?.*/","/\%26.*/","/\%3F.*/"],"",$_SERVER['QUERY_STRING']);
+					$this->replaced = true;
+					$this->doinnerlink();
+				}else{
+					$this->view->assign("search_tip_switch", $this->setting['search_tip_switch']);
+					$this->view->assign("searchtext",stripslashes($title));
+					$this->view->assign("searchword",urlencode(_string::hiconv($title,'utf-8')));
+					$this->view->assign("title",$title);
+					$this->view->display("notexist");
+				}
+
 			}
 		}else{
 			$this->get[2]=$doc['did'];

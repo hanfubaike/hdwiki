@@ -63,9 +63,6 @@ class hdwiki {
 	}
 	
 	function load_control(){
-		if($this->is_wx_url($this->get[0])){
-			$this->get[0] = 'index';
-		}
 		if($this->get[0]=='plugin'){
 			if(empty($this->get[2])){
 				$this->get[2]=$this->get[1];
@@ -81,7 +78,10 @@ class hdwiki {
 		}else{
 			$controlfile=HDWIKI_ROOT.'/control/'.$this->get[0].'.php';
 			if(false===@include($controlfile)){
-				$this->notfound('control "'.$this->get[0].'"  not found!');
+				//$this->notfound('control "'.$this->get[0].'"  not found!');
+				$this->get[0] = 'index';
+				$controlfile=HDWIKI_ROOT.'/control/'.$this->get[0].'.php';
+				@include($controlfile);
 			}
 		}
 	}
