@@ -1,0 +1,9 @@
+#以下为nginx伪静态的配置
+location ~ ^/wiki/(.*)$ {
+    try_files $uri $uri/ /index.php?doc-innerlink-$1;
+}
+
+location ~ ^/(.*)$ {
+    try_files $uri $uri/ /index.php?$1;
+}
+
