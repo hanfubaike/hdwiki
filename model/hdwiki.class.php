@@ -80,14 +80,10 @@ class hdwiki {
 		}else{
 			$controlfile=HDWIKI_ROOT.'/control/'.$this->get[0].'.php';
 			if(false===@include($controlfile)){
-				$this->notfound('control "'.$this->get[0].'"  not found!');
-				//$this->get[0] = preg_replace(["/\&.*/","/\?.*/","/\%26.*/","/\%3F.*/"],"",$this->get[0]);
-				//$controlfile=HDWIKI_ROOT.'/control/'.$this->get[0].'.php';
-				//if(false===@include($controlfile)){
-					//$this->get[0] = 'index';
-					//$pluginfile=HDWIKI_ROOT.'/plugins/'.$this->get[1].'/control/'.$this->get[2].'.php';
-					//@include($controlfile);
-				//}
+				//$this->notfound('control "'.$this->get[0].'"  not found!');
+				$this->get[0] = 'index';
+				$controlfile=HDWIKI_ROOT.'/control/'.$this->get[0].'.php';
+				@include($controlfile);
 			}
 		}
 	}
