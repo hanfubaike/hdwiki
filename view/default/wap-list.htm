@@ -40,7 +40,7 @@
                             <li class="no">
                                 <a href="{url doc-view-$data['did']}">
                                     <span class="aimg w150">
-                                        <img src="<!--{if {$data['image']} != '' }-->{$data['image']}<!--{else}-->style/default/recommend.jpg<!--{/if}-->" alt="">
+                                        <img src="<!--{if {$data['image']} != '' }-->{$data['image']}<!--{elseif {$data['img']} != ''}-->{$data['img']<!--{else}-->style/default/recommend.jpg<!--{/if}-->" alt="">
                                         <svg><use xlink:href="style/default/wap-ico.svg#second"/></svg>
                                     </span>
                                     <strong class="title">{$data['title']}</strong>
