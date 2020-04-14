@@ -137,7 +137,7 @@ class hdwiki {
 							//如果是访问词条，且包含括号，则忽略。
 							continue;
 						}
-						if(stripos($getvalue, $invalue) !== false && !$this->is_wx_url($getvalue)){
+						if(stripos($getvalue, $invalue) !== false){
 							$this->notfound('page is not found!');
 							//exit('No Aceess!注意敏感词!');
 						}
