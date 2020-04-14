@@ -1,7 +1,7 @@
 {template wapheader}
 <body ontouchstart><div class="wrap">
     <header class="header viewdoc">
-        <a href="javascript:history.back();" class="goback">&nbsp;</a>
+        <a href="javascript:if(document.referrer === ''){window.location.href='/';}else{history.back();};" class="goback">&nbsp;</a>
         <a href="javascript:void(0);" class="btn-pagenavi"></a>
     </header>
     <section class="column viewdoc">
