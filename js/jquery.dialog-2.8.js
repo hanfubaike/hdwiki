@@ -241,8 +241,8 @@
         box: function(id, title, content, conf) {
             var id = id||"__box", op = {
                 id: id,
-                width: $(window).width()*0.8,
-                height: $(window).height()*0.8,
+                width: 500,
+                height: 200,
                 align: 'center',
                 title: title,
                 content: "",
@@ -261,6 +261,8 @@
                 }else if (content.substr(0,4) == 'img:'){
                     op.type = 'img';
                     op.url = content.substr(4);
+                    op.width = $(window).width()*0.8;
+                    op.height = $(window).height()*0.8;
                 }else if (content.substr(0,7) == 'iframe:'){
                     op.type = 'iframe';
                     op.url = content.substr(7);
@@ -506,7 +508,7 @@
             style.push(".noborder .jqd-inner-wrap{}.noborder .jqd-title{display:none;}.noborder .jqd-content{padding:0;}.noborder .jqd-close{display:none;}.noborder .jqd-bottom-pad{height:0;}.noborder .jqd-bottom{display:none;}");
             style.push(".bluebox .jqd-bg{background:#000; filter:alpha(opacity=30);opacity:0.3; width:100%; height:100% !important; _height:1000px;position:absolute; z-index:-1; zoom:1;}.bluebox .jqd-inner-wrap{}.bluebox .jqd-title{background-color:#009DF0;color:#FFF;font-weight:bold;}.bluebox .jqd-close{top:3px;right:5px;}.bluebox .jqd-button button{width:80px;height:27px;cursor: pointer;font-size:12px;line-height:100%;_line-height:26px;}");
             style.push(".greybox .jqd-outter-wrap{}.greybox .jqd-bg{background:#000; filter:alpha(opacity=8);opacity:0.08; width:100%; height:100% !important; _height:1000px;position:absolute; z-index:-1; zoom:1;}.greybox .jqd-inner-wrap{border:1px solid #A5A5A5;border-radius:2px;box-shadow:0;}.greybox .jqd-title{border:0; height:30px;font-size:14px;line-height:30px;color:#87C7DB;background-color:#F3F3F3;}.greybox .jqd-close{width:10px;height:10px;top:10px;right:14px;background:url(http://www.huimg.cn/xiaobaike/images/baike2.0/form.png) -42px -108px;text-indent:2em;}.greybox .jqd-button button{width:80px;height:27px;cursor: pointer;font-size:12px;line-height:100%;_line-height:26px;}");
-            style.push(".xiaobaike .jqd-outter-wrap{}.xiaobaike .jqd-bg{background:#000; filter:alpha(opacity=8);opacity:0.08; width:100%; height:100% !important; _height:1000px;position:absolute; z-index:-1; zoom:1;}.xiaobaike .jqd-inner-wrap{border:1px solid #A5A5A5;border-radius:2px;box-shadow:0;}.xiaobaike .jqd-title{padding:20px 0 0 30px;font-size:20px;color:#3a3e55;font-weight:700;}.xiaobaike .jqd-content{padding:0;}.xiaobaike .jqd-close{width:16px;height:16px;background:url(js/jqeditor/skins/bg/close.png) no-repeat center center;overflow:hidden;line-height:99em;top:26px;right:26px;}.xiaobaike .jqd-button button{background-color: #0068b7;height: 40px;border-radius: 40px;font-size: 16px;color: #fff;padding:0 30px;display: inline-block;margin:0 5px;border:0;cursor: pointer;}.xiaobaike .jqd-cancel.jqd-button button[name='panel-close']{background-color:#788da3;}");
+            style.push(".xiaobaike .jqd-outter-wrap{}.xiaobaike .jqd-bg{background:#000; filter:alpha(opacity=8);opacity:0.08; width:100%; height:100% !important; _height:1000px;position:absolute; z-index:-1; zoom:1;}.xiaobaike .jqd-inner-wrap{border:1px solid #A5A5A5;border-radius:2px;box-shadow:0;}.xiaobaike .jqd-title{padding:20px 50px 40px 50px;font-size:20px;color:#3a3e55;font-weight:700;}.xiaobaike .jqd-content{padding:0;}.xiaobaike .jqd-close{width:16px;height:16px;background:url(js/jqeditor/skins/bg/close.png) no-repeat center center;overflow:hidden;line-height:99em;top:26px;right:26px;}.xiaobaike .jqd-button button{background-color: #0068b7;height: 40px;border-radius: 40px;font-size: 16px;color: #fff;padding:0 30px;display: inline-block;margin:0 5px;border:0;cursor: pointer;}.xiaobaike .jqd-cancel.jqd-button button[name='panel-close']{background-color:#788da3;}");
             style.push(".hudong .jqd-title, .hudong .jqd-close, .hudong .jqd-button, .hudong .jqd-button button{background:url(http://www.huimg.cn/lib/dialog/bg_minbox.png) no-repeat;}.hudong .jqd-title{background-repeat:repeat-x;height:30px;border-top:1px solid #69B2FC; font-weight:bold; color:#FFF; line-height:30px;}.hudong .jqd-bg{background:#000; filter:alpha(opacity=20);opacity:0.2; width:100%; height:100% !important; _height:1000px;position:absolute; z-index:-1; zoom:1;}.hudong .jqd-content{padding:2px 20px;}.hudong .jqd-bottom{height:25px;padding:5px 0 8px; text-align:center;}.hudong .jqd-close{width:16px;height:16px;top:7px;right:7px; background-position:0 -218px;text-indent:2em;}.hudong .jqd-button{display:inline-block;  margin:0 4px 0 3px; background-position:0 -32px;font-size:12px;}.hudong .jqd-button button{margin:0; cursor:pointer;height:31px; padding:0 14px; *padding:0 4px; border:0 none; background-position:right -63px;font-weight:bold;color:#FFF;line-height:31px;}.hudong .jqd-reg{background-position:0 -94px;}.hudong .jqd-reg button{background-position:right -125px; color:#2375CB;}.hudong .jqd-cancel{background-position:0 -156px;}.hudong .jqd-cancel button{background-position:right -187px; color:#2C2C2C;}");
             $.dialog.addStyle(style.join("\n\n"));
         },
@@ -541,20 +543,22 @@
 	 3、未知尺寸大小的内容
 	*/
         getHtml: function(option) {
-            var o = option, style = "";
+            var o = option, style = "",wrap_style="";
             // 去掉 o.fixedSize 参数 2012-03-27 潘雪鹏
             //if( o.fixedSize ){
             //	style += 'width:'+o.width+'px; height:'+o.height+'px; overflow:hidden;';
             //}
             if (o.width && o.height) {
                 style += "width:" + o.width + "px; height:" + o.height + "px; overflow:hidden;";
+                wrap_style += "width:" + o.width + "px;"
             } else if (o.width) {
                 style += "width:" + o.width + "px; overflow-x:hidden;";
+                wrap_style += "width:" + o.width + "px;"
             } else if (o.height) {
                 style += "height:" + o.height + "px; overflow-y:hidden;";
             }
             // 浏览器兼容需要使用table标签
-            return '<div class="jqd-bg"></div><div class="jqd-outter-wrap">	<table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td>	<div class="jqd-inner-wrap">	<div class="jqd-title">' + o.title + '</div><a class="jqd-close" name="close" title="关闭">×</a>	<div class="jqd-content" id="jqd-content-' + o.id + '" style="' + style + '"></div>	<div class="jqd-bottom">	<span class="jqd-ok jqd-button"><button name="ok" type="submit" >' + o.textOk + '</button></span>	<span class="jqd-cancel jqd-button"><button name="close">' + o.textCancel + '</button></span>	</div>	<div class="jqd-bottom-pad"></div>	<div class="jqd-status" id="jqd-status-' + o.id + '"></div>	</div></td></tr></tbody></table></div>';
+            return '<div class="jqd-bg"></div><div class="jqd-outter-wrap">	<table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td>	<div class="jqd-inner-wrap" style="' + wrap_style + '">	<div class="jqd-title">' + o.title + '</div><a class="jqd-close" name="close" title="关闭">×</a>	<div class="jqd-content" id="jqd-content-' + o.id + '" style="' + style + '"></div>	<div class="jqd-bottom">	<span class="jqd-ok jqd-button"><button name="ok" type="submit" >' + o.textOk + '</button></span>	<span class="jqd-cancel jqd-button"><button name="close">' + o.textCancel + '</button></span>	</div>	<div class="jqd-bottom-pad"></div>	<div class="jqd-status" id="jqd-status-' + o.id + '"></div>	</div></td></tr></tbody></table></div>';
         },
         // 设置样式窗口
         setCss: function(self) {
