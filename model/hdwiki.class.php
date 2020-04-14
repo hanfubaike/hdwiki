@@ -133,6 +133,10 @@ class hdwiki {
 			if(!empty($this->$check_key)) {
 				foreach($this->$check_key as $getvalue) {
 					foreach ($check_val as $invalue) {
+						if(($invalue == '(' || $invalue == ')') && $this->get[0] == 'doc'){
+							//如果是访问词条，且包含括号，则忽略。
+							continue;
+						}
 						if(stripos($getvalue, $invalue) !== false && !$this->is_wx_url($getvalue)){
 							$this->notfound('page is not found!');
 							//exit('No Aceess!注意敏感词!');
